@@ -1,0 +1,70 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// Copyright 2011 Joyent, Inc.  All rights reserved.
+
+var fs = require('fs');
+var path = require('path');
+var url = require('url');
+
+var common = require('../lib/cli_common');
+
+
+
+///--- Globals
+
+var Options = {
+  "account": String,
+  "clone": Number,
+  "debug": Boolean,
+  "decomposition": String,
+  "help": Boolean,
+  "identity": path,
+  "keyId": String,
+  "module": String,
+  "predicate": String,
+  "stat": String,
+  "url": url
+};
+
+var ShortOptions = {
+  "a": ["--account"],
+  "c": ["--clone"],
+  "d": ["--debug"],
+  "h": ["--help"],
+  "?": ["--help"],
+  "i": ["--identity"],
+  "k": ["--keyId"],
+  "m": ["--module"],
+  "n": ["--decomposition"],
+  "p": ["--predicate"],
+  "s": ["--stat"],
+  "u": ["--url"]
+};
+
+
+///--- Mainline
+
+common.parseArguments(Options, ShortOptions, function(parsed) {
+  var opts = {};
+  if (parsed.module)
+    opts.module = parsed.module;
+
+  if (parsed.stat)
+    opts.stat = parsed.stat;
+
+  if (parsed.decomposition)
+    opts.decomposition = parsed.decomposition;
+
+  if (parsed.predicate)
+    opts.predicate = parsed.predicate;
+
+  if (parsed.clone)
+    opts.clone = parsed.clone;
+
+  var client = common.newClient(parsed);
+  client.createInstrumentation(opts, common.callback);
+});
+
+
+
+

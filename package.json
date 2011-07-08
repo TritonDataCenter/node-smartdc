@@ -1,0 +1,27 @@
+{
+  "author": "Joyent, Inc. (http://www.joyent.com)",
+  "name": "smartdc",
+  "description": "Client SDK and CLI for the Joyent SmartDataCenter API",
+  "version": "6.1.0",
+  "homepage": "http://www.joyent.com/software/smartdatacenter",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/joyent/node-smartdc.git"
+  },
+  "main": "lib/index.js",
+  "engines": {
+    "node": "~0.4.9"
+  },
+  "directories": {
+    "bin": "./bin",
+    "lib": "./lib"
+  },
+  "dependencies": {
+    "lru-cache": "~1.0.2",
+    "nopt": "~1.0.6",
+    "restify": "~0.3.12",
+    "sprintf": "~0.1.1",
+    "ssh-agent": "~0.1.0"
+  },
+  "devDependencies": {}
+}

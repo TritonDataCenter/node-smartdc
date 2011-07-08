@@ -1,0 +1,82 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// Copyright 2011 Joyent, Inc.  All rights reserved.
+
+var path = require('path');
+var url = require('url');
+
+var common = require('../lib/cli_common');
+
+
+
+///--- Globals
+
+var Options = {
+  "account": String,
+  "debug": Boolean,
+  "dataset": String,
+  "help": Boolean,
+  "identity": path,
+  "keyId": String,
+  "limit": Number,
+  "memory": Number,
+  "name": String,
+  "offset": Number,
+  "state": String,
+  "tag": [String, Array],
+  "type": String,
+  "tombstone": Number,
+  "url": url
+};
+
+var ShortOptions = {
+  "a": ["--account"],
+  "b": ["--tombstone"],
+  "d": ["--debug"],
+  "e": ["--dataset"],
+  "h": ["--help"],
+  "?": ["--help"],
+  "i": ["--identity"],
+  "k": ["--keyId"],
+  "l": ["--limit"],
+  "m": ["--memory"],
+  "n": ["--name"],
+  "o": ["--offset"],
+  "s": ["--state"],
+  "t": ["--tag"],
+  "y": ["--type"],
+  "u": ["--url"]
+};
+
+
+
+///--- Mainline
+
+common.parseArguments(Options, ShortOptions, function(parsed) {
+
+  var opts = {};
+  var tags = {};
+  if (parsed.dataset) opts.dataset = parsed.dataet;
+  if (parsed.limit) opts.limit = parsed.limit;
+  if (parsed.memory) opts.memory = parsed.memory;
+  if (parsed.name) opts.name = parsed.name;
+  if (parsed.offset) opts.offset = parsed.offset;
+  if (parsed.state) opts.state = parsed.state;
+  if (parsed.tombstone) opts.tombstone = parsed.tombstone;
+  if (parsed.type) opts.type = parsed.type;
+
+  if (parsed.tag) {
+    for (var i = 0; i < parsed.tag.length; i++) {
+      var tmp = parsed.tag[i].split('=');
+      if (!tmp || tmp.length !== 2) {
+        console.error(parsed.tag[i] + ' is an invalid tag; try foo=bar');
+        process.exit(1);
+      }
+      tags[tmp[0]] = tmp[1];
+    }
+  }
+
+  var client = common.newClient(parsed);
+  client.listMachines(opts, tags, common.callback);
+
+});

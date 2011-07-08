@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// Copyright 2011 Joyent, Inc.  All rights reserved.
+
+var path = require('path');
+var url = require('url');
+
+var common = require('../lib/cli_common');
+
+
+
+///--- Globals
+
+var Options = {
+  "account": String,
+  "debug": Boolean,
+  "help": Boolean,
+  "identity": path,
+  "keyId": String,
+  "url": url
+};
+
+var ShortOptions = {
+  "a": ["--account"],
+  "d": ["--debug"],
+  "h": ["--help"],
+  "?": ["--help"],
+  "i": ["--identity"],
+  "k": ["--keyId"],
+  "u": ["--url"]
+};
+
+var usageStr = common.buildUsageString(Options) + ' machine';
+
+
+///--- Mainline
+
+common.parseArguments(Options, ShortOptions, function(parsed) {
+  if (parsed.argv.remain.length < 1)
+    common.usage(usageStr, 1, 'machine required');
+
+  var client = common.newClient(parsed);
+  client.listMachineSnapshots(parsed.argv.remain[0], common.callback);
+}, usageStr);
