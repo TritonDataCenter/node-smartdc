@@ -44,7 +44,7 @@ var ShortOptions = {
 
 common.parseArguments(Options, ShortOptions, function(parsed) {
   var opts = {}
-  if (parsed.dataset) opts.dataset = parsed.dataet;
+  if (parsed.dataset) opts.dataset = parsed.dataset;
   if (parsed.name) opts.name = parsed.name;
   if (parsed['package']) opts['package'] = parsed['package'];
   if (parsed.tag) {
