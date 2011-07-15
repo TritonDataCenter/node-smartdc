@@ -3,6 +3,7 @@
   "name": "smartdc",
   "description": "Client SDK and CLI for the Joyent SmartDataCenter API",
   "version": "6.1.0",
+  "author": "Joyent, Inc",
   "homepage": "http://www.joyent.com/software/smartdatacenter",
   "repository": {
     "type": "git",
