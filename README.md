@@ -15,7 +15,7 @@ always in your path.
 
 There are CLI commands corresponding to almost every action available in the
 SmartDataCenter API; see the
-[SmartDataCenter documentation][http://apidocs.joyent.com/napi/cloudapi/] for
+[SmartDataCenter documentation](http://apidocs.joyent.com/napi/cloudapi/) for
 complete information, but to get started, you'll want to run the following:
 
     sdc-setup
@@ -28,7 +28,7 @@ it indicates), you can provision a machine, and check it's status.  For example,
 here's an example that creates a new node.js machine and tags it as a
 'test' machine, then you can grab the status a few times until it's `running`.
 
-Note this assumes you've also got [jsontool][https://github.com/trentm/json]
+Note this assumes you've also got [jsontool](https://github.com/trentm/json)
 installed:
 
     sdc-createmachine -e nodejs -n demo -t group=test
