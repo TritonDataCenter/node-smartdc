@@ -183,10 +183,12 @@ prompt('Username (login): ', process.env.USER, function(err, username) {
           process.exit(3);
         }
 
-        console.log('\n\nIf you set these environment variables, your life will be easier:');
+        console.log('\n\nIf you set these environment variables, your life ' +
+                    'will be easier:');
         console.log('export SDC_CLI_URL=' + url);
         console.log('export SDC_CLI_ACCOUNT=' + username);
         console.log('export SDC_CLI_KEY_ID=' + key.name);
+        console.log('export SDC_CLI_IDENTITY=' + file.replace(/\.pub$/, ''));
       });
     });
   });
