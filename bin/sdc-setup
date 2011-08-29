@@ -16,6 +16,8 @@ var CloudAPI = require('../lib/index').CloudAPI;
 
 ///--- Globals
 
+var DEF_KEY = process.env.HOME + '/.ssh/id_rsa.pub';
+
 var Options = {
   "debug": Boolean,
   "help": Boolean
@@ -113,6 +115,53 @@ function prompt(p, def, silent, cb) {
 }
 
 
+function dumpEnvVars(url, account, keyId) {
+  console.log('\n\nIf you set these environment variables, your life will be ' +
+              'easier:');
+  console.log('export SDC_CLI_URL=' + url);
+  console.log('export SDC_CLI_ACCOUNT=' + account);
+  console.log('export SDC_CLI_KEY_ID=' + keyId);
+}
+
+
+function uploadKey(client, url, account) {
+  return prompt('SSH public key: ', DEF_KEY, function(err, file) {
+    if (err) {
+      console.error('Unable to read key: ' + err.message);
+      process.exit(5);
+    }
+    var key = common.loadKey(file);
+
+    // So that SSH agent support automagically works (if using the CLI),
+    // pick the name to be the same as what SSH Agent will pass in the
+    // comment field (well, the file name, not the full path).
+    var keyName = file.split('/');
+    var opts = {
+      name: keyName[keyName.length - 1].split('.')[0],
+      key: key
+    }
+    client.createKey(opts, function(err, key) {
+      if (err) {
+        if (err.httpCode >= 500) {
+          if (err.details && err.details.body) {
+            try {
+              console.error(JSON.parse(err.details.body).message);
+            } catch(e) {
+              console.error(err.message);
+            }
+          }
+        } else {
+          console.error(err.message);
+        }
+        process.exit(3);
+      }
+
+      dumpEnvVars(url, account, key.name);
+      console.log('export SDC_CLI_IDENTITY=' + file.replace(/\.pub$/, ''));
+    });
+  });
+}
+
 
 ///--- Mainline
 
@@ -143,53 +192,70 @@ prompt('Username (login): ', process.env.USER, function(err, username) {
       process.exit(6);
     }
 
-    var DEF_KEY = process.env.HOME + '/.ssh/id_rsa.pub';
-    return prompt('SSH public key: ', DEF_KEY, function(err, file) {
-      if (err) {
-        console.error('Unable to read key: ' + err.message);
-        process.exit(5);
-      }
-      log.debug('setup: user=%s, pass=%s, key=%s', username, password, file);
-      var key = common.loadKey(file);
-      var client = new CloudAPI({
-        url: url,
-        account: username,
-        noCache: true,
-        username: username,
-        password: password
-      });
+    var client = new CloudAPI({
+      url: url,
+      account: username,
+      noCache: true,
+      username: username,
+      password: password
+    });
 
-      // So that SSH agent support automagically works (if using the CLI),
-      // pick the name to be the same as what SSH Agent will pass in the
-      // comment field (well, the file name, not the full path).
-      var keyName = file.split('/');
-      var opts = {
-        name: keyName[keyName.length - 1].split('.')[0],
-        key: key
+    return client.listKeys(function(err, keys) {
+      if (err) {
+        console.err('Unable to list keys: ' + err.message);
+        process.exit(7);
       }
-      client.createKey(opts, function(err, key) {
-        if (err) {
-          if (err.httpCode >= 500) {
-            if (err.details && err.details.body) {
-              try {
-                console.error(JSON.parse(err.details.body).message);
-              } catch(e) {
-                console.error(err.message);
-              }
-            }
-          } else {
-            console.error(err.message);
-          }
-          process.exit(3);
+
+      if (keys.length) {
+        console.log('The following keys exist in SmartDataCenter:');
+        for (var i = 0; i < keys.length; i++) {
+          console.log('\t[' + (i + 1) + '] ' + keys[i].name);
         }
 
-        console.log('\n\nIf you set these environment variables, your life ' +
-                    'will be easier:');
-        console.log('export SDC_CLI_URL=' + url);
-        console.log('export SDC_CLI_ACCOUNT=' + username);
-        console.log('export SDC_CLI_KEY_ID=' + key.name);
-        console.log('export SDC_CLI_IDENTITY=' + file.replace(/\.pub$/, ''));
-      });
+        function useExistingCb(err, choice) {
+          if (err) {
+            console.error('Unable to read choice: ' + err.message);
+            process.exit(8);
+          }
+          if (/^ye?s?/i.test(choice)) {
+            function done(name) {
+              dumpEnvVars(url, username, name);
+              console.log('\nYou\'ll additionally want to set ' +
+                          'SDC_CLI_IDENTITY to the full path location of the ' +
+                          'ssh key on your system (likely ' +
+                          process.env.HOME + '/.ssh/' + name + '.pub).');
+              process.exit(0);
+            }
+
+            if (keys.length === 1) {
+              return done(keys[0].name);
+            }
+
+            return prompt('Select a key:', 1, function(err, choice) {
+              if (err) {
+                console.error('Unable to read key number: ' + err.message);
+                process.exit(8);
+              }
+
+              var index = parseInt(choice, 10) - 1;
+              if (index < 0 || index >= keys.length) {
+                console.error(index + ' is an invalid selection.');
+                process.exit(8);
+              }
+
+              return done(keys[index].name);
+            });
+          } else {
+            return uploadKey(client, url, username);
+          }
+        }
+
+        return prompt('Would you like to use an existing key? ',
+                      'yes', useExistingCb);
+
+      } else {
+        return uploadKey(client, url, username);
+      }
     });
   });
 });
