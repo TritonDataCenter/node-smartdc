@@ -4,7 +4,7 @@
 
 var fs = require('fs');
 var path = require('path');
-var url = require('url');
+var URL = require('url');
 
 var nopt = require('nopt');
 var restify = require('restify');
@@ -171,7 +171,7 @@ if (parsed.help)
 if (parsed.debug)
   restify.log.level(restify.LogLevel.Trace);
 if (parsed.argv.remain.length < 1)
-  common.usage(usageStr, 1, 'url required');
+  common.usage(usageStr, 1, 'url of SmartDataCenter CloudAPI required');
 var url = parsed.argv.remain[0];
 
 
@@ -202,7 +202,23 @@ prompt('Username (login): ', process.env.USER, function(err, username) {
 
     return client.listKeys(function(err, keys) {
       if (err) {
-        console.err('Unable to list keys: ' + err.message);
+        if (err.code) {
+          if (err.code === 'InvalidCredentials') {
+            console.error('The username or password you entered is incorrect.');
+          } else {
+            console.error('Error communicating with SmartDataCenter: ' +
+                          err.message);
+          }
+        } else if (err.details && err.details.statusCode) {
+          var details = err.details;
+          if (details.statusCode === 301) {
+            if (details.headers && details.headers.location) {
+              var _url = URL.parse(details.headers.location);
+              console.error('SmartDataCenter is only available at: ' +
+                            _url.protocol + '//' + _url.host);
+            }
+          }
+        }
         process.exit(7);
       }
 
