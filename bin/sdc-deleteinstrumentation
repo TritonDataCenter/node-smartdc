@@ -40,8 +40,12 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
   if (parsed.argv.remain.length < 1)
     common.usage(usageStr, 1, 'instrumentation required');
 
-  var id = parseInt(parsed.argv.remain[0], 10);
+
   var client = common.newClient(parsed);
 
-  client.deleteInstrumentation(id, common.callback);
+  parsed.argv.remain.forEach(function(inst) {
+    var id = parseInt(inst, 10);
+    client.deleteInstrumentation(id, common.callback);
+  });
+
 }, usageStr);

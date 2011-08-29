@@ -77,6 +77,19 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
   }
 
   var client = common.newClient(parsed);
-  client.listMachines(opts, tags, common.callback);
+  client.listMachines(opts, tags, function(err, obj, done) {
+    if (err) {
+      console.error(err.message);
+      process.exit(3);
+    }
+
+    if (obj) {
+      console.log(JSON.stringify(obj, null, 2));
+      if (!done) {
+        console.error('Partial listing of machines. Try increasing listing ' +
+                      'limit with sdc-listmachines --limit');
+      }
+    }
+  });
 
 });

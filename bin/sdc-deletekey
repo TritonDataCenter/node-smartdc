@@ -41,5 +41,7 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
     common.usage(usageStr, 1, 'key_name required');
 
   var client = common.newClient(parsed);
-  client.deleteKey(parsed.argv.remain[0], common.callback);
+  parsed.argv.remain.forEach(function(key) {
+    client.deleteKey(key, common.callback);
+  });
 }, usageStr);

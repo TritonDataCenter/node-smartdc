@@ -50,5 +50,7 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
     opts.name = parsed.name;
 
   var client = common.newClient(parsed);
-  client.createMachineSnapshot(parsed.argv.remain[0], opts, common.callback);
+  parsed.argv.remain.forEach(function(machine) {
+    client.createMachineSnapshot(machine, opts, common.callback);
+  });
 }, usageStr);

@@ -222,8 +222,9 @@ prompt('Username (login): ', process.env.USER, function(err, username) {
               dumpEnvVars(url, username, name);
               console.log('\nYou\'ll additionally want to set ' +
                           'SDC_CLI_IDENTITY to the full path location of the ' +
-                          'ssh key on your system (likely ' +
-                          process.env.HOME + '/.ssh/' + name + '.pub).');
+                          'ssh key on your system (try ' +
+                          'export SDC_CLI_IDENTITY=' +
+                          process.env.HOME + '/.ssh/' + name + '.pub ).');
               process.exit(0);
             }
 

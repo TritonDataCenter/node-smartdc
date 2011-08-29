@@ -45,11 +45,11 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
     common.usage(usageStr, 1, 'snapshot required');
 
   var client = common.newClient(parsed);
-  if (parsed.argv.remain[0] === '*') {
-    client.deleteMachineTags(parsed.machine, common.callback);
-  } else {
-    client.deleteMachineTag(parsed.machine,
-                            parsed.argv.remain[0],
-                            common.callback);
-  }
+
+  if (parsed.argv.remain[0] === '*')
+    return client.deleteMachineTags(parsed.machine, common.callback);
+
+  parsed.argv.remain.forEach(function(tag) {
+    client.deleteMachineTag(parsed.machine, tag, common.callback);
+  });
 }, usageStr);

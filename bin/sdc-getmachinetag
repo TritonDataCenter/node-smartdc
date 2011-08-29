@@ -54,5 +54,8 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
   }
 
   var client = common.newClient(parsed);
-  client.getMachineTag(parsed.machine, parsed.argv.remain[0], callback);
+
+  parsed.argv.remain.forEach(function(tag) {
+    client.getMachineTag(parsed.machine, tag, callback);
+  });
 }, usageStr);

@@ -41,5 +41,7 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
     common.usage(usageStr, 1, 'dataset required');
 
   var client = common.newClient(parsed);
-  client.getDataset(parsed.argv.remain[0], common.callback);
+  parsed.argv.remain.forEach(function(dataset) {
+    client.getDataset(dataset, common.callback);
+  });
 }, usageStr);

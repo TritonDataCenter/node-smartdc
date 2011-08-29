@@ -45,7 +45,8 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
     common.usage(usageStr, 1, 'snapshot required');
 
   var client = common.newClient(parsed);
-  client.getMachineSnapshot(parsed.machine,
-                            parsed.argv.remain[0],
-                            common.callback);
+
+  parsed.argv.remain.forEach(function(snapshot) {
+    client.getMachineSnapshot(parsed.machine, snapshot, common.callback);
+  });
 }, usageStr);

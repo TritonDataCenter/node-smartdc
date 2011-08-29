@@ -41,5 +41,7 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
     common.usage(usageStr, 1, 'package required');
 
   var client = common.newClient(parsed);
-  client.getPackage(parsed.argv.remain[0], common.callback);
+  parsed.argv.remain.forEach(function(pkg) {
+    client.getPackage(pkg, common.callback);
+  });
 }, usageStr);
