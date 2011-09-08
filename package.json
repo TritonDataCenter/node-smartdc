@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "lru-cache": "~1.0.2",
-    "nopt": "~1.0.6",
+    "nopt": "~1.0.7",
     "restify": "~0.4.3",
     "sprintf": "~0.1.1",
     "ssh-agent": "~0.1.0"
