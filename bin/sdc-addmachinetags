@@ -45,8 +45,6 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
     common.usage(usageStr, 1, 'machine required');
 
   var opts = {};
-  if (parsed.name)
-    opts.name = parsed.name;
   if (!parsed.tag)
     common.usage(usageStr, 1, '--tag required');
 

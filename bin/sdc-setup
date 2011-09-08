@@ -240,7 +240,7 @@ prompt('Username (login): ', process.env.USER, function(err, username) {
                           'SDC_CLI_IDENTITY to the full path location of the ' +
                           'ssh key on your system (try ' +
                           'export SDC_CLI_IDENTITY=' +
-                          process.env.HOME + '/.ssh/' + name + '.pub ).');
+                          process.env.HOME + '/.ssh/' + name + ').');
               process.exit(0);
             }
 
