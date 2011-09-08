@@ -13,6 +13,7 @@ var common = require('../lib/cli_common');
 
 var Options = {
   "account": String,
+  "credentials": Boolean,
   "debug": Boolean,
   "help": Boolean,
   "identity": path,
@@ -22,6 +23,7 @@ var Options = {
 
 var ShortOptions = {
   "a": ["--account"],
+  "c": ["--credentials"],
   "d": ["--debug"],
   "h": ["--help"],
   "?": ["--help"],
@@ -42,6 +44,6 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
 
   var client = common.newClient(parsed);
   parsed.argv.remain.forEach(function(machine) {
-    client.getMachine(machine, common.callback);
+    client.getMachine(machine, parsed.credentials || false, common.callback);
   });
 }, usageStr);

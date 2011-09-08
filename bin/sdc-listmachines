@@ -13,6 +13,7 @@ var common = require('../lib/cli_common');
 
 var Options = {
   "account": String,
+  "credentials": Boolean,
   "debug": Boolean,
   "dataset": String,
   "help": Boolean,
@@ -31,6 +32,7 @@ var Options = {
 
 var ShortOptions = {
   "a": ["--account"],
+  "c": ["--credentials"],
   "b": ["--tombstone"],
   "d": ["--debug"],
   "e": ["--dataset"],
@@ -56,6 +58,7 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
 
   var opts = {};
   var tags = {};
+  if (parsed.credentials) opts.credentials = parsed.credentials;
   if (parsed.dataset) opts.dataset = parsed.dataet;
   if (parsed.limit) opts.limit = parsed.limit;
   if (parsed.memory) opts.memory = parsed.memory;
