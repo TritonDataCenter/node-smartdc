@@ -19,6 +19,7 @@ var Options = {
   "help": Boolean,
   "identity": path,
   "keyId": String,
+  "metadata": [String, Array],
   "name": String,
   "package": String,
   "tag": [String, Array],
@@ -33,6 +34,7 @@ var ShortOptions = {
   "?": ["--help"],
   "i": ["--identity"],
   "k": ["--keyId"],
+  "m": ["--metadata"],
   "n": ["--name"],
   "p": ["--package"],
   "t": ["--tag"],
@@ -55,6 +57,16 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
         process.exit(1);
       }
       opts['tag.' + tmp[0]] = tmp[1];
+    }
+  }
+  if (parsed.metadata) {
+    for (var i = 0; i < parsed.metadata.length; i++) {
+      var tmp = parsed.metadata[i].split('=');
+      if (!tmp || tmp.length !== 2) {
+        console.error(parsed.metadata[i] + ' is invalid metadata; try foo=bar');
+        process.exit(1);
+      }
+      opts['metadata.' + tmp[0]] = tmp[1];
     }
   }
 

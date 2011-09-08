@@ -1,0 +1,65 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// Copyright 2011 Joyent, Inc.  All rights reserved.
+
+var fs = require('fs');
+var path = require('path');
+var url = require('url');
+
+var common = require('../lib/cli_common');
+
+
+
+///--- Globals
+
+var Options = {
+  "account": String,
+  "debug": Boolean,
+  "help": Boolean,
+  "identity": path,
+  "keyId": String,
+  "metadata": [String, Array],
+  "url": url
+};
+
+var ShortOptions = {
+  "a": ["--account"],
+  "d": ["--debug"],
+  "h": ["--help"],
+  "?": ["--help"],
+  "i": ["--identity"],
+  "k": ["--keyId"],
+  "m": ["--metadata"],
+  "u": ["--url"]
+};
+
+var usageStr = common.buildUsageString(Options);
+usageStr += ' machine';
+
+
+///--- Mainline
+
+common.parseArguments(Options, ShortOptions, function(parsed) {
+
+  if (parsed.argv.remain.length < 1)
+    common.usage(usageStr, 1, 'machine required');
+
+  var opts = {};
+  if (!parsed.metadata)
+    common.usage(usageStr, 1, '--metadata required');
+
+  var metadata = {};
+  for (var i = 0; i < parsed.metadata.length; i++) {
+    var tmp = parsed.metadata[i].split('=');
+    if (!tmp || tmp.length !== 2) {
+      console.error(parsed.metadata[i] + ' is invalid metadata; try foo=bar');
+      process.exit(1);
+    }
+    metadata[tmp[0]] = tmp[1];
+  }
+
+  var client = common.newClient(parsed);
+  parsed.argv.remain.forEach(function(machine) {
+    client.updateMachineMetadata(machine, metadata, common.callback);
+  });
+}, usageStr);
