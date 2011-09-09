@@ -43,7 +43,21 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
     common.usage(usageStr, 1, 'machine(id) required');
 
   var client = common.newClient(parsed);
+
+  function callback(err, obj, headers) {
+    if (err) {
+      console.error(err.message);
+      process.exit(3);
+    }
+
+    if (obj)
+      console.log(JSON.stringify(obj, null, 2));
+
+    if (headers && headers['x-credentials-suppressed'])
+      console.error('credentials were suppressed from metadata');
+  }
+
   parsed.argv.remain.forEach(function(machine) {
-    client.getMachine(machine, parsed.credentials || false, common.callback);
+    client.getMachine(machine, parsed.credentials || false, callback);
   });
 }, usageStr);
