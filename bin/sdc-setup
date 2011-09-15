@@ -170,9 +170,11 @@ if (parsed.help)
   common.usage(usageStr);
 if (parsed.debug)
   restify.log.level(restify.LogLevel.Trace);
-if (parsed.argv.remain.length < 1)
+
+
+var url = parsed.argv.remain[0] || process.env.SDC_CLI_URL;
+if (!url)
   common.usage(usageStr, 1, 'url of SmartDataCenter CloudAPI required');
-var url = parsed.argv.remain[0];
 
 
 prompt('Username (login): ', process.env.USER, function(err, username) {
