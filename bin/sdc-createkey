@@ -43,7 +43,7 @@ function loadNewKey(key) {
   try {
     return fs.readFileSync(key, 'ascii');
   } catch(e) {
-    common.usage(usageStr, 2, 'Unable to load key ' + identity + ': ' + e);
+    common.usage(usageStr, 2, 'Unable to load key ' + key + ': ' + e);
   }
 }
 

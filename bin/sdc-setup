@@ -120,7 +120,6 @@ function dumpEnvVars(url, account, keyId) {
               'easier:');
   console.log('export SDC_CLI_URL=' + url);
   console.log('export SDC_CLI_ACCOUNT=' + account);
-  console.log('export SDC_CLI_KEY_ID=' + keyId);
 }
 
 
