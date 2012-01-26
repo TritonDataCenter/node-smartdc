@@ -2,6 +2,7 @@
 // -*- mode: js -*-
 // Copyright 2011 Joyent, Inc.  All rights reserved.
 
+var fs = require('fs');
 var https = require('https');
 var path = require('path');
 var url = require('url');
@@ -22,6 +23,7 @@ var Options = {
   "metadata": [String, Array],
   "name": String,
   "package": String,
+  "script": path,
   "tag": [String, Array],
   "url": url
 };
@@ -37,6 +39,7 @@ var ShortOptions = {
   "m": ["--metadata"],
   "n": ["--name"],
   "p": ["--package"],
+  "s": ["--script"],
   "t": ["--tag"],
   "u": ["--url"]
 };
@@ -68,6 +71,10 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
       }
       opts['metadata.' + tmp[0]] = tmp[1];
     }
+  }
+  if (parsed.script) {
+    us = fs.readFileSync(parsed.script, 'utf-8');
+    opts['metadata.user-script'] = us.toString();
   }
 
   var client = common.newClient(parsed);
