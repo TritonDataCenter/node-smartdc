@@ -194,24 +194,16 @@ prompt('Username (login): ', process.env.USER, function(err, username) {
 
     return client.listKeys(function(err, keys) {
       if (err) {
-        if (err.code) {
-          if (err.code === 'InvalidCredentials') {
-            console.error('The username or password you entered is incorrect.');
-          } else {
-            console.error('Error communicating with SmartDataCenter: ' +
-                          err.message);
-          }
-        } else if (err.details && err.details.statusCode) {
-          var details = err.details;
-          if (details.statusCode === 301) {
-            if (details.headers && details.headers.location) {
-              var _url = URL.parse(details.headers.location);
-              console.error('SmartDataCenter is only available at: ' +
-                            _url.protocol + '//' + _url.host);
-            }
-          }
+        if (err.httpCode === 401) {
+          console.error('The username or password you entered is incorrect.');
+        } else if (err.httpCode === 302) {
+          console.error('SmartDataCenter is available at: %s',
+                        err.details.headers.location);
+        } else {
+          console.error('Error communicating with SmartDataCenter: %s',
+                        err.message);
         }
-        process.exit(7);
+        process.exit(1);
       }
 
       if (keys.length) {
