@@ -59,13 +59,13 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
   var opts = {};
   var tags = {};
   if (parsed.credentials) opts.credentials = parsed.credentials;
-  if (parsed.dataset) opts.dataset = parsed.dataet;
-  if (parsed.limit) opts.limit = parsed.limit;
-  if (parsed.memory) opts.memory = parsed.memory;
+  if (parsed.dataset) opts.dataset = parsed.dataset;
+  if (parsed.limit != undefined) opts.limit = parsed.limit;
+  if (parsed.memory != undefined) opts.memory = parsed.memory;
   if (parsed.name) opts.name = parsed.name;
-  if (parsed.offset) opts.offset = parsed.offset;
+  if (parsed.offset != undefined) opts.offset = parsed.offset;
   if (parsed.state) opts.state = parsed.state;
-  if (parsed.tombstone) opts.tombstone = parsed.tombstone;
+  if (parsed.tombstone != undefined) opts.tombstone = parsed.tombstone;
   if (parsed.type) opts.type = parsed.type;
 
   if (parsed.tag) {
