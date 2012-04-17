@@ -58,7 +58,7 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
   if (parsed.predicate)
     opts.predicate = parsed.predicate;
 
-  if (parsed.clone)
+  if (parsed.clone != undefined)
     opts.clone = parsed.clone;
 
   var client = common.newClient(parsed);
