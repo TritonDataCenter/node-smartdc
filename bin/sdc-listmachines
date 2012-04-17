@@ -59,7 +59,7 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
   var opts = {};
   var tags = {};
   if (parsed.credentials) opts.credentials = parsed.credentials;
-  if (parsed.dataset) opts.dataset = parsed.dataet;
+  if (parsed.dataset) opts.dataset = parsed.dataset;
   if (parsed.limit) opts.limit = parsed.limit;
   if (parsed.memory) opts.memory = parsed.memory;
   if (parsed.name) opts.name = parsed.name;
