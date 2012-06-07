@@ -1,5 +1,5 @@
 {
-  "author": "Joyent, Inc. (http://www.joyent.com)",
+  "author": "Joyent, Inc. http://www.joyent.com",
   "name": "smartdc",
   "description": "Client SDK and CLI for the Joyent SmartDataCenter API",
   "version": "7.0.0",
