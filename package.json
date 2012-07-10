@@ -4,7 +4,6 @@
   "description": "Client SDK and CLI for the Joyent SmartDataCenter API",
   "version": "7.0.0",
   "private": true,
-  "author": "Joyent, Inc",
   "homepage": "http://www.joyent.com/software/smartdatacenter",
   "repository": {
     "type": "git",
