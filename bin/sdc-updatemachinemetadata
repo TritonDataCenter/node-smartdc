@@ -45,7 +45,6 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
   if (parsed.argv.remain.length < 1)
     common.usage(usageStr, 1, 'machine required');
 
-  var opts = {};
   if (!parsed.metadata)
     common.usage(usageStr, 1, '--metadata required');
 

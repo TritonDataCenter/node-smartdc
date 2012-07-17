@@ -47,10 +47,11 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
 
   var client = common.newClient(parsed);
 
-  if (parsed.argv.remain[0] === '*')
-    return client.deleteMachineTags(parsed.machine, common.callback);
-
-  parsed.argv.remain.forEach(function(tag) {
-    client.deleteMachineTag(parsed.machine, tag, common.callback);
-  });
+  if (parsed.argv.remain[0] === '*') {
+      return client.deleteMachineTags(parsed.machine, common.callback);
+  } else {
+      return parsed.argv.remain.forEach(function(tag) {
+        client.deleteMachineTag(parsed.machine, tag, common.callback);
+      });
+  }
 }, usageStr);

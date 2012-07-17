@@ -7,7 +7,7 @@ var fs = require('fs');
 var path = require('path');
 var tty = require('tty');
 var URL = require('url');
-var util = require('util')
+var util = require('util');
 var nopt = require('nopt');
 var restify = require('restify');
 var bunyan = require('bunyan');
@@ -42,15 +42,23 @@ usageStr += ' url';
 // Totally ripped off from npm. Thanks isaacs@!
 
 function prompt (p, def, silent, cb) {
-  if (!cb) cb = silent, silent = false
-  if (!cb) cb = def, def = null
-  if (def) p += "("+(silent ? "<hidden>" : def)+") "
-  var r = (silent ? silentRead : read).bind(null, def, cb)
+  if (!cb) {
+      cb = silent;
+      silent = false;
+  }
+  if (!cb) {
+      cb = def;
+      def = null;
+  }
+  if (def) {
+      p += "("+(silent ? "<hidden>" : def)+") ";
+  }
+  var r = (silent ? silentRead : read).bind(null, def, cb);
   if (!process.stdout.write(p)) process.stdout.on("drain", function D () {
-    process.stdout.removeListener("drain", D)
-    r()
-  })
-  else r()
+    process.stdout.removeListener("drain", D);
+    r();
+  });
+  else r();
 }
 
 function read (def, cb) {
@@ -73,7 +81,7 @@ function read (def, cb) {
       val = val.trim() || def;
       cb(null, val);
     }
-  })
+  });
 }
 
 function silentRead (def, cb) {
@@ -87,7 +95,7 @@ function silentRead (def, cb) {
   stdin.resume();
   stdin.on("error", cb);
   stdin.on("data", function D (c) {
-    c = "" + c
+    c = "" + c;
     switch (c) {
       case "\n": case "\r": case "\r\n": case "\u0004":
           if (process.stdin.setRawMode) {
@@ -103,25 +111,24 @@ function silentRead (def, cb) {
         return cb(null, val);
       case "\u0003": case "\0":
         return cb("cancelled");
-        break;
       default:
         val += buffer + c;
         buffer = "";
-        break;
+        return cb(null, val);
     }
   });
 }
 
 
-function dumpEnvVars(url, account, keyId) {
+function dumpEnvVars(sdc_url, account, keyId) {
   console.log('\n\nIf you set these environment variables, your life will be ' +
               'easier:');
-  console.log('export SDC_CLI_URL=' + url);
+  console.log('export SDC_CLI_URL=' + sdc_url);
   console.log('export SDC_CLI_ACCOUNT=' + account);
 }
 
 
-function uploadKey(client, url, account) {
+function uploadKey(client, sdc_url, account) {
   return prompt('SSH public key: ', DEF_KEY, function(err, file) {
     if (err) {
       console.error('Unable to read key: ' + err.message);
@@ -136,25 +143,25 @@ function uploadKey(client, url, account) {
     var opts = {
       name: keyName[keyName.length - 1].split('.')[0],
       key: key
-    }
+    };
 
-    client.createKey(opts, function(err, key) {
-      if (err) {
-        if (err.httpCode >= 500) {
-          if (err.details && err.details.body) {
+    client.createKey(opts, function(err2, key2) {
+      if (err2) {
+        if (err2.httpCode >= 500) {
+          if (err2.details && err2.details.body) {
             try {
-              console.error(JSON.parse(err.details.body).message);
+              console.error(JSON.parse(err2.details.body).message);
             } catch(e) {
-              console.error(err.message);
+              console.error(err2.message);
             }
           }
         } else {
-          console.error(err.message);
+          console.error(err2.message);
         }
         process.exit(3);
       }
 
-      dumpEnvVars(url, account, key.name);
+      dumpEnvVars(sdc_url, account, key2.name);
       console.log('export SDC_CLI_IDENTITY=' + file.replace(/\.pub$/, ''));
       process.exit(0);
     });
@@ -181,9 +188,9 @@ prompt('Username (login): ', process.env.USER, function(err, username) {
     process.exit(5);
   }
 
-  return prompt('Password: ', null, true, function(err, password) {
-    if (err) {
-      console.error('Unable to read password: ' + err.message);
+  return prompt('Password: ', null, true, function(err2, password) {
+    if (err2) {
+      console.error('Unable to read password: ' + err2.message);
       process.exit(5);
     }
 
@@ -201,17 +208,17 @@ prompt('Username (login): ', process.env.USER, function(err, username) {
       logLevel: 'fatal'
     });
 
-    return client.listKeys(function(err, keys) {
-      if (err) {
-        if (err.code) {
-          if (err.code === 'InvalidCredentials') {
+    return client.listKeys(function(err3, keys) {
+      if (err3) {
+        if (err3.code) {
+          if (err3.code === 'InvalidCredentials') {
             console.error('The username or password you entered is incorrect.');
           } else {
             console.error('Error communicating with SmartDataCenter: ' +
-                          err.message);
+                          err3.message);
           }
-        } else if (err.details && err.details.statusCode) {
-          var details = err.details;
+        } else if (err3.details && err3.details.statusCode) {
+          var details = err3.details;
           if (details.statusCode === 301) {
             if (details.headers && details.headers.location) {
               var _url = URL.parse(details.headers.location);
@@ -229,9 +236,9 @@ prompt('Username (login): ', process.env.USER, function(err, username) {
           console.log('\t[' + (i + 1) + '] ' + keys[i].name);
         }
 
-        function useExistingCb(err, choice) {
-          if (err) {
-            console.error('Unable to read choice: ' + err.message);
+        function useExistingCb(err4, choice) {
+          if (err4) {
+            console.error('Unable to read choice: ' + err4.message);
             process.exit(8);
           }
           if (/^ye?s?/i.test(choice)) {
@@ -249,13 +256,13 @@ prompt('Username (login): ', process.env.USER, function(err, username) {
               return done(keys[0].name);
             }
 
-            return prompt('Select a key:', 1, function(err, choice) {
-              if (err) {
-                console.error('Unable to read key number: ' + err.message);
+            return prompt('Select a key:', 1, function(err5, choice2) {
+              if (err5) {
+                console.error('Unable to read key number: ' + err5.message);
                 process.exit(8);
               }
 
-              var index = parseInt(choice, 10) - 1;
+              var index = parseInt(choice2, 10) - 1;
               if (index < 0 || index >= keys.length) {
                 console.error(index + ' is an invalid selection.');
                 process.exit(8);

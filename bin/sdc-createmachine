@@ -49,7 +49,7 @@ var ShortOptions = {
 ///--- Mainline
 
 common.parseArguments(Options, ShortOptions, function(parsed) {
-  var opts = {}
+  var opts = {};
   if (parsed.dataset) opts.dataset = parsed.dataset;
   if (parsed.name) opts.name = parsed.name;
   if (parsed['package']) opts['package'] = parsed['package'];
@@ -64,17 +64,17 @@ common.parseArguments(Options, ShortOptions, function(parsed) {
     }
   }
   if (parsed.metadata) {
-    for (var i = 0; i < parsed.metadata.length; i++) {
-      var tmp = parsed.metadata[i].split('=');
-      if (!tmp || tmp.length !== 2) {
-        console.error(parsed.metadata[i] + ' is invalid metadata; try foo=bar');
+    for (var j = 0; j < parsed.metadata.length; j++) {
+      var tmp2 = parsed.metadata[j].split('=');
+      if (!tmp2 || tmp2.length !== 2) {
+        console.error(parsed.metadata[j] + ' is invalid metadata; try foo=bar');
         process.exit(1);
       }
-      opts['metadata.' + tmp[0]] = tmp[1];
+      opts['metadata.' + tmp2[0]] = tmp2[1];
     }
   }
   if (parsed.script) {
-    us = fs.readFileSync(parsed.script, 'utf-8');
+    var us = fs.readFileSync(parsed.script, 'utf-8');
     opts['metadata.user-script'] = us.toString();
   }
 
