@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
-// Copyright 2011 Joyent, Inc.  All rights reserved.
+// vim: set filetype=javascript :
+// Copyright 2012 Joyent, Inc.  All rights reserved.
 
 var fs = require('fs');
 var path = require('path');
 var tty = require('tty');
 var URL = require('url');
-
+var util = require('util')
 var nopt = require('nopt');
 var restify = require('restify');
+var bunyan = require('bunyan');
 
 var common = require('../lib/cli_common');
 var CloudAPI = require('../lib/index').CloudAPI;
@@ -30,7 +32,6 @@ var ShortOptions = {
 };
 
 var buffer = '';
-var log = restify.log;
 
 var usageStr = common.buildUsageString(Options);
 usageStr += ' url';
@@ -53,54 +54,62 @@ function prompt (p, def, silent, cb) {
 }
 
 function read (def, cb) {
-  var stdin = process.openStdin()
-    , val = ""
-  stdin.resume()
-  stdin.setEncoding("utf8")
-  stdin.on("error", cb)
+  var stdin = process.openStdin(),
+      val = "";
+  stdin.resume();
+  stdin.setEncoding("utf8");
+  stdin.on("error", cb);
   stdin.on("data", function D (chunk) {
-    val += buffer + chunk
-    buffer = ""
-    val = val.replace(/\r/g, '')
+    val += buffer + chunk;
+    buffer = "";
+    val = val.replace(/\r/g, '');
     if (val.indexOf("\n") !== -1) {
-      if (val !== "\n") val = val.replace(/^\n+/, "")
-      buffer = val.substr(val.indexOf("\n"))
-      val = val.substr(0, val.indexOf("\n"))
-      stdin.pause()
-      stdin.removeListener("data", D)
-      stdin.removeListener("error", cb)
-      val = val.trim() || def
-      cb(null, val)
+      if (val !== "\n") val = val.replace(/^\n+/, "");
+      buffer = val.substr(val.indexOf("\n"));
+      val = val.substr(0, val.indexOf("\n"));
+      stdin.pause();
+      stdin.removeListener("data", D);
+      stdin.removeListener("error", cb);
+      val = val.trim() || def;
+      cb(null, val);
     }
   })
 }
 
 function silentRead (def, cb) {
-  var stdin = process.openStdin()
-    , val = ""
-  tty.setRawMode(true)
-  stdin.resume()
-  stdin.on("error", cb)
+  var stdin = process.openStdin(),
+      val = "";
+  if (process.stdin.setRawMode) {
+      process.stdin.setRawMode(true);
+  } else {
+      tty.setRawMode(true);
+  }
+  stdin.resume();
+  stdin.on("error", cb);
   stdin.on("data", function D (c) {
     c = "" + c
     switch (c) {
       case "\n": case "\r": case "\r\n": case "\u0004":
-        tty.setRawMode(false)
-        stdin.removeListener("data", D)
-        stdin.removeListener("error", cb)
-        val = val.trim() || def
-        process.stdout.write("\n")
-        stdin.pause()
-        return cb(null, val)
+          if (process.stdin.setRawMode) {
+              process.stdin.setRawMode(false);
+          } else {
+              tty.setRawMode(false);
+          }
+        stdin.removeListener("data", D);
+        stdin.removeListener("error", cb);
+        val = val.trim() || def;
+        process.stdout.write("\n");
+        stdin.pause();
+        return cb(null, val);
       case "\u0003": case "\0":
-        return cb("cancelled")
-        break
+        return cb("cancelled");
+        break;
       default:
-        val += buffer + c
-        buffer = ""
-        break
+        val += buffer + c;
+        buffer = "";
+        break;
     }
-  })
+  });
 }
 
 
@@ -128,6 +137,7 @@ function uploadKey(client, url, account) {
       name: keyName[keyName.length - 1].split('.')[0],
       key: key
     }
+
     client.createKey(opts, function(err, key) {
       if (err) {
         if (err.httpCode >= 500) {
@@ -155,12 +165,13 @@ function uploadKey(client, url, account) {
 ///--- Mainline
 
 var parsed = nopt(Options, ShortOptions, process.argv, 2);
-if (parsed.help)
+if (parsed.help) {
   common.usage(usageStr);
-if (parsed.debug)
-  restify.log.level(restify.LogLevel.Trace);
-if (parsed.argv.remain.length < 1)
+}
+
+if (parsed.argv.remain.length < 1) {
   common.usage(usageStr, 1, 'url of SmartDataCenter CloudAPI required');
+}
 var url = parsed.argv.remain[0];
 
 
@@ -186,7 +197,8 @@ prompt('Username (login): ', process.env.USER, function(err, username) {
       account: username,
       noCache: true,
       username: username,
-      password: password
+      password: password,
+      logLevel: 'fatal'
     });
 
     return client.listKeys(function(err, keys) {
@@ -265,4 +277,3 @@ prompt('Username (login): ', process.env.USER, function(err, username) {
     });
   });
 });
-

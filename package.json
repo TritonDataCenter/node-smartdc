@@ -11,18 +11,18 @@
   },
   "main": "lib/index.js",
   "engines": {
-    "node": "~0.4.9"
+    "node": ">=0.6"
   },
   "directories": {
     "bin": "./bin",
     "lib": "./lib"
   },
   "dependencies": {
-    "http-signature": "0.9.6",
-    "lru-cache": "1.0.4",
+    "http-signature": "0.9.9",
+    "lru-cache": "1.1.0",
     "nopt": "1.0.10",
-    "restify": "0.5.4",
-    "sprintf": "0.1.1",
+    "restify": "1.4.3",
+    "bunyan": "0.8.0",
     "ssh-agent": "0.1.0"
   },
   "devDependencies": {}

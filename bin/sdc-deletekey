@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
-// Copyright 2011 Joyent, Inc.  All rights reserved.
+// vim: set filetype=javascript :
+// Copyright 2012 Joyent, Inc.  All rights reserved.
 
 var path = require('path');
 var url = require('url');
