@@ -13,24 +13,24 @@ var common = require('../lib/cli_common');
 ///--- Globals
 
 var Options = {
-  "account": String,
-  "debug": Boolean,
-  "help": Boolean,
-  "identity": path,
-  "keyId": String,
-  "value": Boolean,
-  "url": url
+    'account': String,
+    'debug': Boolean,
+    'help': Boolean,
+    'identity': path,
+    'keyId': String,
+    'value': Boolean,
+    'url': url
 };
 
 var ShortOptions = {
-  "a": ["--account"],
-  "d": ["--debug"],
-  "h": ["--help"],
-  "?": ["--help"],
-  "i": ["--identity"],
-  "k": ["--keyId"],
-  "u": ["--url"],
-  "v": ["--value"]
+    'a': ['--account'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'i': ['--identity'],
+    'k': ['--keyId'],
+    'u': ['--url'],
+    'v': ['--value']
 };
 
 var usageStr = common.buildUsageString(Options) + ' instrumentation_id';
@@ -39,18 +39,18 @@ var usageStr = common.buildUsageString(Options) + ' instrumentation_id';
 
 ///--- Mainline
 
-common.parseArguments(Options, ShortOptions, function(parsed) {
-  if (parsed.argv.remain.length < 1)
-    common.usage(usageStr, 1, 'instrumentation required');
+common.parseArguments(Options, ShortOptions, function (parsed) {
+    if (parsed.argv.remain.length < 1)
+        common.usage(usageStr, 1, 'instrumentation required');
 
 
-  var client = common.newClient(parsed);
+    var client = common.newClient(parsed);
 
-  parsed.argv.remain.forEach(function(inst) {
-    var id = parseInt(inst, 10);
-    if (parsed.value)
-      return client.getInstrumentationValue(id, common.callback);
+    parsed.argv.remain.forEach(function (inst) {
+        var id = parseInt(inst, 10);
+        if (parsed.value)
+            return client.getInstrumentationValue(id, common.callback);
 
-    return client.getInstrumentation(id, common.callback);
-  });
+        return client.getInstrumentation(id, common.callback);
+    });
 }, usageStr);

@@ -13,24 +13,24 @@ var common = require('../lib/cli_common');
 ///--- Globals
 
 var Options = {
-  "account": String,
-  "debug": Boolean,
-  "help": Boolean,
-  "identity": path,
-  "keyId": String,
-  "package": String,
-  "url": url
+    'account': String,
+    'debug': Boolean,
+    'help': Boolean,
+    'identity': path,
+    'keyId': String,
+    'package': String,
+    'url': url
 };
 
 var ShortOptions = {
-  "a": ["--account"],
-  "d": ["--debug"],
-  "h": ["--help"],
-  "?": ["--help"],
-  "i": ["--identity"],
-  "k": ["--keyId"],
-  "p": ["--package"],
-  "u": ["--url"]
+    'a': ['--account'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'i': ['--identity'],
+    'k': ['--keyId'],
+    'p': ['--package'],
+    'u': ['--url']
 };
 
 var usageStr = common.buildUsageString(Options);
@@ -39,17 +39,17 @@ usageStr += ' machine';
 
 ///--- Mainline
 
-common.parseArguments(Options, ShortOptions, function(parsed) {
-  if (parsed.argv.remain.length < 1)
-    common.usage(usageStr, 1, 'machine required');
+common.parseArguments(Options, ShortOptions, function (parsed) {
+    if (parsed.argv.remain.length < 1)
+        common.usage(usageStr, 1, 'machine required');
 
-  var opts = {};
-  if (parsed['package'])
-    opts['package'] = parsed['package'];
+    var opts = {};
+    if (parsed['package'])
+        opts['package'] = parsed['package'];
 
 
-  var client = common.newClient(parsed);
-  parsed.argv.remain.forEach(function(machine) {
-    client.resizeMachine(machine, opts, common.callback);
-  });
+    var client = common.newClient(parsed);
+    parsed.argv.remain.forEach(function (machine) {
+        client.resizeMachine(machine, opts, common.callback);
+    });
 }, usageStr);

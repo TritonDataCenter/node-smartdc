@@ -14,24 +14,24 @@ var common = require('../lib/cli_common');
 ///--- Globals
 
 var Options = {
-  "account": String,
-  "debug": Boolean,
-  "help": Boolean,
-  "identity": path,
-  "keyId": String,
-  "name": String,
-  "url": url
+    'account': String,
+    'debug': Boolean,
+    'help': Boolean,
+    'identity': path,
+    'keyId': String,
+    'name': String,
+    'url': url
 };
 
 var ShortOptions = {
-  "a": ["--account"],
-  "d": ["--debug"],
-  "h": ["--help"],
-  "?": ["--help"],
-  "i": ["--identity"],
-  "k": ["--keyId"],
-  "n": ["--name"],
-  "u": ["--url"]
+    'a': ['--account'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'i': ['--identity'],
+    'k': ['--keyId'],
+    'n': ['--name'],
+    'u': ['--url']
 };
 
 var usageStr = common.buildUsageString(Options);
@@ -41,32 +41,33 @@ usageStr += ' public_ssh_key';
 ///--- Internal Functions
 
 function loadNewKey(key) {
-  try {
-    return fs.readFileSync(key, 'ascii');
-  } catch(e) {
-    return common.usage(usageStr, 2, 'Unable to load key ' + key + ': ' + e);
-  }
+    try {
+        return fs.readFileSync(key, 'ascii');
+    } catch (e) {
+        return common.usage(usageStr, 2,
+                'Unable to load key ' + key + ': ' + e);
+    }
 }
 
 
 
 ///--- Mainline
 
-common.parseArguments(Options, ShortOptions, function(parsed) {
+common.parseArguments(Options, ShortOptions, function (parsed) {
 
-  if (parsed.argv.remain.length < 1)
-    common.usage(usageStr, 1, 'ssh_key required');
+    if (parsed.argv.remain.length < 1)
+        common.usage(usageStr, 1, 'ssh_key required');
 
-  var opts = {
-    key: loadNewKey(parsed.argv.remain[0])
-  };
-  if (parsed.name) {
-    opts.name = parsed.name;
-  } else {
-    var name = parsed.argv.remain[0].split('/');
-    opts.name = name[name.length - 1];
-  }
+    var opts = {
+        key: loadNewKey(parsed.argv.remain[0])
+    };
+    if (parsed.name) {
+        opts.name = parsed.name;
+    } else {
+        var name = parsed.argv.remain[0].split('/');
+        opts.name = name[name.length - 1];
+    }
 
-  var client = common.newClient(parsed);
-  client.createKey(opts, common.callback);
+    var client = common.newClient(parsed);
+    client.createKey(opts, common.callback);
 }, usageStr);

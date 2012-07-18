@@ -13,29 +13,29 @@ var common = require('../lib/cli_common');
 ///--- Globals
 
 var Options = {
-  "account": String,
-  "debug": Boolean,
-  "help": Boolean,
-  "identity": path,
-  "keyId": String,
-  "url": url
+    'account': String,
+    'debug': Boolean,
+    'help': Boolean,
+    'identity': path,
+    'keyId': String,
+    'url': url
 };
 
 var ShortOptions = {
-  "a": ["--account"],
-  "d": ["--debug"],
-  "h": ["--help"],
-  "?": ["--help"],
-  "i": ["--identity"],
-  "k": ["--keyId"],
-  "u": ["--url"]
+    'a': ['--account'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'i': ['--identity'],
+    'k': ['--keyId'],
+    'u': ['--url']
 };
 
 
 
 ///--- Mainline
 
-common.parseArguments(Options, ShortOptions, function(parsed) {
-  var client = common.newClient(parsed);
-  client.listInstrumentations(common.callback);
+common.parseArguments(Options, ShortOptions, function (parsed) {
+    var client = common.newClient(parsed);
+    client.listInstrumentations(common.callback);
 });

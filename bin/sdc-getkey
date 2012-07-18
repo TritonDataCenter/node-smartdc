@@ -13,22 +13,22 @@ var common = require('../lib/cli_common');
 ///--- Globals
 
 var Options = {
-  "account": String,
-  "debug": Boolean,
-  "help": Boolean,
-  "identity": path,
-  "keyId": String,
-  "url": url
+    'account': String,
+    'debug': Boolean,
+    'help': Boolean,
+    'identity': path,
+    'keyId': String,
+    'url': url
 };
 
 var ShortOptions = {
-  "a": ["--account"],
-  "d": ["--debug"],
-  "h": ["--help"],
-  "?": ["--help"],
-  "i": ["--identity"],
-  "k": ["--keyId"],
-  "u": ["--url"]
+    'a': ['--account'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'i': ['--identity'],
+    'k': ['--keyId'],
+    'u': ['--url']
 };
 
 var usageStr = common.buildUsageString(Options) + ' key_name';
@@ -37,12 +37,12 @@ var usageStr = common.buildUsageString(Options) + ' key_name';
 
 ///--- Mainline
 
-common.parseArguments(Options, ShortOptions, function(parsed) {
-  if (parsed.argv.remain.length < 1)
-    common.usage(usageStr, 1, 'key_name required');
+common.parseArguments(Options, ShortOptions, function (parsed) {
+    if (parsed.argv.remain.length < 1)
+        common.usage(usageStr, 1, 'key_name required');
 
-  var client = common.newClient(parsed);
-  parsed.argv.remain.forEach(function(key) {
-    client.getKey(key, common.callback);
-  });
+    var client = common.newClient(parsed);
+    parsed.argv.remain.forEach(function (key) {
+        client.getKey(key, common.callback);
+    });
 }, usageStr);
