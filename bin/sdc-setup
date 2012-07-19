@@ -114,7 +114,7 @@ function silentRead(def, cb) {
         default:
             val += buffer + c;
             buffer = '';
-            return cb(null, val);
+            // This does not always return a value INTENTIONALLY
         }
     });
 }
