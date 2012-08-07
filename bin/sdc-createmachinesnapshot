@@ -30,7 +30,6 @@ var ShortOptions = {
     '?': ['--help'],
     'i': ['--identity'],
     'k': ['--keyId'],
-    'm': ['--machine'],
     'n': ['--name'],
     'u': ['--url']
 };
