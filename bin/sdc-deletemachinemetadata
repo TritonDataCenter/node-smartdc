@@ -19,7 +19,7 @@ var Options = {
     'help': Boolean,
     'identity': path,
     'keyId': String,
-    'machine': String,
+    'metadata': String,
     'url': url
 };
 
@@ -30,12 +30,12 @@ var ShortOptions = {
     '?': ['--help'],
     'i': ['--identity'],
     'k': ['--keyId'],
-    'm': ['--machine'],
+    'm': ['--metadata'],
     'u': ['--url']
 };
 
 var usageStr = common.buildUsageString(Options);
-usageStr += ' metadata_key';
+usageStr += ' machine';
 
 
 ///--- Mainline
@@ -43,13 +43,13 @@ usageStr += ' metadata_key';
 common.parseArguments(Options, ShortOptions, function (parsed) {
 
     if (parsed.argv.remain.length < 1)
-        common.usage(usageStr, 1, 'metadata key required');
+        common.usage(usageStr, 1, 'machine required');
 
-    if (!parsed.machine)
-        common.usage(usageStr, 1, '--machine required');
+    if (!parsed.metadata)
+        common.usage(usageStr, 1, '--metadata required');
 
     var client = common.newClient(parsed);
-    parsed.argv.remain.forEach(function (key) {
-        client.deleteMachineMetadata(parsed.machine, key, common.callback);
+    parsed.argv.remain.forEach(function (machine) {
+        client.deleteMachineMetadata(machine, parsed.metadata, common.callback);
     });
 }, usageStr);

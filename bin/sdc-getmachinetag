@@ -18,7 +18,7 @@ var Options = {
     'help': Boolean,
     'identity': path,
     'keyId': String,
-    'machine': String,
+    'tag': String,
     'url': url
 };
 
@@ -29,21 +29,21 @@ var ShortOptions = {
     '?': ['--help'],
     'i': ['--identity'],
     'k': ['--keyId'],
-    'm': ['--machine'],
+    't': ['--tag'],
     'u': ['--url']
 };
 
-var usageStr = common.buildUsageString(Options) + ' tag';
+var usageStr = common.buildUsageString(Options) + ' machine';
 
 
 
 ///--- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
-    if (!parsed.machine)
-        common.usage(usageStr, 1, 'machine required');
-    if (parsed.argv.remain.length < 1)
+    if (!parsed.tag)
         common.usage(usageStr, 1, 'tag required');
+    if (parsed.argv.remain.length < 1)
+        common.usage(usageStr, 1, 'machine required');
 
     function callback(err, obj) {
         if (err) {
@@ -56,7 +56,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
 
     var client = common.newClient(parsed);
 
-    parsed.argv.remain.forEach(function (tag) {
-        client.getMachineTag(parsed.machine, tag, callback);
+    parsed.argv.remain.forEach(function (machine) {
+        client.getMachineTag(machine, parsed.tag, callback);
     });
 }, usageStr);
