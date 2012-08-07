@@ -28,6 +28,7 @@ var Options = {
 
 var ShortOptions = {
     'd': ['--debug'],
+    '?': ['--help'],
     'h': ['--help']
 };
 
