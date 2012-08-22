@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
-// Copyright 2011 Joyent, Inc.  All rights reserved.
+// vim: set filetype=javascript :
+// Copyright 2012 Joyent, Inc.  All rights reserved.
 
 var fs = require('fs');
 var path = require('path');
@@ -13,58 +14,54 @@ var common = require('../lib/cli_common');
 ///--- Globals
 
 var Options = {
-  "account": String,
-  "clone": Number,
-  "debug": Boolean,
-  "decomposition": String,
-  "help": Boolean,
-  "identity": path,
-  "keyId": String,
-  "module": String,
-  "predicate": String,
-  "stat": String,
-  "url": url
+    'account': String,
+    'clone': Number,
+    'debug': Boolean,
+    'decomposition': String,
+    'help': Boolean,
+    'identity': path,
+    'keyId': String,
+    'module': String,
+    'predicate': String,
+    'stat': String,
+    'url': url
 };
 
 var ShortOptions = {
-  "a": ["--account"],
-  "c": ["--clone"],
-  "d": ["--debug"],
-  "h": ["--help"],
-  "?": ["--help"],
-  "i": ["--identity"],
-  "k": ["--keyId"],
-  "m": ["--module"],
-  "n": ["--decomposition"],
-  "p": ["--predicate"],
-  "s": ["--stat"],
-  "u": ["--url"]
+    'a': ['--account'],
+    'c': ['--clone'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'i': ['--identity'],
+    'k': ['--keyId'],
+    'm': ['--module'],
+    'n': ['--decomposition'],
+    'p': ['--predicate'],
+    's': ['--stat'],
+    'u': ['--url']
 };
 
 
 ///--- Mainline
 
-common.parseArguments(Options, ShortOptions, function(parsed) {
-  var opts = {};
-  if (parsed.module)
-    opts.module = parsed.module;
+common.parseArguments(Options, ShortOptions, function (parsed) {
+    var opts = {};
+    if (parsed.module)
+        opts.module = parsed.module;
 
-  if (parsed.stat)
-    opts.stat = parsed.stat;
+    if (parsed.stat)
+        opts.stat = parsed.stat;
 
-  if (parsed.decomposition)
-    opts.decomposition = parsed.decomposition;
+    if (parsed.decomposition)
+        opts.decomposition = parsed.decomposition;
 
-  if (parsed.predicate)
-    opts.predicate = parsed.predicate;
+    if (parsed.predicate)
+        opts.predicate = parsed.predicate;
 
-  if (parsed.clone != undefined)
-    opts.clone = parsed.clone;
+    if (parsed.clone != undefined)
+        opts.clone = parsed.clone;
 
-  var client = common.newClient(parsed);
-  client.createInstrumentation(opts, common.callback);
+    var client = common.newClient(parsed);
+    client.createInstrumentation(opts, common.callback);
 });
-
-
-
-

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
-// Copyright 2011 Joyent, Inc.  All rights reserved.
+// vim: set filetype=javascript :
+// Copyright 2012 Joyent, Inc.  All rights reserved.
 
 var path = require('path');
 var url = require('url');
@@ -12,87 +13,88 @@ var common = require('../lib/cli_common');
 ///--- Globals
 
 var Options = {
-  "account": String,
-  "credentials": Boolean,
-  "debug": Boolean,
-  "dataset": String,
-  "help": Boolean,
-  "identity": path,
-  "keyId": String,
-  "limit": Number,
-  "memory": Number,
-  "name": String,
-  "offset": Number,
-  "state": String,
-  "tag": [String, Array],
-  "type": String,
-  "tombstone": Number,
-  "url": url
+    'account': String,
+    'credentials': Boolean,
+    'debug': Boolean,
+    'dataset': String,
+    'help': Boolean,
+    'identity': path,
+    'keyId': String,
+    'limit': Number,
+    'memory': Number,
+    'name': String,
+    'offset': Number,
+    'state': String,
+    'tag': [String, Array],
+    'type': String,
+    'tombstone': Number,
+    'url': url
 };
 
 var ShortOptions = {
-  "a": ["--account"],
-  "c": ["--credentials"],
-  "b": ["--tombstone"],
-  "d": ["--debug"],
-  "e": ["--dataset"],
-  "h": ["--help"],
-  "?": ["--help"],
-  "i": ["--identity"],
-  "k": ["--keyId"],
-  "l": ["--limit"],
-  "m": ["--memory"],
-  "n": ["--name"],
-  "o": ["--offset"],
-  "s": ["--state"],
-  "t": ["--tag"],
-  "y": ["--type"],
-  "u": ["--url"]
+    'a': ['--account'],
+    'c': ['--credentials'],
+    'b': ['--tombstone'],
+    'd': ['--debug'],
+    'e': ['--dataset'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'i': ['--identity'],
+    'k': ['--keyId'],
+    'l': ['--limit'],
+    'm': ['--memory'],
+    'n': ['--name'],
+    'o': ['--offset'],
+    's': ['--state'],
+    't': ['--tag'],
+    'y': ['--type'],
+    'u': ['--url']
 };
 
 
 
 ///--- Mainline
 
-common.parseArguments(Options, ShortOptions, function(parsed) {
+common.parseArguments(Options, ShortOptions, function (parsed) {
 
-  var opts = {};
-  var tags = {};
-  if (parsed.credentials) opts.credentials = parsed.credentials;
-  if (parsed.dataset) opts.dataset = parsed.dataset;
-  if (parsed.limit != undefined) opts.limit = parsed.limit;
-  if (parsed.memory != undefined) opts.memory = parsed.memory;
-  if (parsed.name) opts.name = parsed.name;
-  if (parsed.offset != undefined) opts.offset = parsed.offset;
-  if (parsed.state) opts.state = parsed.state;
-  if (parsed.tombstone != undefined) opts.tombstone = parsed.tombstone;
-  if (parsed.type) opts.type = parsed.type;
+    var opts = {};
+    var tags = {};
+    if (parsed.credentials) opts.credentials = parsed.credentials;
+    if (parsed.dataset) opts.dataset = parsed.dataset;
+    if (parsed.limit != undefined) opts.limit = parsed.limit;
+    if (parsed.memory != undefined) opts.memory = parsed.memory;
+    if (parsed.name) opts.name = parsed.name;
+    if (parsed.offset != undefined) opts.offset = parsed.offset;
+    if (parsed.state) opts.state = parsed.state;
+    if (parsed.tombstone != undefined) opts.tombstone = parsed.tombstone;
+    if (parsed.type) opts.type = parsed.type;
 
-  if (parsed.tag) {
-    for (var i = 0; i < parsed.tag.length; i++) {
-      var tmp = parsed.tag[i].split('=');
-      if (!tmp || tmp.length !== 2) {
-        console.error(parsed.tag[i] + ' is an invalid tag; try foo=bar');
-        process.exit(1);
-      }
-      tags[tmp[0]] = tmp[1];
-    }
-  }
-
-  var client = common.newClient(parsed);
-  client.listMachines(opts, tags, function(err, obj, done) {
-    if (err) {
-      console.error(err.message);
-      process.exit(3);
+    if (parsed.tag) {
+        for (var i = 0; i < parsed.tag.length; i++) {
+            var tmp = parsed.tag[i].split('=');
+            if (!tmp || tmp.length !== 2) {
+                console.error(parsed.tag[i] +
+                    ' is an invalid tag; try foo=bar');
+                process.exit(1);
+            }
+            tags[tmp[0]] = tmp[1];
+        }
     }
 
-    if (obj) {
-      console.log(JSON.stringify(obj, null, 2));
-      if (!done) {
-        console.error('Partial listing of machines. Try increasing listing ' +
-                      'limit with sdc-listmachines --limit');
-      }
-    }
-  });
+    var client = common.newClient(parsed);
+    client.listMachines(opts, tags, function (err, obj, done) {
+        if (err) {
+            console.error(err.message);
+            process.exit(3);
+        }
+
+        if (obj) {
+            console.log(JSON.stringify(obj, null, 2));
+            if (!done) {
+                console.error('Partial listing of machines. Try increasing ' +
+                      'listing limit with sdc-listmachines --limit');
+            }
+        }
+    });
 
 });
