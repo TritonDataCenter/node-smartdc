@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
-// Copyright 2011 Joyent, Inc.  All rights reserved.
+// vim: set filetype=javascript :
+// Copyright 2012 Joyent, Inc.  All rights reserved.
 
 var fs = require('fs');
 var path = require('path');
@@ -13,24 +14,24 @@ var common = require('../lib/cli_common');
 ///--- Globals
 
 var Options = {
-  "account": String,
-  "debug": Boolean,
-  "help": Boolean,
-  "identity": path,
-  "keyId": String,
-  "tag": [String, Array],
-  "url": url
+    'account': String,
+    'debug': Boolean,
+    'help': Boolean,
+    'identity': path,
+    'keyId': String,
+    'tag': [String, Array],
+    'url': url
 };
 
 var ShortOptions = {
-  "a": ["--account"],
-  "d": ["--debug"],
-  "h": ["--help"],
-  "?": ["--help"],
-  "i": ["--identity"],
-  "k": ["--keyId"],
-  "t": ["--tag"],
-  "u": ["--url"]
+    'a': ['--account'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'i': ['--identity'],
+    'k': ['--keyId'],
+    't': ['--tag'],
+    'u': ['--url']
 };
 
 var usageStr = common.buildUsageString(Options);
@@ -39,27 +40,26 @@ usageStr += ' machine';
 
 ///--- Mainline
 
-common.parseArguments(Options, ShortOptions, function(parsed) {
+common.parseArguments(Options, ShortOptions, function (parsed) {
 
-  if (parsed.argv.remain.length < 1)
-    common.usage(usageStr, 1, 'machine required');
+    if (parsed.argv.remain.length < 1)
+        common.usage(usageStr, 1, 'machine required');
 
-  var opts = {};
-  if (!parsed.tag)
-    common.usage(usageStr, 1, '--tag required');
+    if (!parsed.tag)
+        common.usage(usageStr, 1, '--tag required');
 
-  var tags = {};
-  for (var i = 0; i < parsed.tag.length; i++) {
-    var tmp = parsed.tag[i].split('=');
-    if (!tmp || tmp.length !== 2) {
-      console.error(parsed.tag[i] + ' is an invalid tag; try foo=bar');
-      process.exit(1);
+    var tags = {};
+    for (var i = 0; i < parsed.tag.length; i++) {
+        var tmp = parsed.tag[i].split('=');
+        if (!tmp || tmp.length !== 2) {
+            console.error(parsed.tag[i] + ' is an invalid tag; try foo=bar');
+            process.exit(1);
+        }
+        tags[tmp[0]] = tmp[1];
     }
-    tags[tmp[0]] = tmp[1];
-  }
 
-  var client = common.newClient(parsed);
-  parsed.argv.remain.forEach(function(machine) {
-    client.addMachineTags(machine, tags, common.callback);
-  });
+    var client = common.newClient(parsed);
+    parsed.argv.remain.forEach(function (machine) {
+        client.addMachineTags(machine, tags, common.callback);
+    });
 }, usageStr);
