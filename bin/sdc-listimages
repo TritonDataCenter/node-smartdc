@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2012 Joyent, Inc.  All rights reserved.
+
+var path = require('path');
+var url = require('url');
+
+var common = require('../lib/cli_common');
+
+
+
+///--- Globals
+
+var Options = {
+    'account': String,
+    'debug': Boolean,
+    'help': Boolean,
+    'identity': path,
+    'keyId': String,
+    'url': url
+};
+
+var ShortOptions = {
+    'a': ['--account'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'i': ['--identity'],
+    'k': ['--keyId'],
+    'u': ['--url']
+};
+
+
+
+///--- Mainline
+
+common.parseArguments(Options, ShortOptions, function (parsed) {
+    var client = common.newClient(parsed);
+    client.listDatasets(common.callback);
+});
