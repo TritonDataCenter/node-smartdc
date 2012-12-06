@@ -126,6 +126,7 @@ function dumpEnvVars(sdc_url, account, keyId) {
               ' be easier:');
     console.log('export SDC_CLI_URL=' + sdc_url);
     console.log('export SDC_CLI_ACCOUNT=' + account);
+    console.log('export SDC_CLI_KEY_ID=' + keyId);
 }
 
 
@@ -213,8 +214,8 @@ prompt('Username (login): ', process.env.USER, function (err, username) {
 
         return client.listKeys(function (err3, keys) {
             if (err3) {
-                if (err3.code) {
-                    if (err3.code === 'InvalidCredentials') {
+                if (err3.restCode) {
+                    if (err3.restCode === 'InvalidCredentials') {
                         console.error('The username or password you entered' +
                             ' is incorrect.');
                     } else {
@@ -253,9 +254,9 @@ prompt('Username (login): ', process.env.USER, function (err, username) {
                             dumpEnvVars(url, username, name);
                             console.log('\nYou\'ll additionally want to set ' +
                             'SDC_CLI_IDENTITY to the full path location of ' +
-                            'the ssh key on your system (try ' +
+                            'the ssh key on your system, try:\n' +
                             'export SDC_CLI_IDENTITY=' +
-                            process.env.HOME + '/.ssh/' + name + ').');
+                            process.env.HOME + '/.ssh/' + name + '\n');
                             process.exit(0);
                         }
 
