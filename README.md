@@ -15,7 +15,7 @@ always in your path.
 
 There are CLI commands corresponding to almost every action available in the
 SmartDataCenter API; see the
-[SmartDataCenter documentation](http://apidocs.joyent.com/napi/cloudapi/) for
+[Joyent CloudAPI documentation](http://apidocs.joyent.com/sdcapidoc/cloudapi/) for
 complete information, but to get started, you'll want to run the following:
 
     sdc-setup

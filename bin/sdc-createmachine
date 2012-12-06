@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
-// Copyright 2011 Joyent, Inc.  All rights reserved.
+// vim: set filetype=javascript :
+// Copyright 2012 Joyent, Inc.  All rights reserved.
 
 var fs = require('fs');
 var https = require('https');
@@ -14,69 +15,72 @@ var common = require('../lib/cli_common');
 ///--- Globals
 
 var Options = {
-  "account": String,
-  "debug": Boolean,
-  "dataset": String,
-  "help": Boolean,
-  "identity": path,
-  "keyId": String,
-  "metadata": [String, Array],
-  "name": String,
-  "package": String,
-  "script": path,
-  "tag": [String, Array],
-  "url": url
+    'account': String,
+    'debug': Boolean,
+    'dataset': String,
+    'help': Boolean,
+    'identity': path,
+    'keyId': String,
+    'metadata': [String, Array],
+    'name': String,
+    'package': String,
+    'script': path,
+    'tag': [String, Array],
+    'url': url
 };
 
 var ShortOptions = {
-  "a": ["--account"],
-  "d": ["--debug"],
-  "e": ["--dataset"],
-  "h": ["--help"],
-  "?": ["--help"],
-  "i": ["--identity"],
-  "k": ["--keyId"],
-  "m": ["--metadata"],
-  "n": ["--name"],
-  "p": ["--package"],
-  "s": ["--script"],
-  "t": ["--tag"],
-  "u": ["--url"]
+    'a': ['--account'],
+    'd': ['--debug'],
+    'e': ['--dataset'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'i': ['--identity'],
+    'k': ['--keyId'],
+    'm': ['--metadata'],
+    'n': ['--name'],
+    'p': ['--package'],
+    's': ['--script'],
+    't': ['--tag'],
+    'u': ['--url']
 };
 
 
 ///--- Mainline
 
-common.parseArguments(Options, ShortOptions, function(parsed) {
-  var opts = {}
-  if (parsed.dataset) opts.dataset = parsed.dataset;
-  if (parsed.name) opts.name = parsed.name;
-  if (parsed['package']) opts['package'] = parsed['package'];
-  if (parsed.tag) {
-    for (var i = 0; i < parsed.tag.length; i++) {
-      var tmp = parsed.tag[i].split('=');
-      if (!tmp || tmp.length !== 2) {
-        console.error(parsed.tag[i] + ' is an invalid tag; try foo=bar');
-        process.exit(1);
-      }
-      opts['tag.' + tmp[0]] = tmp[1];
+common.parseArguments(Options, ShortOptions, function (parsed) {
+    var opts = {};
+    if (parsed.dataset) opts.dataset = parsed.dataset;
+    if (parsed.name) opts.name = parsed.name;
+    if (parsed['package']) opts['package'] = parsed['package'];
+    if (parsed.tag) {
+        for (var i = 0; i < parsed.tag.length; i++) {
+            var tmp = parsed.tag[i].split('=');
+            if (!tmp || tmp.length !== 2) {
+                console.error(parsed.tag[i] +
+                    ' is an invalid tag; try foo=bar');
+                process.exit(1);
+            }
+            opts['tag.' + tmp[0]] = tmp[1];
+        }
     }
-  }
-  if (parsed.metadata) {
-    for (var i = 0; i < parsed.metadata.length; i++) {
-      var tmp = parsed.metadata[i].split('=');
-      if (!tmp || tmp.length !== 2) {
-        console.error(parsed.metadata[i] + ' is invalid metadata; try foo=bar');
-        process.exit(1);
-      }
-      opts['metadata.' + tmp[0]] = tmp[1];
+    if (parsed.metadata) {
+        for (var j = 0; j < parsed.metadata.length; j++) {
+            var tmp2 = parsed.metadata[j].split('=');
+            if (!tmp2 || tmp2.length !== 2) {
+                console.error(parsed.metadata[j] +
+                    ' is invalid metadata; try foo=bar');
+                process.exit(1);
+            }
+            opts['metadata.' + tmp2[0]] = tmp2[1];
+        }
     }
-  }
-  if (parsed.script) {
-    us = fs.readFileSync(parsed.script, 'utf-8');
-    opts['metadata.user-script'] = us.toString();
-  }
+    if (parsed.script) {
+        var us = fs.readFileSync(parsed.script, 'utf-8');
+        opts['metadata.user-script'] = us.toString();
+    }
 
-  var client = common.newClient(parsed);
-  client.createMachine(opts, common.callback);
+
+    var client = common.newClient(parsed);
+    client.createMachine(opts, common.callback);
 });
