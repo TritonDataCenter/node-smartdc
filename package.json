@@ -23,7 +23,8 @@
     "nopt": "2.0.0",
     "restify": "git://github.com/mcavage/node-restify.git#d688b4a",
     "bunyan": "0.16.7",
-    "ssh-agent": "0.2.1"
+    "ssh-agent": "0.2.1",
+    "clone": "0.1.5"
   },
   "devDependencies": {}
 }
