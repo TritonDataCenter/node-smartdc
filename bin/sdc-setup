@@ -11,6 +11,7 @@ var util = require('util');
 var nopt = require('nopt');
 var restify = require('restify');
 var bunyan = require('bunyan');
+var read = require('read');
 
 var common = require('../lib/cli_common');
 var CloudAPI = require('../lib/index').CloudAPI;
@@ -39,86 +40,6 @@ usageStr += ' url';
 
 
 ///--- Internal Functions
-
-// Totally ripped off from npm. Thanks isaacs@!
-
-function prompt(p, def, silent, cb) {
-    if (!cb) {
-        cb = silent;
-        silent = false;
-    }
-    if (!cb) {
-        cb = def;
-        def = null;
-    }
-    if (def) {
-        p += '('+(silent ? '<hidden>' : def)+') ';
-    }
-    var r = (silent ? silentRead : read).bind(null, def, cb);
-    if (!process.stdout.write(p)) process.stdout.on('drain', function D() {
-        process.stdout.removeListener('drain', D);
-        r();
-    });
-    else r();
-}
-
-function read(def, cb) {
-    var stdin = process.openStdin(),
-        val = '';
-    stdin.resume();
-    stdin.setEncoding('utf8');
-    stdin.on('error', cb);
-    stdin.on('data', function D(chunk) {
-        val += buffer + chunk;
-        buffer = '';
-        val = val.replace(/\r/g, '');
-        if (val.indexOf('\n') !== -1) {
-            if (val !== '\n') val = val.replace(/^\n+/, '');
-            buffer = val.substr(val.indexOf('\n'));
-            val = val.substr(0, val.indexOf('\n'));
-            stdin.pause();
-            stdin.removeListener('data', D);
-            stdin.removeListener('error', cb);
-            val = val.trim() || def;
-            cb(null, val);
-        }
-    });
-}
-
-function silentRead(def, cb) {
-    var stdin = process.openStdin(),
-        val = '';
-    if (process.stdin.setRawMode) {
-        process.stdin.setRawMode(true);
-    } else {
-        tty.setRawMode(true);
-    }
-    stdin.resume();
-    stdin.on('error', cb);
-    stdin.on('data', function D(c) {
-        c = '' + c;
-        switch (c) {
-        case '\n': case '\r': case '\r\n': case '\u0004':
-            if (process.stdin.setRawMode) {
-                process.stdin.setRawMode(false);
-            } else {
-                tty.setRawMode(false);
-            }
-            stdin.removeListener('data', D);
-            stdin.removeListener('error', cb);
-            val = val.trim() || def;
-            process.stdout.write('\n');
-            stdin.pause();
-            return cb(null, val);
-        case '\u0003': case '\0':
-            return cb('cancelled');
-        default:
-            val += buffer + c;
-            buffer = '';
-            // This does not always return a value INTENTIONALLY
-        }
-    });
-}
 
 
 function dumpEnvVars(sdc_url, account, keyId) {
@@ -185,14 +106,20 @@ if (parsed.argv.remain.length < 1) {
 }
 var url = parsed.argv.remain[0];
 
+read({
+    prompt: 'Username (login): ',
+    default: process.env.USER
+}, function (err, username) {
 
-prompt('Username (login): ', process.env.USER, function (err, username) {
     if (err) {
         console.error('Unable to read username: ' + err.message);
         process.exit(5);
     }
 
-    return prompt('Password: ', null, true, function (err2, password) {
+    return read({
+        prompt: 'Password: ',
+        silent: true
+    }, function (err2, password) {
         if (err2) {
             console.error('Unable to read password: ' + err2.message);
             process.exit(5);
@@ -264,8 +191,10 @@ prompt('Username (login): ', process.env.USER, function (err, username) {
                             return done(keys[0].name);
                         }
 
-                        return prompt('Select a key:', 1,
-                            function (err5, choice2) {
+                        return read({
+                            prompt: 'Select a key:',
+                            default: 1
+                        }, function (err5, choice2) {
                                 if (err5) {
                                     console.error('Unable to read key number: '
                                         + err5.message);
@@ -286,9 +215,10 @@ prompt('Username (login): ', process.env.USER, function (err, username) {
                     }
                 }
 
-                return prompt('Would you like to use an existing key? ',
-                      'yes', useExistingCb);
-
+                return read({
+                    prompt: 'Would you like to use an existing key? ',
+                    default: 'yes'
+                }, useExistingCb);
             } else {
                 return uploadKey(client, url, username);
             }
