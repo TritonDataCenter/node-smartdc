@@ -71,6 +71,11 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
 
     if (parsed.tag) {
         for (var i = 0; i < parsed.tag.length; i++) {
+            if (parsed.tag[i] === '*') {
+                tags = '*';
+                break;
+            }
+
             var tmp = parsed.tag[i].split('=');
             if (!tmp || tmp.length !== 2) {
                 console.error(parsed.tag[i] +
