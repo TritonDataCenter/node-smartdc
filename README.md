@@ -19,11 +19,10 @@ SmartDataCenter API; see the
 complete information, but to get started, you can set environment variables for
 the following flags so that you don't have to type them for each request:
 
-|| **CLI Flag** || **Description** || **Environment Variable** ||
-||--account<br/>-a||Login name (account)||SDC\_CLI\_ACCOUNT||
-||--keyId<br/>-k||Name of the key to use for signing||SDC\_CLI\_KEY\_ID||
-||--url<br/>-u||URL of the CloudAPI endpoint||SDC\_CLI\_URL||
-||--identity<br/>-i||Path to the location of your SSH key.<br/>On a Macintosh, this is usually `/Users/username/.ssh/id_rsa`||SDC\_CLI\_IDENTITY||
+* `SDC_CLI_URL` || `--url | -u`: URL of the CloudAPI endpoint.
+* `SDC_CLI_ACCOUNT` || `--account | -a`: Login name (account).
+* `SDC_CLI_KEY_ID` || `--keyId | -k`: Name of the key to use for signing.
+* `SDC_CLI_IDENTITY` || `--identity | -i`: Path to the location of your SSH key. On a Macintosh, this is usually `/Users/username/.ssh/id_rsa`
 
 All of the CLI commands use your RSA private key for signing requests to the API,
 rather than sending your password to the Joyent API.  Once you've set the environment
