@@ -16,22 +16,26 @@ always in your path.
 There are CLI commands corresponding to almost every action available in the
 SmartDataCenter API; see the
 [Joyent CloudAPI documentation](http://apidocs.joyent.com/sdcapidoc/cloudapi/) for
-complete information, but to get started, you'll want to run the following:
+complete information, but to get started, you can set environment variables for
+the following flags so that you don't have to type them for each request:
 
-    sdc-setup
+|| **CLI Flag** || **Description** || **Environment Variable** ||
+||--account<br/>-a||Login name (account)||SDC\_CLI\_ACCOUNT||
+||--keyId<br/>-k||Name of the key to use for signing||SDC\_CLI\_KEY\_ID||
+||--url<br/>-u||URL of the CloudAPI endpoint||SDC\_CLI\_URL||
+||--identity<br/>-i||Path to the location of your SSH key.<br/>On a Macintosh, this is usually `/Users/username/.ssh/id_rsa`||SDC\_CLI\_IDENTITY||
 
-The `sdc-setup` command will prompt you for your username and password, and
-upload your SSH key.  All the rest of the CLI commands use your RSA private
-key for signing requests to the API, rather than sending your password to the
-Joyent API.  Once you've run `sdc-setup` (and set the environment variables
-it indicates), you can provision a machine, and check it's status.  For example,
-here's an example that creates a new node.js machine and tags it as a
-'test' machine, then you can grab the status a few times until it's `running`.
+All of the CLI commands use your RSA private key for signing requests to the API,
+rather than sending your password to the Joyent API.  Once you've set the environment
+variables, you can provision a machine, and check it's status.  For example,
+here's how you can create a new machine and tag it as a 'test' machine, then
+you can grab the status a few times until it's `running`.
 
 Note this assumes you've also got [jsontool](https://github.com/trentm/json)
 installed:
 
-    sdc-createmachine -e nodejs -n demo -t group=test
+    IMAGE=`./bin/sdc-listimages | json 0.id`
+    sdc-createmachine -e $IMAGE -n demo -t group=test
     ...
     sdc-listmachines | json 0.state
       provisioning
@@ -67,7 +71,7 @@ etc.
     var key = fs.readFileSync(home + '/.ssh/id_rsa', 'ascii');
 
     var client = smartdc.createClient({
-      url: 'https://api.no.de',
+      url: 'https://api.example.com',
       key: key,
       keyId: '/<your login here>/keys/id_rsa'
     });
