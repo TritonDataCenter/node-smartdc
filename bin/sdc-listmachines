@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
 // vim: set filetype=javascript :
-// Copyright 2012 Joyent, Inc.  All rights reserved.
+// Copyright 2013 Joyent, Inc.  All rights reserved.
 
-var path = require('path');
 var url = require('url');
 
 var common = require('../lib/cli_common');
@@ -18,7 +17,6 @@ var Options = {
     'debug': Boolean,
     'dataset': String,
     'help': Boolean,
-    'identity': path,
     'keyId': String,
     'limit': Number,
     'memory': Number,
@@ -39,7 +37,6 @@ var ShortOptions = {
     'e': ['--dataset'],
     'h': ['--help'],
     '?': ['--help'],
-    'i': ['--identity'],
     'k': ['--keyId'],
     'l': ['--limit'],
     'm': ['--memory'],

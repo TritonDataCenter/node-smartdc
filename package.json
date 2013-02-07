@@ -6,26 +6,28 @@
   "private": true,
   "homepage": "http://www.joyent.com/software/smartdatacenter",
   "repository": {
-    "type": "git",
-    "url": "git://github.com/joyent/node-smartdc.git"
+      "type": "git",
+      "url": "git://github.com/joyent/node-smartdc.git"
   },
   "main": "lib/index.js",
   "engines": {
-    "node": ">=0.8.14"
+      "node": ">=0.8.14"
   },
   "directories": {
-    "bin": "./bin",
-    "lib": "./lib"
+      "bin": "./bin",
+      "lib": "./lib"
   },
   "dependencies": {
-    "http-signature": "0.9.9",
-    "lru-cache": "2.1.0",
-    "nopt": "2.0.0",
-    "restify": "git://github.com/mcavage/node-restify.git#d688b4a",
-    "bunyan": "0.16.7",
-    "ssh-agent": "0.2.1",
-    "clone": "0.1.5",
-    "read": "1.0.4"
+      "assert-plus": "0.1.2",
+      "http-signature": "0.9.9",
+      "lru-cache": "2.1.0",
+      "nopt": "2.0.0",
+      "restify": "git://github.com/mcavage/node-restify.git#d688b4a",
+      "bunyan": "0.16.7",
+      "ssh-agent": "0.2.1",
+      "clone": "0.1.5",
+      "vasync": "1.3.3",
+      "once": "1.1.1"
   },
   "devDependencies": {}
 }

@@ -21,8 +21,14 @@ the following flags so that you don't have to type them for each request:
 
 * `SDC_CLI_URL` || `--url | -u`: URL of the CloudAPI endpoint.
 * `SDC_CLI_ACCOUNT` || `--account | -a`: Login name (account).
-* `SDC_CLI_KEY_ID` || `--keyId | -k`: Name of the key to use for signing.
-* `SDC_CLI_IDENTITY` || `--identity | -i`: Path to the location of your SSH key. On a Macintosh, this is usually `/Users/username/.ssh/id_rsa`
+* `SDC_CLI_KEY_ID` || `--keyId | -k`: Fingerprint of the key to use for signing.
+
+Faster way to get your key fingerprint is:
+
+    ssh-keygen -l -f ~/.ssh/id_rsa.pub | awk '{print $2}' | tr -d '\n'
+
+where you obviously replace `~/.ssh/id_rsa.pub` with the path to your the
+public key you wan to use for signing requests.
 
 All of the CLI commands use your RSA private key for signing requests to the API,
 rather than sending your password to the Joyent API.  Once you've set the environment
@@ -65,25 +71,25 @@ etc.
     var fs = require('fs');
     var smartdc = require('smartdc');
 
-    // Read in the SSH private key
-    var home = process.env.HOME;
-    var key = fs.readFileSync(home + '/.ssh/id_rsa', 'ascii');
-
     var client = smartdc.createClient({
-      url: 'https://api.example.com',
-      key: key,
-      keyId: '/<your login here>/keys/id_rsa'
+        sign: smartdc.privateKeySigner({
+            key: fs.readFileSync(process.env.HOME + '/.ssh/id_rsa', 'utf8'),
+            keyId: process.env.SDC_CLI_KEY_ID,
+            user: process.env.SDC_CLI_ACCOUNT
+        }),
+        user: process.env.SDC_CLI_ACCOUNT,
+        url: process.env.SDC_CLI_URL
     });
 
     client.listMachines(function(err, machines) {
-      if (err) {
-        console.log('Unable to list machines: ' + e);
-	return;
-      }
+        if (err) {
+            console.log('Unable to list machines: ' + e);
+	          return;
+        }
 
-      machines.forEach(function(m) {
-        console.log('Machine: ' + JSON.stringify(m, null, 2));
-      });
+        machines.forEach(function(m) {
+            console.log('Machine: ' + JSON.stringify(m, null, 2));
+        });
     });
 
 Check out the source documentation for JSDocs on the API.
