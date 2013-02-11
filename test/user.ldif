@@ -1,0 +1,24 @@
+dn: uuid=a820621a-5007-4a2a-9636-edde809106de, ou=users, o=smartdc
+changetype: add
+login: test
+uuid: a820621a-5007-4a2a-9636-edde809106de
+userpassword: verys3cret
+email: test@example.com
+cn: Test
+sn: User
+company: Testing Inc.
+address: liltingly, Inc.
+address: 6165 pyrophyllite Street
+city: benzoylation concoctive
+state: SP
+postalCode: 4967
+country: BAT
+phone: +1 891 657 5818
+objectclass: sdcPerson
+
+dn: fingerprint=66:ca:1c:09:75:99:35:69:be:91:08:25:03:c0:17:c0, uuid=a820621a-5007-4a2a-9636-edde809106de, ou=users, o=smartdc
+changetype: add
+name: id_rsa
+fingerprint: 66:ca:1c:09:75:99:35:69:be:91:08:25:03:c0:17:c0
+openssh: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDNr4q9zMKtylAZGr17fjtUfH2gS+6Gx4m3TJ1H5QwC97JCmtTgke/PBRSEacbXjsYlBjJ9DifNpIbrZrP9hOGhknPDyC3EaRUe/TCUCVGRiHFspurxZAiHvfENCQcvDaVcu9/tO3QyGjDSoYSaQ6NNvl8+yPZ6+mGtXeMnXlCWEvhy/fe3yNVp0isvSIinB2paI+pQqmytJ8omCGShdLqq4/Lvw/zbROe6gEb78+mvwqS+fqYDuPjGc5DXZATqM8rjOSKSPllzNILh9MbR3cHDBfhVi77jL9P8FfQv1U1SZBTbZj78xFcBRnGxrxWE0H7FcXldK5vJvafqWgxZZpgb test@localhost.local
+objectclass: sdcKey
