@@ -12,6 +12,26 @@ var sdc;
 
 var PACKAGE, DATASET, IMAGE, MACHINE;
 
+var TAG_KEY = 'role';
+var TAG_VAL = 'unitTest';
+
+var TAG_TWO_KEY = 'smartdc_type';
+var TAG_TWO_VAL = 'none';
+
+var META_KEY = 'foo';
+var META_VAL = 'bar';
+
+var META_CREDS = {
+    'root': 'secret',
+    'admin': 'secret'
+};
+
+var META_CREDS_TWO = {
+    'root': 'secret',
+    'admin': 'secret',
+    'jill': 'secret'
+};
+
 
 test('setup', function (t) {
     var f = process.env.SSH_KEY || process.env.HOME + '/.ssh/id_rsa';
@@ -169,6 +189,40 @@ test('get dataset', function (t) {
 });
 
 
+// Images (we need to upgrade depending on default SmartOS version):
+test('list images', function (t) {
+    sdc.listDatasets(function (err, images) {
+        t.ifError(err);
+        t.ok(images);
+        t.ok(Array.isArray(images));
+        var smartos = images.filter(function (d) {
+            return (d.name === 'smartos' && d.version === '1.6.3');
+        });
+        t.ok(smartos[0]);
+        IMAGE = smartos[0];
+        if (!IMAGE) {
+            console.error('Exiting because cannot find test image.');
+            process.exit(1);
+        }
+        t.end();
+    }, true);
+});
+
+
+test('get images', function (t) {
+    t.ok(IMAGE);
+    sdc.getDataset(IMAGE.id, function (err, ds) {
+        t.ifError(err);
+        t.ok(ds);
+        t.ok(ds.name);
+        t.ok(ds.version);
+        t.ok(ds.os);
+        t.ok(ds.id);
+        t.end();
+    }, true);
+});
+
+
 // Datacenters:
 test('list datacenters', function (t) {
     sdc.listDatacenters(function (err, datacenters) {
@@ -183,6 +237,43 @@ test('list datacenters', function (t) {
             t.end();
         }, true);
     }, true);
+});
+
+// Machines:
+
+
+function checkMachine(t, m) {
+    t.ok(m, 'checkMachine ok');
+    t.ok(m.id, 'checkMachine id ok');
+    t.ok(m.name, 'checkMachine name ok');
+    t.ok(m.type, 'checkMachine type ok');
+    t.ok(m.state, 'checkMachine state ok');
+    t.ok(m.image, 'checkMachine image ok');
+    t.ok(m.ips, 'checkMachine ips ok');
+    t.ok(m.memory, 'checkMachine memory ok');
+    t.ok(m.metadata, 'checkMachine metadata ok');
+    t.ok(m['package'], 'checkMachine package ok');
+    t.ok(typeof (m.disk) !== 'undefined');
+    t.ok(typeof (m.created) !== 'undefined');
+    t.ok(typeof (m.updated) !== 'undefined');
+}
+
+
+// This test case assumes no previous machines for the current user. Obviously,
+// it is useless if that's not true.
+test('empty machines list/count', function (t) {
+    return sdc.countMachines(function (err, count, done) {
+        t.ifError(err);
+        t.equal(0, count);
+        t.ok(done);
+        return sdc.listMachines(function (err1, machines, done) {
+            t.ifError(err1);
+            t.ok(Array.isArray(machines));
+            t.equal(0, machines.length);
+            t.ok(done);
+            t.end();
+        });
+    });
 });
 
 
@@ -220,16 +311,20 @@ function waitForMachine(t, id, state, callback) {
 }
 
 
-// Machines, there we go!:
+// Machine creation there we go!:
 test('create machine', {
     timeout: 600000
 }, function (t) {
     var opts = {
-        dataset: DATASET.id,
+        image: IMAGE.id,
         name: 'a' + uuid().substr(0, 7)
     };
 
     opts['package'] = PACKAGE.id;
+    opts['metadata.' + META_KEY] = META_VAL;
+    opts['tag.' + TAG_KEY] = TAG_VAL;
+    opts['metadata.credentials'] = META_CREDS;
+
     sdc.createMachine(opts, function (err, machine) {
         if (err) {
             t.ifError(err);
@@ -253,6 +348,7 @@ test('get machine', function (t) {
     sdc.getMachine(MACHINE.id, function (err, machine) {
         t.ifError(err);
         console.log('Machine: %j', machine);
+        checkMachine(t, machine);
         MACHINE = machine;
         t.end();
     }, true);
