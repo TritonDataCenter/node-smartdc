@@ -1,0 +1,78 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2013 Joyent, Inc.  All rights reserved.
+
+var url = require('url');
+
+var common = require('../lib/cli_common');
+
+
+
+///--- Globals
+
+var Options = {
+    'account': String,
+    'address': String,
+    'city': String,
+    'company': String,
+    'country': String,
+    'debug': Boolean,
+    'email': String,
+    'help': Boolean,
+    'keyId': String,
+    'name': String,
+    'phone': String,
+    'postal-code': String,
+    'state': String,
+    'surname': String,
+    'url': url
+};
+
+var ShortOptions = {
+    'a': ['--account'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'k': ['--keyId'],
+    'u': ['--url']
+};
+
+
+///--- Mainline
+
+common.parseArguments(Options, ShortOptions, function (parsed) {
+    var opts = {};
+    if (parsed.address)
+        opts.address = parsed.address;
+
+    if (parsed.city)
+        opts.city = parsed.city;
+
+    if (parsed.company)
+        opts.companyName = parsed.company;
+
+    if (parsed.country)
+        opts.country = parsed.country;
+
+    if (parsed.email)
+        opts.email = parsed.email;
+
+    if (parsed.name)
+        opts.firstName = parsed.name;
+
+    if (parsed.phone)
+        opts.phone = parsed.phone;
+
+    if (parsed['postal-code'])
+        opts.postalCode = parsed['postal-code'];
+
+    if (parsed.state)
+        opts.state = parsed.state;
+
+    if (parsed.surname)
+        opts.lastName = parsed.surname;
+
+    var client = common.newClient(parsed);
+    client.updateAccount(opts, common.callback);
+});
