@@ -19,9 +19,9 @@ SmartDataCenter API; see the
 complete information, but to get started, you can set environment variables for
 the following flags so that you don't have to type them for each request:
 
-* `SDC_CLI_URL` || `--url | -u`: URL of the CloudAPI endpoint.
-* `SDC_CLI_ACCOUNT` || `--account | -a`: Login name (account).
-* `SDC_CLI_KEY_ID` || `--keyId | -k`: Fingerprint of the key to use for signing.
+* `SDC_URL` || `--url | -u`: URL of the CloudAPI endpoint.
+* `SDC_ACCOUNT` || `--account | -a`: Login name (account).
+* `SDC_KEY_ID` || `--keyId | -k`: Fingerprint of the key to use for signing.
 
 Faster way to get your key fingerprint is:
 
@@ -74,11 +74,11 @@ etc.
     var client = smartdc.createClient({
         sign: smartdc.privateKeySigner({
             key: fs.readFileSync(process.env.HOME + '/.ssh/id_rsa', 'utf8'),
-            keyId: process.env.SDC_CLI_KEY_ID,
-            user: process.env.SDC_CLI_ACCOUNT
+            keyId: process.env.SDC_KEY_ID,
+            user: process.env.SDC_ACCOUNT
         }),
-        user: process.env.SDC_CLI_ACCOUNT,
-        url: process.env.SDC_CLI_URL
+        user: process.env.SDC_ACCOUNT,
+        url: process.env.SDC_URL
     });
 
     client.listMachines(function(err, machines) {
@@ -105,7 +105,7 @@ See <https://github.com/joyent/node-smartdc/issues>.
 ## Running the test suite
 
 Note that *this will execute tests against the Smart DC setup set into
-ENV variable SDC_CLI_URL*. Please, make sure it's OK to try to create new
+ENV variable SDC_URL*. Please, make sure it's OK to try to create new
 machines into such Smart DC setup before running this test suite.
 
 Running the test suite is as simple as:
@@ -116,8 +116,8 @@ You may want to add a test user to your Smart DC setup. A sample user, with
 sample ssh keys can be found at `test/user.ldif` and `test/.ssh`. Once you've
 added this user, you can run your tests using:
 
-    SDC_CLI_URL=http://127.0.0.1:8080 \
-    SDC_CLI_ACCOUNT=test \
-    SDC_CLI_KEY_ID=id_rsa \
+    SDC_URL=http://127.0.0.1:8080 \
+    SDC_ACCOUNT=test \
+    SDC_KEY_ID=id_rsa \
     HOME="$(pwd)/test" \
     make test
