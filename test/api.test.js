@@ -12,11 +12,14 @@ var sdc;
 
 var PACKAGE, DATASET, IMAGE, MACHINE;
 
-var TAG_KEY = 'role';
+var TAG_KEY = 'smartdc_role';
 var TAG_VAL = 'unitTest';
 
 var TAG_TWO_KEY = 'smartdc_type';
 var TAG_TWO_VAL = 'none';
+
+var TAG_THREE_KEY = 'smartdc_whatever';
+var TAG_THREE_VAL = 'whateverElse';
 
 var META_KEY = 'foo';
 var META_VAL = 'bar';
@@ -38,8 +41,8 @@ test('setup', function (t) {
     var cmd = 'ssh-keygen -l -f ' +
                 f + ' ' +
                 '| awk \'{print $2}\'';
-    var url = process.env.SDC_CLI_URL || 'http://localhost:8080';
-    var user = process.env.SDC_CLI_ACCOUNT || 'test';
+    var url = process.env.SDC_URL || 'http://localhost:8080';
+    var user = process.env.SDC_ACCOUNT || 'test';
 
     fs.readFile(f, 'utf8', function (err, key) {
         t.ifError(err);
@@ -266,50 +269,63 @@ test('empty machines list/count', function (t) {
         t.ifError(err);
         t.equal(0, count);
         t.ok(done);
-        return sdc.listMachines(function (err1, machines, done) {
+        return sdc.listMachines(function (err1, machines, done1) {
             t.ifError(err1);
             t.ok(Array.isArray(machines));
             t.equal(0, machines.length);
-            t.ok(done);
+            t.ok(done1);
             t.end();
         });
     });
 });
 
 
-function checkMachineStatus(t, id, state, callback) {
-    return sdc.getMachine(id, function (err, machine) {
+function checkMachineAction(id, action, time, cb) {
+    return sdc.getMachineAudit(id, function (err, actions) {
         if (err) {
-            if (err.statusCode && err.statusCode === 410 && state === 'deleted') {
-                return callback(null, true);
-            }
-            return callback(err);
+            return cb(err);
         }
-        if ((machine.state === 'deleted' && state !== 'deleted') ||
-            machine.state === 'failed') {
-            return callback(new Error('Provisioning Job failed'));
+
+        var acts = actions.filter(function (a) {
+            return (a.action === action && (new Date(a.time) > time));
+        });
+
+        if (acts.length === 0) {
+            return cb(null, false);
         }
-        console.log('Machine \'%s\' state is: %s', machine.id, machine.state);
-        return callback(null, (machine ? machine.state === state : false));
+
+        var act = acts[0];
+        if (act.success !== 'yes') {
+            return cb(action + ' failed');
+        }
+        return cb(null, true);
+
     }, true);
 }
 
 
-function waitForMachine(t, id, state, callback) {
-    console.log('Waiting for machine \'%s\' state \'%s\'', id, state);
-    return checkMachineStatus(t, id, state, function (err, ready) {
+function waitForAction(id, action, time, cb) {
+    if (process.env.VERBOSE) {
+        console.log('Waiting for machine \'%s\' %s to complete',
+                id, action);
+    }
+
+    return checkMachineAction(id, action, time, function (err, ready) {
         if (err) {
-            return callback(err);
+            return cb(err);
         }
+
         if (!ready) {
             return setTimeout(function () {
-                waitForMachine(t, id, state, callback);
+                waitForAction(id, action, time, cb);
             }, (process.env.POLL_INTERVAL || 2500));
         }
-        return callback(null);
+        return cb(null);
     });
 }
 
+
+var NOW = new Date();
 
 // Machine creation there we go!:
 test('create machine', {
@@ -331,7 +347,7 @@ test('create machine', {
             console.error('Exiting because machine creation failed.');
             process.exit(1);
         }
-        waitForMachine(t, machine.id, 'running', function (err1) {
+        waitForAction(machine.id, 'provision', NOW, function (err1) {
             if (err1) {
                 t.ifError(err1);
                 console.error('Exiting because machine provisioning failed');
@@ -347,21 +363,31 @@ test('create machine', {
 test('get machine', function (t) {
     sdc.getMachine(MACHINE.id, function (err, machine) {
         t.ifError(err);
-        console.log('Machine: %j', machine);
         checkMachine(t, machine);
+        t.ok(!machine.metadata.credentials);
         MACHINE = machine;
+        t.test('get machine with credentials', function (t1) {
+            sdc.getMachine(MACHINE.id, true, function (err1, machine1) {
+                t1.ifError(err1);
+                t1.ok(machine1.metadata.credentials);
+                t1.end();
+            }, true);
+        });
         t.end();
     }, true);
 });
 
 
-test('reboot machine', {
-    timeout: 180000
-}, function (t) {
-    sdc.rebootMachine(MACHINE.id, function (err) {
+test('machines list/count', function (t) {
+    return sdc.countMachines(function (err, count, done) {
         t.ifError(err);
-        waitForMachine(t, MACHINE.id, 'running', function (err1) {
+        t.equal(1, count);
+        t.ok(done);
+        return sdc.listMachines(function (err1, machines, done1) {
             t.ifError(err1);
+            t.ok(Array.isArray(machines));
+            t.equal(1, machines.length);
+            t.ok(done1);
             t.end();
         });
     });
@@ -373,7 +399,7 @@ test('stop machine', {
 }, function (t) {
     sdc.stopMachine(MACHINE.id, function (err) {
         t.ifError(err);
-        waitForMachine(t, MACHINE.id, 'stopped', function (err1) {
+        waitForAction(MACHINE.id, 'stop', NOW, function (err1) {
             t.ifError(err1);
             t.end();
         });
@@ -386,7 +412,116 @@ test('start machine', {
 }, function (t) {
     sdc.startMachine(MACHINE.id, function (err) {
         t.ifError(err);
-        waitForMachine(t, MACHINE.id, 'running', function (err1) {
+        waitForAction(MACHINE.id, 'start', NOW, function (err1) {
+            t.ifError(err1);
+            t.end();
+        });
+    });
+});
+
+
+test('get machine tag', function (t) {
+    sdc.getMachineTag(MACHINE.id, TAG_KEY, function (err, val) {
+        t.ifError(err);
+        t.equal(TAG_VAL, val);
+        t.end();
+    });
+});
+
+
+test('add machine tags', function (t) {
+    var ID = MACHINE.id;
+    var tags = {};
+    tags[TAG_TWO_KEY] = TAG_TWO_VAL;
+    tags[TAG_THREE_KEY] = TAG_THREE_VAL;
+    sdc.addMachineTags(ID, tags, function (err) {
+        t.ifError(err);
+        waitForAction(ID, 'set_tags', NOW, function (er1) {
+            t.ifError(er1);
+            t.end();
+        });
+    });
+});
+
+
+test('list machine tags', function (t) {
+    sdc.listMachineTags(MACHINE.id, function (err, tgs) {
+        t.ifError(err);
+        var tagNames = Object.keys(tgs);
+        [TAG_KEY, TAG_TWO_KEY, TAG_THREE_KEY].forEach(function (name) {
+            t.ok(tagNames.indexOf(name) !== -1);
+        });
+        t.end();
+    });
+});
+
+
+test('delete machine tag', function (t) {
+    sdc.deleteMachineTag(MACHINE.id, TAG_KEY, function (err) {
+        t.ifError(err);
+        waitForAction(MACHINE.id, 'remove_tags', NOW, function (er1) {
+            t.ifError(er1);
+            t.end();
+        });
+    });
+});
+
+
+test('replace machine tags', function (t) {
+    var tags = {};
+    tags[TAG_KEY] = TAG_VAL;
+    sdc.replaceMachineTags(MACHINE.id, tags, function (err) {
+        t.ifError(err);
+        waitForAction(MACHINE.id, 'replace_tags', (new Date()), function (er1) {
+            t.ifError(er1);
+            t.end();
+        });
+    });
+});
+
+
+
+test('delete machine tags', function (t) {
+    sdc.deleteMachineTags(MACHINE.id, function (err) {
+        t.ifError(err);
+        waitForAction(MACHINE.id, 'remove_tags', (new Date()), function (er1) {
+            t.ifError(er1);
+            t.end();
+        });
+    });
+});
+
+
+
+// Note: Big chance for this test to be waiting for too long for a
+// simple rename operation. Or maybe not.
+test('rename machine', {
+    timeout: 180000
+}, function (t) {
+    var name = 'b' + uuid().substr(0, 7);
+    sdc.renameMachine(MACHINE.id, {
+        name: name
+    }, function (err) {
+        t.ifError(err);
+        waitForAction(MACHINE.id, 'rename', NOW, function (err1) {
+            t.ifError(err1);
+            sdc.getMachine(MACHINE.id, function (er3, machine) {
+                t.ifError(er3);
+                t.equal(machine.name, name);
+                MACHINE = machine;
+                t.end();
+            }, true);
+        });
+    });
+});
+
+
+test('reboot machine', {
+    timeout: 180000
+}, function (t) {
+    sdc.rebootMachine(MACHINE.id, function (err) {
+        t.ifError(err);
+        waitForAction(MACHINE.id, 'reboot', NOW, function (err1) {
             t.ifError(err1);
             t.end();
         });
@@ -399,7 +534,7 @@ test('delete machine', {
 }, function (t) {
     sdc.deleteMachine(MACHINE.id, function (err) {
         t.ifError(err);
-        waitForMachine(t, MACHINE.id, 'deleted', function (err1) {
+        waitForAction(MACHINE.id, 'destroy', NOW, function (err1) {
             t.ifError(err1);
             t.end();
         });
@@ -407,7 +542,26 @@ test('delete machine', {
 });
 
 
+test('machine audit', function (t) {
+    sdc.getMachineAudit(MACHINE.id, function (err, actions) {
+        t.ifError(err);
+        t.ok(Array.isArray(actions));
+        t.ok(actions.length);
+        var f = actions.reverse()[0];
+        t.ok(f.success);
+        t.ok(f.time);
+        t.ok(f.action);
+        t.ok(f.caller);
+        t.ok(f.caller.type);
+        t.equal(f.caller.type, 'signature');
+        t.ok(f.caller.ip);
+        t.ok(f.caller.keyId);
+        t.end();
+    }, true);
+});
+
+
 test('teardown', function (t) {
-    // body...
+    sdc.client.close();
     t.end();
 });

@@ -120,4 +120,5 @@ added this user, you can run your tests using:
     SDC_ACCOUNT=test \
     SDC_KEY_ID=id_rsa \
     HOME="$(pwd)/test" \
+    VERBOSE=1 \
     make test
