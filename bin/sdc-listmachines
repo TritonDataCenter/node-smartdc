@@ -94,6 +94,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
                 console.error('Partial listing of machines. Try increasing ' +
                       'listing limit with sdc-listmachines --limit');
             }
+            process.exit(0);
         }
     });
 
