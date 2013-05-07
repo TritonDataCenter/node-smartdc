@@ -62,9 +62,7 @@ test('setup', function (t) {
                 url: url,
                 account: user,
                 noCache: true,
-                tlsOptions: {
-                    rejectUnauthorized: false
-                }
+                rejectUnauthorized: false
             });
 
             t.end();
