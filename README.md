@@ -2,6 +2,9 @@ node-smartdc is a node.js client library for interacting with the Joyent
 SmartDataCenter API.  This package additionally contains a CLI you can use
 to write scripts encapsulating most common tasks.
 
+Note this is version 7.0.0. It's not 100% backward compatible with
+SmartDC 6.5. Please, use 6.5.x version with 6.5 setups for 100% compatibility.
+
 ## Installation
 
 You probably want to install this package globally, so the CLI commands are
