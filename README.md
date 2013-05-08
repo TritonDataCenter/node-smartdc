@@ -12,6 +12,15 @@ always in your path.
 
     npm install smartdc -g
 
+## Upgrading from 6.5 to 7.0
+
+* Dropped `CLI` from enviornment variables
+    * `SDC_CLI_ACCOUNT` ==> `SDC_ACCOUNT`
+    * `SDC_CLI_URL` ==> `SDC_URL`
+    * `SDC_CLI_KEY_ID ==> `SDC_KEY_ID`
+* Removed `SDC_CLI_IDENTITY` see below for determining your fingerprint.
+* Removed `sdc-setup`
+
 ## Usage
 
 ### CLI
