@@ -22,6 +22,7 @@ var Options = {
     'keyId': String,
     'metadata': [String, Array],
     'name': String,
+    'networks': [String, Array],
     'package': String,
     'script': path,
     'tag': [String, Array],
@@ -40,7 +41,8 @@ var ShortOptions = {
     'p': ['--package'],
     's': ['--script'],
     't': ['--tag'],
-    'u': ['--url']
+    'u': ['--url'],
+    'w': ['--networks']
 };
 
 
@@ -76,6 +78,10 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     if (parsed.script) {
         var us = fs.readFileSync(parsed.script, 'utf-8');
         opts['metadata.user-script'] = us.toString();
+    }
+
+    if (parsed.networks) {
+        opts.networks = parsed.networks;
     }
 
     var client = common.newClient(parsed);
