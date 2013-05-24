@@ -1,5 +1,9 @@
 # node-smartdc Changelog
 
+## smartdc 7.0.0-rc3 (not yet released)
+
+- Added `sdc-listnetworks` and `sdc-getnetwork`.
+
 ## smartdc 7.0.0-rc2
 
 - Added "--networks|-w" argument to sdc-createmachine
