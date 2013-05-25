@@ -21,13 +21,17 @@ always in your path.
 * Removed `SDC_CLI_IDENTITY` see below for determining your fingerprint.
 * Removed `sdc-setup`
 
+Note that in 6.5, `SDC_CLI_KEY_ID` was the _name_ of the SSH key as specified in
+your Joyent Cloud account. In 7.0, `SDC_KEY_ID` is the _fingerprint_ of the SSH key.
+
+
 ## Usage
 
 ### CLI
 
 There are CLI commands corresponding to almost every action available in the
 SmartDataCenter API; see the
-[Joyent CloudAPI documentation](http://apidocs.joyent.com/sdcapidoc/cloudapi/) for
+[Joyent CloudAPI documentation](http://apidocs.joyent.com/cloudapi/) for
 complete information, but to get started, you can set environment variables for
 the following flags so that you don't have to type them for each request:
 
