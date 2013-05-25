@@ -69,7 +69,7 @@ etc.
     var client = smartdc.createClient({
       url: 'https://api.no.de',
       key: key,
-      keyId: '/<your login here>/keys/id_rsa'
+      keyId: '/<account name>/keys/<key id>'
     });
 
     client.listMachines(function(err, machines) {
