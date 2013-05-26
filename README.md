@@ -17,7 +17,7 @@ always in your path.
 * Dropped `CLI` from enviornment variables
     * `SDC_CLI_ACCOUNT` ==> `SDC_ACCOUNT`
     * `SDC_CLI_URL` ==> `SDC_URL`
-    * `SDC_CLI_KEY_ID ==> `SDC_KEY_ID`
+    * `SDC_CLI_KEY_ID` ==> `SDC_KEY_ID`
 * Removed `SDC_CLI_IDENTITY` see below for determining your fingerprint.
 * Removed `sdc-setup`
 
