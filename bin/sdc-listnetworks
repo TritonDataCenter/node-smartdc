@@ -28,11 +28,12 @@ var ShortOptions = {
     'u': ['--url']
 };
 
-
+var usageStr = common.buildUsageString(Options);
+usageStr += common.buildDetailedUsageString(Options);
 
 ///--- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
     var client = common.newClient(parsed);
     client.listNetworks(common.callback);
-});
+},usageStr);

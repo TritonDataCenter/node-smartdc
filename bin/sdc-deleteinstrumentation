@@ -29,7 +29,7 @@ var ShortOptions = {
 };
 
 var usageStr = common.buildUsageString(Options) + ' instrumentation_id';
-
+usageStr += common.buildDetailedUsageString(Options);
 
 
 ///--- Mainline

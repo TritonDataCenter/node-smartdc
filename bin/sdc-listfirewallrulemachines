@@ -28,7 +28,8 @@ var ShortOptions = {
     'u': ['--url']
 };
 
-var usageStr = common.buildUsageString(Options) + ' fwrule(id)';
+var usageStr = common.buildUsageString(Options) + ' fwrule_id';
+usageStr += common.buildDetailedUsageString(Options);
 
 ///--- Mainline
 

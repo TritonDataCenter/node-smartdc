@@ -34,6 +34,8 @@ var ShortOptions = {
 };
 
 
+var usageStr = common.buildUsageString(Options);
+usageStr += common.buildDetailedUsageString(Options);
 
 ///--- Mainline
 
@@ -49,4 +51,4 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
 
     var client = common.newClient(parsed);
     client.createFwRule(opts, common.callback);
-});
+},usageStr);

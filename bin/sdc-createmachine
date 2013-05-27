@@ -45,6 +45,8 @@ var ShortOptions = {
     'w': ['--networks']
 };
 
+var usageStr = common.buildUsageString(Options);
+usageStr += common.buildDetailedUsageString(Options);
 
 ///--- Mainline
 
@@ -86,4 +88,4 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
 
     var client = common.newClient(parsed);
     client.createMachine(opts, common.callback);
-});
+},usageStr);
