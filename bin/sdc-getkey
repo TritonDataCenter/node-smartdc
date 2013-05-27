@@ -29,7 +29,7 @@ var ShortOptions = {
 };
 
 var usageStr = common.buildUsageString(Options) + ' key_name';
-
+usageStr += common.buildDetailedUsageString(Options);
 
 
 ///--- Mainline

@@ -30,7 +30,7 @@ var ShortOptions = {
 
 
 var usageStr = common.buildUsageString(Options) + ' fwrule_id';
-
+usageStr += common.buildDetailedUsageString(Options);
 
 ///--- Mainline
 
