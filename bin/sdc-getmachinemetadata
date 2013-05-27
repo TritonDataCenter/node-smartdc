@@ -32,8 +32,8 @@ var ShortOptions = {
     'u': ['--url']
 };
 
-var usageStr = common.buildUsageString(Options) + ' machine';
-
+var usageStr = common.buildUsageString(Options) + ' machine_id';
+usageStr += common.buildDetailedUsageString(Options);
 
 
 ///--- Mainline

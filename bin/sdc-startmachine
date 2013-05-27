@@ -29,8 +29,8 @@ var ShortOptions = {
 };
 
 var usageStr = common.buildUsageString(Options);
-usageStr += ' machine';
-
+usageStr += ' machine_id';
+usageStr += common.buildDetailedUsageString(Options);
 
 ///--- Mainline
 

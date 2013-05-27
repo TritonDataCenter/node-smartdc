@@ -33,7 +33,7 @@ var ShortOptions = {
 
 var usageStr = common.buildUsageString(Options);
 usageStr += ' public_ssh_key';
-
+usageStr += common.buildDetailedUsageString(Options);
 
 ///--- Internal Functions
 
