@@ -28,7 +28,7 @@ var ShortOptions = {
     'u': ['--url']
 };
 
-var usageStr = common.buildUsageString(Options) + ' image';
+var usageStr = common.buildUsageString(Options) + ' network';
 
 
 
