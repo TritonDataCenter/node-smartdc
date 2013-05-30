@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
 // vim: set filetype=javascript :
-// Copyright 2012 Joyent, Inc.  All rights reserved.
+// Copyright 2013 Joyent, Inc.  All rights reserved.
 
-var fs = require('fs');
-var path = require('path');
 var url = require('url');
 
 var common = require('../lib/cli_common');
@@ -17,9 +15,8 @@ var Options = {
     'account': String,
     'debug': Boolean,
     'help': Boolean,
-    'identity': path,
     'keyId': String,
-    'machine': String,
+    'metadata': String,
     'url': url
 };
 
@@ -28,28 +25,27 @@ var ShortOptions = {
     'd': ['--debug'],
     'h': ['--help'],
     '?': ['--help'],
-    'i': ['--identity'],
     'k': ['--keyId'],
-    'm': ['--machine'],
+    'm': ['--metadata'],
     'u': ['--url']
 };
 
 var usageStr = common.buildUsageString(Options);
-usageStr += ' metadata_key';
-
+usageStr += ' machine_id';
+usageStr += common.buildDetailedUsageString(Options);
 
 ///--- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
 
     if (parsed.argv.remain.length < 1)
-        common.usage(usageStr, 1, 'metadata key required');
+        common.usage(usageStr, 1, 'machine required');
 
-    if (!parsed.machine)
-        common.usage(usageStr, 1, '--machine required');
+    if (!parsed.metadata)
+        common.usage(usageStr, 1, '--metadata required');
 
     var client = common.newClient(parsed);
-    parsed.argv.remain.forEach(function (key) {
-        client.deleteMachineMetadata(parsed.machine, key, common.callback);
+    parsed.argv.remain.forEach(function (machine) {
+        client.deleteMachineMetadata(machine, parsed.metadata, common.callback);
     });
 }, usageStr);

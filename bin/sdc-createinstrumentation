@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
 // vim: set filetype=javascript :
-// Copyright 2012 Joyent, Inc.  All rights reserved.
+// Copyright 2013 Joyent, Inc.  All rights reserved.
 
-var fs = require('fs');
-var path = require('path');
 var url = require('url');
 
 var common = require('../lib/cli_common');
@@ -19,7 +17,6 @@ var Options = {
     'debug': Boolean,
     'decomposition': String,
     'help': Boolean,
-    'identity': path,
     'keyId': String,
     'module': String,
     'predicate': String,
@@ -33,7 +30,6 @@ var ShortOptions = {
     'd': ['--debug'],
     'h': ['--help'],
     '?': ['--help'],
-    'i': ['--identity'],
     'k': ['--keyId'],
     'm': ['--module'],
     'n': ['--decomposition'],
@@ -42,6 +38,8 @@ var ShortOptions = {
     'u': ['--url']
 };
 
+var usageStr = common.buildUsageString(Options);
+usageStr += common.buildDetailedUsageString(Options);
 
 ///--- Mainline
 
@@ -64,4 +62,4 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
 
     var client = common.newClient(parsed);
     client.createInstrumentation(opts, common.callback);
-});
+},usageStr);

@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
 // vim: set filetype=javascript :
-// Copyright 2012 Joyent, Inc.  All rights reserved.
+// Copyright 2013 Joyent, Inc.  All rights reserved.
 
-var path = require('path');
 var url = require('url');
 
 var common = require('../lib/cli_common');
@@ -16,9 +15,8 @@ var Options = {
     'account': String,
     'debug': Boolean,
     'help': Boolean,
-    'identity': path,
     'keyId': String,
-    'machine': String,
+    'tag': String,
     'url': url
 };
 
@@ -27,31 +25,29 @@ var ShortOptions = {
     'd': ['--debug'],
     'h': ['--help'],
     '?': ['--help'],
-    'i': ['--identity'],
     'k': ['--keyId'],
-    'm': ['--machine'],
+    't': ['--tag'],
     'u': ['--url']
 };
 
-var usageStr = common.buildUsageString(Options) + ' tag (use * to delete all)';
-
+var usageStr = common.buildUsageString(Options) + ' machine_id';
+usageStr += common.buildDetailedUsageString(Options);
 
 
 ///--- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
-    if (!parsed.machine)
-        common.usage(usageStr, 1, 'machine required');
+    if (!parsed.tag)
+        common.usage(usageStr, 1, 'tag required');
     if (parsed.argv.remain.length < 1)
-        common.usage(usageStr, 1, 'snapshot required');
+        common.usage(usageStr, 1, 'machine required');
 
-    var client = common.newClient(parsed);
+    var client = common.newClient(parsed),
+        machine = parsed.argv.remain[0];
 
-    if (parsed.argv.remain[0] === '*') {
-        return client.deleteMachineTags(parsed.machine, common.callback);
+    if (parsed.tag === '*') {
+        return client.deleteMachineTags(machine, common.callback);
     } else {
-        return parsed.argv.remain.forEach(function (tag) {
-            client.deleteMachineTag(parsed.machine, tag, common.callback);
-        });
+        return client.deleteMachineTag(machine, parsed.tag, common.callback);
     }
 }, usageStr);

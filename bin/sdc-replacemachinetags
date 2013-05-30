@@ -1,0 +1,62 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2013 Joyent, Inc.  All rights reserved.
+
+var url = require('url');
+
+var common = require('../lib/cli_common');
+
+
+
+///--- Globals
+
+var Options = {
+    'account': String,
+    'debug': Boolean,
+    'help': Boolean,
+    'keyId': String,
+    'tag': [String, Array],
+    'url': url
+};
+
+var ShortOptions = {
+    'a': ['--account'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'k': ['--keyId'],
+    't': ['--tag'],
+    'u': ['--url']
+};
+
+var usageStr = common.buildUsageString(Options);
+usageStr += ' machine_id';
+usageStr += common.buildDetailedUsageString(Options);
+
+///--- Mainline
+
+common.parseArguments(Options, ShortOptions, function (parsed) {
+
+    if (parsed.argv.remain.length < 1)
+        common.usage(usageStr, 1, 'machine required');
+
+    if (!parsed.tag)
+        common.usage(usageStr, 1, '--tag required');
+
+    var tags = {};
+    for (var i = 0; i < parsed.tag.length; i++) {
+        var tmp = parsed.tag[i].split('=');
+        if (!tmp || tmp.length !== 2) {
+            console.error(parsed.tag[i] + ' is an invalid tag; try foo=bar');
+            process.exit(1);
+        }
+        tags[tmp[0]] = tmp[1];
+    }
+
+    var client = common.newClient(parsed);
+    parsed.argv.remain.forEach(function (machine) {
+        client.replaceMachineTags(machine, tags, common.callback);
+    });
+}, usageStr);
+

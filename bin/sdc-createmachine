@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
 // vim: set filetype=javascript :
-// Copyright 2012 Joyent, Inc.  All rights reserved.
+// Copyright 2013 Joyent, Inc.  All rights reserved.
 
 var fs = require('fs');
 var https = require('https');
@@ -19,10 +19,10 @@ var Options = {
     'debug': Boolean,
     'dataset': String,
     'help': Boolean,
-    'identity': path,
     'keyId': String,
     'metadata': [String, Array],
     'name': String,
+    'networks': [String, Array],
     'package': String,
     'script': path,
     'tag': [String, Array],
@@ -35,16 +35,18 @@ var ShortOptions = {
     'e': ['--dataset'],
     'h': ['--help'],
     '?': ['--help'],
-    'i': ['--identity'],
     'k': ['--keyId'],
     'm': ['--metadata'],
     'n': ['--name'],
     'p': ['--package'],
     's': ['--script'],
     't': ['--tag'],
-    'u': ['--url']
+    'u': ['--url'],
+    'w': ['--networks']
 };
 
+var usageStr = common.buildUsageString(Options);
+usageStr += common.buildDetailedUsageString(Options);
 
 ///--- Mainline
 
@@ -80,6 +82,10 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
         opts['metadata.user-script'] = us.toString();
     }
 
+    if (parsed.networks) {
+        opts.networks = parsed.networks;
+    }
+
     var client = common.newClient(parsed);
     client.createMachine(opts, common.callback);
-});
+},usageStr);
