@@ -1,6 +1,14 @@
 # node-smartdc Changelog
 
-## smartdc 7.0.0-rc3 (not yet released)
+## smartdc 7.0.1 (not yet released)
+
+- Added `sdc-enablemachinefirewall` and `sdc-disablemachinefirewall`
+
+## smartdc 7.0.0
+
+- Improved docs and usage strings
+
+## smartdc 7.0.0-rc3
 
 - Added `sdc-listnetworks` and `sdc-getnetwork`.
 
