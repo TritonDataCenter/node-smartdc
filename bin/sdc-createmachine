@@ -18,6 +18,7 @@ var Options = {
     'account': String,
     'debug': Boolean,
     'dataset': String,
+    'enable-firewall': Boolean,
     'help': Boolean,
     'keyId': String,
     'metadata': [String, Array],
@@ -33,6 +34,7 @@ var ShortOptions = {
     'a': ['--account'],
     'd': ['--debug'],
     'e': ['--dataset'],
+    'f': ['--enable-firewall'],
     'h': ['--help'],
     '?': ['--help'],
     'k': ['--keyId'],
@@ -60,6 +62,9 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     }
     if (parsed['package']) {
         opts['package'] = parsed['package'];
+    }
+    if (typeof (parsed['enable-firewall']) !== 'undefined') {
+        opts.firewall_enabled = parsed['enable-firewall'];
     }
     if (parsed.tag) {
         var i;

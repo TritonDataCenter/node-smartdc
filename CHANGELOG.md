@@ -3,6 +3,7 @@
 ## smartdc 7.0.1 (not yet released)
 
 - Added `sdc-enablemachinefirewall` and `sdc-disablemachinefirewall`
+- Added `-f | --enable-firewall` option to `sdc-createmachine`
 
 ## smartdc 7.0.0
 
