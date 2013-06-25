@@ -9,7 +9,7 @@ var common = require('../lib/cli_common');
 
 
 
-///--- Globals
+// --- Globals
 
 var Options = {
     'account': String,
@@ -31,9 +31,9 @@ var ShortOptions = {
 var usageStr = common.buildUsageString(Options);
 usageStr += common.buildDetailedUsageString(Options);
 
-///--- Mainline
+// --- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
     var client = common.newClient(parsed);
     client.listPackages(common.callback);
-},usageStr);
+}, usageStr);

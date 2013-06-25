@@ -9,7 +9,7 @@ var common = require('../lib/cli_common');
 
 
 
-///--- Globals
+// --- Globals
 
 var Options = {
     'account': String,
@@ -35,11 +35,12 @@ var ShortOptions = {
 var usageStr = common.buildUsageString(Options) + ' fwrule_id';
 usageStr += common.buildDetailedUsageString(Options);
 
-///--- Mainline
+// --- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
-    if (parsed.argv.remain.length < 1)
+    if (parsed.argv.remain.length < 1) {
         common.usage(usageStr, 1, 'fwrule_id required');
+    }
 
     var opts = {};
     if (parsed.rule) {

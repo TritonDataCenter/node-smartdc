@@ -9,7 +9,7 @@ var common = require('../lib/cli_common');
 
 
 
-///--- Globals
+// --- Globals
 
 var Options = {
     'account': String,
@@ -41,25 +41,30 @@ var ShortOptions = {
 var usageStr = common.buildUsageString(Options);
 usageStr += common.buildDetailedUsageString(Options);
 
-///--- Mainline
+// --- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
     var opts = {};
-    if (parsed.module)
+    if (parsed.module) {
         opts.module = parsed.module;
+    }
 
-    if (parsed.stat)
+    if (parsed.stat) {
         opts.stat = parsed.stat;
+    }
 
-    if (parsed.decomposition)
+    if (parsed.decomposition) {
         opts.decomposition = parsed.decomposition;
+    }
 
-    if (parsed.predicate)
+    if (parsed.predicate) {
         opts.predicate = parsed.predicate;
+    }
 
-    if (parsed.clone != undefined)
+    if (typeof (parsed.clone) !== 'undefined') {
         opts.clone = parsed.clone;
+    }
 
     var client = common.newClient(parsed);
     client.createInstrumentation(opts, common.callback);
-},usageStr);
+}, usageStr);

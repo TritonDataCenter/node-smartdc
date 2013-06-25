@@ -12,7 +12,7 @@ var common = require('../lib/cli_common');
 
 
 
-///--- Globals
+// --- Globals
 
 var Options = {
     'account': String,
@@ -48,15 +48,22 @@ var ShortOptions = {
 var usageStr = common.buildUsageString(Options);
 usageStr += common.buildDetailedUsageString(Options);
 
-///--- Mainline
+// --- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
     var opts = {};
-    if (parsed.dataset) opts.dataset = parsed.dataset;
-    if (parsed.name) opts.name = parsed.name;
-    if (parsed['package']) opts['package'] = parsed['package'];
+    if (parsed.dataset) {
+        opts.dataset = parsed.dataset;
+    }
+    if (parsed.name)  {
+        opts.name = parsed.name;
+    }
+    if (parsed['package']) {
+        opts['package'] = parsed['package'];
+    }
     if (parsed.tag) {
-        for (var i = 0; i < parsed.tag.length; i++) {
+        var i;
+        for (i = 0; i < parsed.tag.length; i++) {
             var tmp = parsed.tag[i].split('=');
             if (!tmp || tmp.length !== 2) {
                 console.error(parsed.tag[i] +
@@ -67,7 +74,8 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
         }
     }
     if (parsed.metadata) {
-        for (var j = 0; j < parsed.metadata.length; j++) {
+        var j;
+        for (j = 0; j < parsed.metadata.length; j++) {
             var tmp2 = parsed.metadata[j].split('=');
             if (!tmp2 || tmp2.length !== 2) {
                 console.error(parsed.metadata[j] +
@@ -88,4 +96,4 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
 
     var client = common.newClient(parsed);
     client.createMachine(opts, common.callback);
-},usageStr);
+}, usageStr);

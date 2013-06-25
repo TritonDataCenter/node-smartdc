@@ -9,7 +9,7 @@ var common = require('../lib/cli_common');
 
 
 
-///--- Globals
+// --- Globals
 
 var Options = {
     'account': String,
@@ -35,15 +35,17 @@ usageStr += ' machine_id';
 usageStr += common.buildDetailedUsageString(Options);
 
 
-///--- Mainline
+// --- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
-    if (parsed.argv.remain.length < 1)
+    if (parsed.argv.remain.length < 1) {
         common.usage(usageStr, 1, 'machine required');
+    }
 
     var opts = {};
-    if (parsed['package'])
+    if (parsed['package']) {
         opts['package'] = parsed['package'];
+    }
 
 
     var client = common.newClient(parsed);

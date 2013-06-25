@@ -9,7 +9,7 @@ var common = require('../lib/cli_common');
 
 
 
-///--- Globals
+// --- Globals
 
 var Options = {
     'account': String,
@@ -32,11 +32,12 @@ var usageStr = common.buildUsageString(Options) + ' dataset_id';
 usageStr += common.buildDetailedUsageString(Options);
 
 
-///--- Mainline
+// --- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
-    if (parsed.argv.remain.length < 1)
+    if (parsed.argv.remain.length < 1) {
         common.usage(usageStr, 1, 'dataset required');
+    }
 
     var client = common.newClient(parsed);
     parsed.argv.remain.forEach(function (dataset) {

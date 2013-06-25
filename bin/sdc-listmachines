@@ -9,7 +9,7 @@ var common = require('../lib/cli_common');
 
 
 
-///--- Globals
+// --- Globals
 
 var Options = {
     'account': String,
@@ -51,24 +51,43 @@ var ShortOptions = {
 var usageStr = common.buildUsageString(Options);
 usageStr += common.buildDetailedUsageString(Options);
 
-///--- Mainline
+// --- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
 
     var opts = {};
     var tags = {};
-    if (parsed.credentials) opts.credentials = parsed.credentials;
-    if (parsed.dataset) opts.dataset = parsed.dataset;
-    if (parsed.limit != undefined) opts.limit = parsed.limit;
-    if (parsed.memory != undefined) opts.memory = parsed.memory;
-    if (parsed.name) opts.name = parsed.name;
-    if (parsed.offset != undefined) opts.offset = parsed.offset;
-    if (parsed.state) opts.state = parsed.state;
-    if (parsed.tombstone != undefined) opts.tombstone = parsed.tombstone;
-    if (parsed.type) opts.type = parsed.type;
+    if (parsed.credentials) {
+        opts.credentials = parsed.credentials;
+    }
+    if (parsed.dataset) {
+        opts.dataset = parsed.dataset;
+    }
+    if (typeof (parsed.limit) !== 'undefined') {
+        opts.limit = parsed.limit;
+    }
+    if (typeof (parsed.memory) !== 'undefined') {
+        opts.memory = parsed.memory;
+    }
+    if (parsed.name) {
+        opts.name = parsed.name;
+    }
+    if (typeof (parsed.offset) !== 'undefined') {
+        opts.offset = parsed.offset;
+    }
+    if (parsed.state) {
+        opts.state = parsed.state;
+    }
+    if (typeof (parsed.tombstone) !== 'undefined') {
+        opts.tombstone = parsed.tombstone;
+    }
+    if (parsed.type) {
+        opts.type = parsed.type;
+    }
 
     if (parsed.tag) {
-        for (var i = 0; i < parsed.tag.length; i++) {
+        var i;
+        for (i = 0; i < parsed.tag.length; i++) {
             if (parsed.tag[i] === '*') {
                 tags = '*';
                 break;
@@ -101,4 +120,4 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
         }
     });
 
-},usageStr);
+}, usageStr);

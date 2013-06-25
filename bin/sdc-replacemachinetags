@@ -9,7 +9,7 @@ var common = require('../lib/cli_common');
 
 
 
-///--- Globals
+// --- Globals
 
 var Options = {
     'account': String,
@@ -34,18 +34,21 @@ var usageStr = common.buildUsageString(Options);
 usageStr += ' machine_id';
 usageStr += common.buildDetailedUsageString(Options);
 
-///--- Mainline
+// --- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
 
-    if (parsed.argv.remain.length < 1)
+    if (parsed.argv.remain.length < 1) {
         common.usage(usageStr, 1, 'machine required');
+    }
 
-    if (!parsed.tag)
+    if (!parsed.tag) {
         common.usage(usageStr, 1, '--tag required');
+    }
 
     var tags = {};
-    for (var i = 0; i < parsed.tag.length; i++) {
+    var i;
+    for (i = 0; i < parsed.tag.length; i++) {
         var tmp = parsed.tag[i].split('=');
         if (!tmp || tmp.length !== 2) {
             console.error(parsed.tag[i] + ' is an invalid tag; try foo=bar');
@@ -59,4 +62,3 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
         client.replaceMachineTags(machine, tags, common.callback);
     });
 }, usageStr);
-
