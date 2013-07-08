@@ -99,8 +99,8 @@ etc.
 
     client.listMachines(function(err, machines) {
         if (err) {
-            console.log('Unable to list machines: ' + e);
-	          return;
+            console.log('Unable to list machines: ' + err);
+            return;
         }
 
         machines.forEach(function(m) {
