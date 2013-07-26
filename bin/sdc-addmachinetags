@@ -49,7 +49,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     var tags = {};
     var i;
     for (i = 0; i < parsed.tag.length; i++) {
-        var tmp = parsed.tag[i].split('=');
+        var tmp = parsed.tag[i].split('=', 1);
         if (!tmp || tmp.length !== 2) {
             console.error(parsed.tag[i] + ' is an invalid tag; try foo=bar');
             process.exit(1);
