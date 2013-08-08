@@ -40,7 +40,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     }
 
     var client = common.newClient(parsed);
-    parsed.argv.remain.forEach(function (dataset) {
-        client.getDataset(dataset, common.callback);
+    parsed.argv.remain.forEach(function (image) {
+        client.getImage(image, common.callback);
     });
 }, usageStr);

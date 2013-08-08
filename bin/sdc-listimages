@@ -35,5 +35,5 @@ usageStr += common.buildDetailedUsageString(Options);
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
     var client = common.newClient(parsed);
-    client.listDatasets(common.callback);
+    client.listImages(common.callback);
 }, usageStr);
