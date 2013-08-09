@@ -47,7 +47,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     parsed.argv.remain.forEach(function (inst) {
         var id = parseInt(inst, 10);
         if (parsed.value) {
-            return client.getInstrumentationValue(id, common.callback);
+            return client.getInstrumentationValue(id, parsed, common.callback);
         }
 
         return client.getInstrumentation(id, common.callback);
