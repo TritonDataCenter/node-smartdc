@@ -1,0 +1,70 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2013 Joyent, Inc.  All rights reserved.
+
+var fs = require('fs');
+var https = require('https');
+var path = require('path');
+var url = require('url');
+
+var common = require('../lib/cli_common');
+
+
+
+// --- Globals
+
+var Options = {
+    'account': String,
+    'debug': Boolean,
+    'help': Boolean,
+    'keyId': String,
+    'machine': String,
+    'imageVersion': String,
+    'name': String,
+    'description': String,
+    'homepage': String,
+    'eula': String,
+    'acl': Array,
+    'tags': String
+};
+
+var ShortOptions = {
+    'a': ['--account'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'k': ['--keyId'],
+    'm': ['--machine'],
+    'i': ['--imageVersion'],
+    'n': ['--name'],
+    'd': ['--description']
+};
+
+var usageStr = common.buildUsageString(Options);
+usageStr += common.buildDetailedUsageString(Options);
+
+// --- Mainline
+
+common.parseArguments(Options, ShortOptions, function (parsed) {
+    var opts = {};
+    if (parsed.machine)
+        opts.machine = parsed.machine;
+    if (parsed.name)
+        opts.name = parsed.name;
+    if (parsed.imageVersion)
+        opts.version = parsed.imageVersion;
+    if (parsed.description)
+        opts.description = parsed.description;
+    if (parsed.homepage)
+        opts.homepage = parsed.homepage;
+    if (parsed.eula)
+        opts.eula = parsed.eula;
+    if (parsed.acl)
+        opts.acl = parsed.acl;
+    if (parsed.tags)
+        opts.tags = JSON.parse(parsed.tags);
+
+    var client = common.newClient(parsed);
+    client.createImageFromMachine(opts, common.callback);
+}, usageStr);
