@@ -13,6 +13,9 @@ var common = require('../lib/cli_common');
 
 var Options = {
     'account': String,
+    'public': String,
+    'state': String,
+    'type': String,
     'debug': Boolean,
     'help': Boolean,
     'keyId': String,
@@ -21,6 +24,9 @@ var Options = {
 
 var ShortOptions = {
     'a': ['--account'],
+    'p': ['--public'],
+    's': ['--state'],
+    't': ['--type'],
     'd': ['--debug'],
     'h': ['--help'],
     '?': ['--help'],
@@ -34,6 +40,17 @@ usageStr += common.buildDetailedUsageString(Options);
 // --- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
+    var opts = {};
+    if (parsed['public']) {
+        opts['public'] = parsed['public'];
+    }
+    if (parsed.state) {
+        opts.state = parsed.state;
+    }
+    if (parsed.type) {
+        opts.type = parsed.type;
+    }
+
     var client = common.newClient(parsed);
-    client.listImages(common.callback);
+    client.listImages(opts, common.callback);
 }, usageStr);
