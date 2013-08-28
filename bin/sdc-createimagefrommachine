@@ -50,10 +50,16 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     var opts = {};
     if (parsed.machine)
         opts.machine = parsed.machine;
+    else
+        common.usage(usageStr, 1, 'machine(id) required');
     if (parsed.name)
         opts.name = parsed.name;
+    else
+        common.usage(usageStr, 1, 'name(string) required');
     if (parsed.imageVersion)
         opts.version = parsed.imageVersion;
+    else
+        common.usage(usageStr, 1, 'imageVersion(string) required');
     if (parsed.description)
         opts.description = parsed.description;
     if (parsed.homepage)
