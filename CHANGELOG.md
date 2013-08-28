@@ -1,7 +1,12 @@
 # node-smartdc Changelog
 
-## smartdc 7.0.1 (not yet released)
+## smartdc 7.1.0 (not yet released)
 
+-
+- [PUBAPI-660] Added `sdc-createimagefrommachine`, `sdc-deleteimage`,
+  `sdc-updateimage`.
+- [PUBAPI-675] Allow filtering of `sdc-listimages` by `public`, `state` and
+  `type`.
 - [issue #34] Change `sdc-listimages` and `sdc-getimage` to use the appropriate
   `/:account/images` CloudAPI endpoints.
 - Added `sdc-enablemachinefirewall` and `sdc-disablemachinefirewall`
