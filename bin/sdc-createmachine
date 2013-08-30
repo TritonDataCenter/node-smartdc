@@ -48,7 +48,9 @@ var ShortOptions = {
 };
 
 var usageStr = common.buildUsageString(Options);
-usageStr += common.buildDetailedUsageString(Options);
+usageStr += common.buildDetailedUsageString(Options, {
+    'name': 'friendly name (may contain letters, numbers, dashes, and periods)'
+});
 
 // --- Mainline
 
