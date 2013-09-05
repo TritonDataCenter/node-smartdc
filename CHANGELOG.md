@@ -2,7 +2,6 @@
 
 ## smartdc 7.1.0 (not yet released)
 
--
 - [PUBAPI-660] Added `sdc-createimagefrommachine`, `sdc-deleteimage`,
   `sdc-updateimage`.
 - [PUBAPI-675] Allow filtering of `sdc-listimages` by `public`, `state` and

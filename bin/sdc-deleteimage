@@ -15,7 +15,7 @@ var Options = {
     'account': String,
     'debug': Boolean,
     'help': Boolean,
-    'image': String,
+    'keyId': String,
     'url': url
 };
 
@@ -24,22 +24,25 @@ var ShortOptions = {
     'd': ['--debug'],
     'h': ['--help'],
     '?': ['--help'],
-    'i': ['--image'],
+    'k': ['--keyId'],
     'u': ['--url']
 };
 
 var usageStr = common.buildUsageString(Options);
-usageStr += ' image';
+usageStr += ' image_id';
 usageStr += common.buildDetailedUsageString(Options);
 
 
 // --- Mainline
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
-    if (!parsed.image) {
-        common.usage(usageStr, 1, 'image required');
+    if (parsed.argv.remain.length == 0) {
+        common.usage(usageStr, 1, 'image_id required');
+    } else if (parsed.argv.remain.length > 1) {
+        common.usage(usageStr, 1, 'only a single image_id is supported');
     }
 
     var client = common.newClient(parsed);
-    client.deleteImage(parsed.image, common.callback);
+    var image_id = parsed.argv.remain[0];
+    client.deleteImage(image_id, common.callback);
 }, usageStr);
