@@ -15,10 +15,13 @@ var common = require('../lib/cli_common');
 // --- Globals
 
 var Options = {
+    // General
     'account': String,
     'debug': Boolean,
     'help': Boolean,
     'keyId': String,
+    'url': url,
+    // Specific to this command
     'machine': String,
     'imageVersion': String,
     'name': String,
@@ -30,11 +33,14 @@ var Options = {
 };
 
 var ShortOptions = {
+    // General
     'a': ['--account'],
     'd': ['--debug'],
     'h': ['--help'],
     '?': ['--help'],
     'k': ['--keyId'],
+    'u': ['--url'],
+    // Specific to this command
     'm': ['--machine'],
     'i': ['--imageVersion'],
     'n': ['--name'],
