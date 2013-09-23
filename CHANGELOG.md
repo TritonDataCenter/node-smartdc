@@ -8,6 +8,9 @@
   `type`.
 - [issue #34] Change `sdc-listimages` and `sdc-getimage` to use the appropriate
   `/:account/images` CloudAPI endpoints.
+
+## smartdc 7.0.1
+
 - Added `sdc-enablemachinefirewall` and `sdc-disablemachinefirewall`
 - Added `-f | --enable-firewall` option to `sdc-createmachine`
 

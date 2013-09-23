@@ -137,6 +137,10 @@ test('list packages', function (t) {
             return (p['default'] === 'true');
         });
         PACKAGE = packages[0];
+        // If there isn't a default package, use first one:
+        if (!PACKAGE) {
+            PACKAGE = pkgs[0];
+        }
         if (!PACKAGE) {
             console.error('Exiting because cannot find test package.');
             process.exit(1);
