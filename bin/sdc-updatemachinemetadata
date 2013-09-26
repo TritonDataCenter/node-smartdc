@@ -49,7 +49,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     var metadata = {};
     var i;
     for (i = 0; i < parsed.metadata.length; i++) {
-        var tmp = parsed.metadata[i].split('=', 1);
+        var tmp = common.getMeta(parsed.metadata[i]);
         if (!tmp || tmp.length !== 2) {
             console.error(parsed.metadata[i] +
                 ' is invalid metadata; try foo=bar');

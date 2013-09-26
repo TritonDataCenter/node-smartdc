@@ -71,7 +71,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     if (parsed.tag) {
         var i;
         for (i = 0; i < parsed.tag.length; i++) {
-            var tmp = parsed.tag[i].split('=', 1);
+            var tmp = common.getMeta(parsed.tag[i]);
             if (!tmp || tmp.length !== 2) {
                 console.error(parsed.tag[i] +
                     ' is an invalid tag; try foo=bar');
@@ -83,7 +83,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     if (parsed.metadata) {
         var j;
         for (j = 0; j < parsed.metadata.length; j++) {
-            var tmp2 = parsed.metadata[j].split('=', 1);
+            var tmp2 = common.getMeta(parsed.metadata[j]);
             if (!tmp2 || tmp2.length !== 2) {
                 console.error(parsed.metadata[j] +
                     ' is invalid metadata; try foo=bar');

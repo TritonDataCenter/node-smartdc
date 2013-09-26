@@ -93,7 +93,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
                 break;
             }
 
-            var tmp = parsed.tag[i].split('=');
+            var tmp = common.getMeta(parsed.tag[i]);
             if (!tmp || tmp.length !== 2) {
                 console.error(parsed.tag[i] +
                     ' is an invalid tag; try foo=bar');
