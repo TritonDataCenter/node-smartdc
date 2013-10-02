@@ -24,7 +24,7 @@
       "restify": "2.4.1",
       "bunyan": "0.21.1",
       "clone": "0.1.6",
-      "smartdc-auth": "1.0.0"
+      "smartdc-auth": "1.0.1"
   },
   "devDependencies": {
       "tap": "0.4.0",
