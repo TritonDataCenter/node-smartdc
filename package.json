@@ -28,6 +28,6 @@
   },
   "devDependencies": {
       "tap": "0.4.0",
-      "node-uuid": "1.4.0"
+      "libuuid": "0.1.2"
   }
 }
