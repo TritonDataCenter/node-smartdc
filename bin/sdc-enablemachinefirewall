@@ -40,13 +40,8 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
         common.usage(usageStr, 1, 'machine required');
     }
 
-    var opts = {};
-    if (parsed.name) {
-        opts.name = parsed.name;
-    }
-
     var client = common.newClient(parsed);
     parsed.argv.remain.forEach(function (machine) {
-        client.enableFirewall(machine, opts, common.callback);
+        client.enableFirewall(machine, common.callback);
     });
 }, usageStr);
