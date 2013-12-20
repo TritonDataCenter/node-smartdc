@@ -1,6 +1,6 @@
 # node-smartdc Changelog
 
-## 7.1.1
+## 7.1.2
 
 - #47 Deprecated '-e|--dataset' option to `sdc-listmachines` and
   `sdc-createmachine` in favor of '-i|--image'.
@@ -8,6 +8,24 @@
 - #46 Fix '-d|--debug' option to actually include more logging. Example usage:
 
         sdc-listmachines -d 2>&1 | bunyan
+
+- Improve printing of errors on the CLI. E.g.:
+
+        $ sdc-createmachine -e asdf
+        sdc-createmachine: error (InvalidArgument): asdf is not a valid image
+
+  Before:
+
+        $ sdc-createmachine -e asdf
+        asdf is not a valid image
+
+
+## 7.1.1
+
+???
+
+
+## 7.1.0
 
 - [PUBAPI-660] Added `sdc-createimagefrommachine`, `sdc-deleteimage`,
   `sdc-updateimage`.
