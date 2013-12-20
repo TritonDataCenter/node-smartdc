@@ -2,10 +2,10 @@
 
 ## 7.1.2
 
-- #47: Deprecated '-e|--dataset' option to `sdc-listmachines` and
+- issue#47: Deprecated '-e|--dataset' option to `sdc-listmachines` and
   `sdc-createmachine` in favor of '-i|--image'.
 
-- #46: Fix '-d|--debug' option to actually include more logging. Example usage:
+- issue#46: Fix '-d|--debug' option to actually include more logging. Example usage:
 
         sdc-listmachines -d 2>&1 | bunyan
 
@@ -20,11 +20,6 @@
         asdf is not a valid image
 
 
-## 7.1.1
-
-???
-
-
 ## 7.1.0
 
 - [PUBAPI-660] Added `sdc-createimagefrommachine`, `sdc-deleteimage`,
@@ -33,7 +28,7 @@
 - [PUBAPI-675] Allow filtering of `sdc-listimages` by `public`, `state` and
   `type`.
 
-- #34: Change `sdc-listimages` and `sdc-getimage` to use the appropriate
+- issue#34: Change `sdc-listimages` and `sdc-getimage` to use the appropriate
   `/:account/images` CloudAPI endpoints.
 
 
