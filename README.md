@@ -1,88 +1,133 @@
-node-smartdc is a node.js client library for interacting with the Joyent
-SmartDataCenter API.  This package additionally contains a CLI you can use
-to write scripts encapsulating most common tasks.
+node-smartdc is a node.js client library and set of CLI tools for using with
+the [Joyent SmartDataCenter API](http://apidocs.joyent.com/cloudapi/), for
+example the [Joyent Compute
+Service](http://www.joyent.com/products/compute-service).
 
-Note this is version 7.0.0. It's not 100% backward compatible with
-SmartDC 6.5. Please, use 6.5.x version with 6.5 setups for 100% compatibility.
-
-## Installation
-
-You probably want to install this package globally, so the CLI commands are
-always in your path.
-
-    npm install smartdc -g
-
-## Upgrading from 6.5 to 7.0
-
-* Dropped `CLI` from enviornment variables
-    * `SDC_CLI_ACCOUNT` ==> `SDC_ACCOUNT`
-    * `SDC_CLI_URL` ==> `SDC_URL`
-    * `SDC_CLI_KEY_ID` ==> `SDC_KEY_ID`
-* Removed `SDC_CLI_IDENTITY` see below for determining your fingerprint.
-* Removed `sdc-setup`
-
-Note that in 6.5, `SDC_CLI_KEY_ID` was the _name_ of the SSH key as specified in
-your Joyent Cloud account. In 7.0, `SDC_KEY_ID` is the _fingerprint_ of the SSH key.
+(Note: Current releases and the #master branch of this are for SmartDataCenter
+(SDC) version 7.  It is not 100% backward compatible with SDC 6.5. For 100%
+compatility with SDC 6.5, you must install a "6.5.x" version of this module.)
 
 
-## Usage
+# Installation
 
-### CLI
+To use the CLI tools (a number of `sdc-*` commands) you may want to install
+globally:
+
+    npm install -g smartdc
+
+The CLI commands typical work with JSON content. We suggest you also install
+the [`json` tool](https://github.com/trentm/json) for working with JSON on the
+command line. The examples below use `json` heavily.
+
+    npm install -g jsontool   # *not* 'npm install json'
+
+
+# CLI Setup and Authentication
 
 There are CLI commands corresponding to almost every action available in the
-SmartDataCenter API; see the
-[Joyent CloudAPI documentation](http://apidocs.joyent.com/cloudapi/) for
-complete information, but to get started, you can set environment variables for
-the following flags so that you don't have to type them for each request:
+SmartDataCenter API; see the [Joyent CloudAPI
+documentation](http://apidocs.joyent.com/cloudapi/) for complete information.
+Each command takes `--url`, `--account`, and `--keyId` flags to provide the
+API endpoint URL and your credentials. However you'll probably want to set
+the environment variable equivalents:
 
-* `SDC_URL` || `--url | -u`: URL of the CloudAPI endpoint.
-* `SDC_ACCOUNT` || `--account | -a`: Login name (account).
-* `SDC_KEY_ID` || `--keyId | -k`: Fingerprint of the key to use for signing.
+* `SDC_URL` (`--url | -u`): URL of the CloudAPI endpoint. E.g.
+  "https://us-sw-1.api.joyentcloud.com".
+* `SDC_ACCOUNT` (`--account | -a`): Login name/username. E.g. "bob".
+* `SDC_KEY_ID` (`--keyId | -k`): The fingerprint of an SSH public key that has
+  been added to the account set in `SDC_ACCOUNT`. This is used for signing
+  requests. If you use an SSH agent, the fingerprint is shown in `ssh-add -l`
+  output. You can calculate the fingerprint like this:
 
-Faster way to get your key fingerprint is:
+        ssh-keygen -l -f ~/.ssh/id_rsa.pub | awk '{print $2}' | tr -d '\n'
 
-    ssh-keygen -l -f ~/.ssh/id_rsa.pub | awk '{print $2}' | tr -d '\n'
+  Your matching SSH *private* key must be beside the ".pub" public key file
+  in your "~/.ssh" dir.
 
-where you obviously replace `~/.ssh/id_rsa.pub` with the path to your the
-public key you wan to use for signing requests.
+The SmartDataCenter Cloud API uses
+[http-signature](https://github.com/joyent/node-http-signature) ([IETF draft
+spec](http://tools.ietf.org/id/draft-cavage-http-signatures-00.txt)) for
+authentication. All requests to the API are signed using your RSA private key.
+The server uses your (previously uploaded) public key to verify the signed
+request. This avoids ever sending a password.
 
-All of the CLI commands use your RSA private key for signing requests to the API,
-rather than sending your password to the Joyent API.  Once you've set the environment
-variables, you can provision a machine, and check it's status.  For example,
-here's how you can create a new machine and tag it as a 'test' machine, then
-you can grab the status a few times until it's `running`.
+Once you have set the environment variables, check that it is working by
+listing available images for provisioning:
 
-Note this assumes you've also got [jsontool](https://github.com/trentm/json)
-installed:
-
-    IMAGE=`./bin/sdc-listimages | json 0.id`
-    sdc-createmachine -e $IMAGE -n demo -t group=test
+    $ sdc-listimages
+    [
+      {
+        "id": "753ceee6-5372-11e3-8f4e-f79c1154e596",
+        "name": "base",
+        "version": "13.3.0",
+        "os": "smartos",
+        "requirements": {},
+        "type": "smartmachine",
+        "description": "A 32-bit SmartOS image with just essential packages installed. Ideal for users who are comfortable with setting up their own environment and tools.",
+        "owner": "9dce1460-0c4c-4417-ab8b-25ca478c5a78",
+        "homepage": "http://wiki.joyent.com/jpc2/SmartMachine+Base",
+        "published_at": "2013-11-22T12:34:40Z",
+        "public": true,
+        "state": "active"
+      },
     ...
-    sdc-listmachines | json 0.state
-      provisioning
-    sdc-listmachines | json 0.state
-      provisioning
-    sdc-listmachines | json 0.state
-      running
+
+
+# CLI Usage
+
+There are many many `sdc-*` commands. Typically one for each endpoint in
+[the API](http://apidocs.joyent.com/cloudapi/). A common one is for provisioning
+a new machine (aka VM). Let's provision a new "base" (SmartOS) machine. First
+find the id of the "base" image (version 13.3.0):
+
+    $ IMAGE=$(sdc-listimages | json -c 'this.name=="base" && this.version=="13.3.0"' 0.id)
+    $ sdc-createmachine --image $IMAGE --name mymachine1
+    $ sdc-getmachine f8f995da-086f-e8f5-c062-992139432c4f
+    {
+      "id": "f8f995da-086f-e8f5-c062-992139432c4f",
+      "name": "mymachine1",
+      "type": "smartmachine",
+      "state": "provisioning",
+      "image": "753ceee6-5372-11e3-8f4e-f79c1154e596",
+      ...
+    }
+
+Then you can poll until the state of the machine goes to "running":
+
+    $ sdc-getmachine f8f995da-086f-e8f5-c062-992139432c4f | json state
+    provisioning
+    ...
+    $ sdc-getmachine f8f995da-086f-e8f5-c062-992139432c4f | json state
+    running
 
 At that point, you can ssh into the machine; try this:
 
-    ssh-add
-    ssh -A admin@`./sdc-listmachines | json 0.ips[0]`
+    $ IP=$(sdc-getmachine f8f995da-086f-e8f5-c062-992139432c4f | json primaryIp)
+    $ ssh root@$IP
+    ...
+       __        .                   .
+     _|  |_      | .-. .  . .-. :--. |-
+    |_    _|     ;|   ||  |(.-' |  | |
+      |__|   `--'  `-' `;-| `-' '  ' `-'
+                       /  ; Instance (base 13.3.0)
+                       `-'  http://wiki.joyent.com/jpc2/SmartMachine+Base
 
-Note that we added your keys to the SSH agent, so that you can use the CLI
-seamlessly on your new SmartMachine. Once you've played around and are done,
-you can dispose of it; shut it down, then poll until it's `stopped`.
+    [root@f8f995da-086f-e8f5-c062-992139432c4f ~]#
 
-    sdc-listmachines | json 0.id | xargs sdc-stopmachine
-    sdc-listmachines | json 0.state
-      stopped
-    sdc-listmachines | json 0.id | xargs sdc-deletemachine
+
+Once you've played around and are done, you can delete this machine.
+
+    $ sdc-deletemachine f8f995da-086f-e8f5-c062-992139432c4f
+    ...
+    $ sdc-getmachine f8f995da-086f-e8f5-c062-992139432c4f
+    Object is Gone (410)
 
 There's a lot more you can do, like manage snapshots, analytics, keys, tags,
-etc.
+etc. For the *Joyent* cloud, you can read more here:
+<http://www.joyent.com/developers>.
 
-### Programmatic Usage
+
+# Programmatic Usage
 
     var fs = require('fs');
     var smartdc = require('smartdc');
@@ -108,17 +153,35 @@ etc.
         });
     });
 
-Check out the source documentation for JSDocs on the API.
 
-## License
 
-MIT.
+# Upgrading from 6.5 to 7.0
 
-## Bugs
+* The environment variables changed from 6.5 to 7 (the `CLI_` string was
+  dropped):
+    * `SDC_CLI_ACCOUNT` ==> `SDC_ACCOUNT`
+    * `SDC_CLI_URL` ==> `SDC_URL`
+    * `SDC_CLI_KEY_ID` ==> `SDC_KEY_ID`
+* The `SDC_CLI_IDENTITY` environment variable is no longer used. See above
+  on how to determine your public key fingerprint for `SDC_KEY_ID`.
+* The `sdc-setup` command was removed.
 
-See <https://github.com/joyent/node-smartdc/issues>.
+Note that in 6.5, `SDC_CLI_KEY_ID` was the *name* of the SSH key as specified in
+your Joyent Cloud account. In 7.0, `SDC_KEY_ID` is the *fingerprint* of your
+SSH public key.
 
-## Running the test suite
+
+# License
+
+MIT. See the "LICENSE" file.
+
+
+# Bugs
+
+Please report issues to <https://github.com/joyent/node-smartdc/issues>.
+
+
+# Running the test suite
 
 Note that *this will execute tests against the Smart DC setup set into
 ENV variable SDC_URL*. Please, make sure it's OK to try to create new
@@ -133,8 +196,8 @@ sample ssh keys can be found at `test/user.ldif` and `test/.ssh`. Once you've
 added this user, you can run your tests using:
 
     SDC_URL=http://127.0.0.1:8080 \
-    SDC_ACCOUNT=test \
-    SDC_KEY_ID=id_rsa \
-    HOME="$(pwd)/test" \
-    VERBOSE=1 \
-    make test
+        SDC_ACCOUNT=test \
+        SDC_KEY_ID=id_rsa \
+        HOME="$(pwd)/test" \
+        VERBOSE=1 \
+        make test

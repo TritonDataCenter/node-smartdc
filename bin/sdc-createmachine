@@ -17,7 +17,8 @@ var common = require('../lib/cli_common');
 var Options = {
     'account': String,
     'debug': Boolean,
-    'dataset': String,
+    'dataset': String,  // DEPRECATED
+    'image': String,
     'enable-firewall': Boolean,
     'help': Boolean,
     'keyId': String,
@@ -33,7 +34,8 @@ var Options = {
 var ShortOptions = {
     'a': ['--account'],
     'd': ['--debug'],
-    'e': ['--dataset'],
+    'e': ['--image'],  // DEPRECATED
+    'i': ['--image'],
     'f': ['--enable-firewall'],
     'h': ['--help'],
     '?': ['--help'],
@@ -56,8 +58,10 @@ usageStr += common.buildDetailedUsageString(Options, {
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
     var opts = {};
-    if (parsed.dataset) {
-        opts.dataset = parsed.dataset;
+    if (parsed.image) {
+        opts.image = parsed.image;
+    } else if (parsed.dataset) {
+        opts.image = parsed.dataset;
     }
     if (parsed.name)  {
         opts.name = parsed.name;

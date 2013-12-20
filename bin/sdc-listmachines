@@ -15,7 +15,8 @@ var Options = {
     'account': String,
     'credentials': Boolean,
     'debug': Boolean,
-    'dataset': String,
+    'dataset': String, // DEPRECATED
+    'image': String,
     'help': Boolean,
     'keyId': String,
     'limit': Number,
@@ -34,7 +35,8 @@ var ShortOptions = {
     'c': ['--credentials'],
     'b': ['--tombstone'],
     'd': ['--debug'],
-    'e': ['--dataset'],
+    'e': ['--image'], // DEPRECATED
+    'i': ['--image'],
     'h': ['--help'],
     '?': ['--help'],
     'k': ['--keyId'],
@@ -60,8 +62,10 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     if (parsed.credentials) {
         opts.credentials = parsed.credentials;
     }
-    if (parsed.dataset) {
-        opts.dataset = parsed.dataset;
+    if (parsed.image) {
+        opts.image = parsed.image;
+    } else if (parsed.dataset) {
+        opts.image = parsed.dataset;
     }
     if (typeof (parsed.limit) !== 'undefined') {
         opts.limit = parsed.limit;
@@ -106,7 +110,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     var client = common.newClient(parsed);
     client.listMachines(opts, tags, function (err, obj, done) {
         if (err) {
-            console.error(err.message);
+            common.printErr(err);
             process.exit(3);
         }
 

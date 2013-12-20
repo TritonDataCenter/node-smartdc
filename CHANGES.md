@@ -1,33 +1,43 @@
 # node-smartdc Changelog
 
-## smartdc 7.1.0 (not yet released)
+## 7.1.1
+
+- #47 Deprecated '-e|--dataset' option to `sdc-listmachines` and
+  `sdc-createmachine` in favor of '-i|--image'.
+
+- #46 Fix '-d|--debug' option to actually include more logging. Example usage:
+
+        sdc-listmachines -d 2>&1 | bunyan
 
 - [PUBAPI-660] Added `sdc-createimagefrommachine`, `sdc-deleteimage`,
   `sdc-updateimage`.
+
 - [PUBAPI-675] Allow filtering of `sdc-listimages` by `public`, `state` and
   `type`.
-- [issue #34] Change `sdc-listimages` and `sdc-getimage` to use the appropriate
+
+- #34 Change `sdc-listimages` and `sdc-getimage` to use the appropriate
   `/:account/images` CloudAPI endpoints.
 
-## smartdc 7.0.1
+
+## 7.0.1
 
 - Added `sdc-enablemachinefirewall` and `sdc-disablemachinefirewall`
 - Added `-f | --enable-firewall` option to `sdc-createmachine`
 
-## smartdc 7.0.0
+## 7.0.0
 
 - Improved docs and usage strings
 
-## smartdc 7.0.0-rc3
+## 7.0.0-rc3
 
 - Added `sdc-listnetworks` and `sdc-getnetwork`.
 
-## smartdc 7.0.0-rc2
+## 7.0.0-rc2
 
 - Added "--networks|-w" argument to sdc-createmachine
 - Update README with upgrade section
 
-## smartdc 7.0.0-rc1
+## 7.0.0-rc1
 
 - New version to support SDC 7.0 new features.
 - Added `/images` resource
