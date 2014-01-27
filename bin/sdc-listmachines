@@ -90,21 +90,8 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     }
 
     if (parsed.tag) {
-        var i;
-        for (i = 0; i < parsed.tag.length; i++) {
-            if (parsed.tag[i] === '*') {
-                tags = '*';
-                break;
-            }
-
-            var tmp = common.getMeta(parsed.tag[i]);
-            if (!tmp || tmp.length !== 2) {
-                console.error(parsed.tag[i] +
-                    ' is an invalid tag; try foo=bar');
-                process.exit(1);
-            }
-            tags[tmp[0]] = tmp[1];
-        }
+        tags = parsed.tag.indexOf('*') !== -1 ? '*' :
+            common.parseMetadata(parsed.tag, false);
     }
 
     var client = common.newClient(parsed);

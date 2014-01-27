@@ -4,6 +4,7 @@
 // Copyright 2013 Joyent, Inc.  All rights reserved.
 
 var url = require('url');
+var fs = require('fs');
 
 var common = require('../lib/cli_common');
 
@@ -17,6 +18,7 @@ var Options = {
     'help': Boolean,
     'keyId': String,
     'metadata': [String, Array],
+    'metadata-file': [String, Array],
     'url': url
 };
 
@@ -27,6 +29,7 @@ var ShortOptions = {
     '?': ['--help'],
     'k': ['--keyId'],
     'm': ['--metadata'],
+    'M': ['--metadata-file'],
     'u': ['--url']
 };
 
@@ -42,21 +45,16 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
         common.usage(usageStr, 1, 'machine required');
     }
 
-    if (!parsed.metadata) {
-        common.usage(usageStr, 1, '--metadata required');
+    if (!parsed.metadata && !parsed['metadata-file']) {
+        common.usage(usageStr, 1, '--metadata or --metadata-file required');
     }
 
     var metadata = {};
-    var i;
-    for (i = 0; i < parsed.metadata.length; i++) {
-        var tmp = common.getMeta(parsed.metadata[i]);
-        if (!tmp || tmp.length !== 2) {
-            console.error(parsed.metadata[i] +
-                ' is invalid metadata; try foo=bar');
-            process.exit(1);
-        }
-        metadata[tmp[0]] = tmp[1];
-    }
+
+    metadata = common.mergeObjects(metadata, common.parseMetadata(
+        parsed['metadata-file'], true));
+    metadata = common.mergeObjects(metadata, common.parseMetadata(
+        parsed['metadata'], false));
 
     var client = common.newClient(parsed);
     parsed.argv.remain.forEach(function (machine) {

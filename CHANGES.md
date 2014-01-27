@@ -1,5 +1,15 @@
 # node-smartdc Changelog
 
+## 7.2.0
+
+- issue#43: Allow '-M|--metadata-file' option to `sdc-createmachine` and
+  `sdc-updatemachinemetadata`.  Accepts a parameter of the form `"key=filename"`.
+  Example usage:
+
+        $ sdc-updatemachinemetadata \
+            --metadata-file passwd_file=/etc/passwd \
+            ${uuid}
+
 ## 7.1.2
 
 - issue#47: Deprecated '-e|--dataset' option to `sdc-listmachines` and

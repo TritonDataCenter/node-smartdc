@@ -46,16 +46,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
         common.usage(usageStr, 1, '--tag required');
     }
 
-    var tags = {};
-    var i;
-    for (i = 0; i < parsed.tag.length; i++) {
-        var tmp = common.getMeta(parsed.tag[i]);
-        if (!tmp || tmp.length !== 2) {
-            console.error(parsed.tag[i] + ' is an invalid tag; try foo=bar');
-            process.exit(1);
-        }
-        tags[tmp[0]] = tmp[1];
-    }
+    var tags = common.parseMetadata(parsed.tag, false);
 
     var client = common.newClient(parsed);
     parsed.argv.remain.forEach(function (machine) {

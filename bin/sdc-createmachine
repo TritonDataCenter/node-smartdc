@@ -23,6 +23,7 @@ var Options = {
     'help': Boolean,
     'keyId': String,
     'metadata': [String, Array],
+    'metadata-file': [String, Array],
     'name': String,
     'networks': [String, Array],
     'package': String,
@@ -41,6 +42,7 @@ var ShortOptions = {
     '?': ['--help'],
     'k': ['--keyId'],
     'm': ['--metadata'],
+    'M': ['--metadata-file'],
     'n': ['--name'],
     'p': ['--package'],
     's': ['--script'],
@@ -58,6 +60,8 @@ usageStr += common.buildDetailedUsageString(Options, {
 
 common.parseArguments(Options, ShortOptions, function (parsed) {
     var opts = {};
+    var tmp;
+    var k;
     if (parsed.image) {
         opts.image = parsed.image;
     } else if (parsed.dataset) {
@@ -72,30 +76,27 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     if (typeof (parsed['enable-firewall']) !== 'undefined') {
         opts.firewall_enabled = parsed['enable-firewall'];
     }
+
     if (parsed.tag) {
-        var i;
-        for (i = 0; i < parsed.tag.length; i++) {
-            var tmp = common.getMeta(parsed.tag[i]);
-            if (!tmp || tmp.length !== 2) {
-                console.error(parsed.tag[i] +
-                    ' is an invalid tag; try foo=bar');
-                process.exit(1);
-            }
-            opts['tag.' + tmp[0]] = tmp[1];
+        tmp = common.parseMetadata(parsed.tag, false);
+        for (k in tmp) {
+            opts['tag.' + k] = tmp[k];
         }
     }
-    if (parsed.metadata) {
-        var j;
-        for (j = 0; j < parsed.metadata.length; j++) {
-            var tmp2 = common.getMeta(parsed.metadata[j]);
-            if (!tmp2 || tmp2.length !== 2) {
-                console.error(parsed.metadata[j] +
-                    ' is invalid metadata; try foo=bar');
-                process.exit(1);
-            }
-            opts['metadata.' + tmp2[0]] = tmp2[1];
-        }
+
+    tmp = {};
+    if (parsed['metadata-file']) {
+        tmp = common.mergeObjects(tmp, common.parseMetadata(
+            parsed['metadata-file'], true));
     }
+    if (parsed['metadata']) {
+        tmp = common.mergeObjects(tmp, common.parseMetadata(
+            parsed['metadata'], false));
+    }
+    for (k in tmp) {
+        opts['metadata.' + k] = tmp[k];
+    }
+
     if (parsed.script) {
         var us = fs.readFileSync(parsed.script, 'utf-8');
         opts['metadata.user-script'] = us.toString();
