@@ -17,7 +17,8 @@ var Options = {
     'help': Boolean,
     'keyId': String,
     'tag': [String, Array],
-    'url': url
+    'url': url,
+    'version': Boolean
 };
 
 var ShortOptions = {

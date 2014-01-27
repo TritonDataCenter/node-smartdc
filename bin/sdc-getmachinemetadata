@@ -18,7 +18,8 @@ var Options = {
     'help': Boolean,
     'keyId': String,
     'metadata': String,
-    'url': url
+    'url': url,
+    'version': Boolean
 };
 
 var ShortOptions = {

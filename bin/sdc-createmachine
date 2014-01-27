@@ -29,7 +29,8 @@ var Options = {
     'package': String,
     'script': path,
     'tag': [String, Array],
-    'url': url
+    'url': url,
+    'version': Boolean
 };
 
 var ShortOptions = {

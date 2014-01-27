@@ -21,6 +21,7 @@ var Options = {
     'help': Boolean,
     'keyId': String,
     'url': url,
+    'version': Boolean,
     // Specific to this command
     'machine': String,
     'imageVersion': String,

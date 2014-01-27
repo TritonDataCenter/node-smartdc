@@ -19,7 +19,8 @@ var Options = {
     'keyId': String,
     'metadata': [String, Array],
     'metadata-file': [String, Array],
-    'url': url
+    'url': url,
+    'version': Boolean
 };
 
 var ShortOptions = {

@@ -21,7 +21,8 @@ var Options = {
     'module': String,
     'predicate': String,
     'stat': String,
-    'url': url
+    'url': url,
+    'version': Boolean
 };
 
 var ShortOptions = {

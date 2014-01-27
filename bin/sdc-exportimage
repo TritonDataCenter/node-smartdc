@@ -17,7 +17,8 @@ var Options = {
     'help': Boolean,
     'keyId': String,
     'url': url,
-    'mantaPath': String
+    'mantaPath': String,
+    'version': Boolean
 };
 
 var ShortOptions = {

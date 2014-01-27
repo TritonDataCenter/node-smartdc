@@ -19,7 +19,8 @@ var Options = {
     'help': Boolean,
     'keyId': String,
     'rule': String,
-    'url': url
+    'url': url,
+    'version': Boolean
 };
 
 var ShortOptions = {

@@ -27,7 +27,8 @@ var Options = {
     'tag': [String, Array],
     'type': String,
     'tombstone': Number,
-    'url': url
+    'url': url,
+    'version': Boolean
 };
 
 var ShortOptions = {

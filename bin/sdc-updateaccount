@@ -26,7 +26,8 @@ var Options = {
     'postal-code': String,
     'state': String,
     'surname': String,
-    'url': url
+    'url': url,
+    'version': Boolean
 };
 
 var ShortOptions = {
