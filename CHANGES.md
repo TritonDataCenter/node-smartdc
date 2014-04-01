@@ -1,5 +1,12 @@
 # node-smartdc Changelog
 
+## 7.2.1
+
+- Add 'sdc-updateimage' for updating attributes on a custom image.
+
+- issue#49: Add '--version' to all `sdc-\*` CLI tools.
+
+
 ## 7.2.0
 
 - issue#43: Allow '-M|--metadata-file' option to `sdc-createmachine` and
