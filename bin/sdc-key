@@ -92,17 +92,20 @@ function SDCKey() {
             {
                 names: ['account', 'a'],
                 type: 'string',
-                help: 'account name (default: env.SDC_ACCOUNT)'
+                help: 'account name (default: env.SDC_ACCOUNT)',
+                env: 'SDC_ACCOUNT'
             },
             {
                 names: ['url', 'u'],
                 type: 'string',
-                help: 'url for SmartDataCenter API (default: env.SDC_URL)'
+                help: 'url for SmartDataCenter API (default: env.SDC_URL)',
+                env: 'SDC_URL'
             },
             {
                 names: ['keyId', 'k'],
                 type: 'string',
-                help: 'your ssh key fingerprint (default: env.SDC_KEY_ID)'
+                help: 'your ssh key fingerprint (default: env.SDC_KEY_ID)',
+                env: 'SDC_KEY_ID'
             }
         ]
     });
@@ -125,26 +128,14 @@ SDCKey.prototype.init = function (opts, args, callback) {
         log.src = true;
     }
 
-    if (!opts.keyId && process.env.SDC_KEY_ID) {
-        opts.keyId = process.env.SDC_KEY_ID;
-    }
-
     if (typeof (opts.keyId) === 'undefined') {
         return callback(new Error(
             'Either -k or (env) SDC_KEY_ID must be specified'));
     }
 
     if (!opts.account) {
-        opts.account = process.env.SDC_ACCOUNT;
-    }
-
-    if (!opts.account) {
         return callback(new Error(
             'Either -a or (env) SDC_ACCOUNT must be specified'));
-    }
-
-    if (!opts.url) {
-        opts.url = process.env.SDC_URL;
     }
 
     if (!opts.url) {
