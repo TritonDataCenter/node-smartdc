@@ -12,6 +12,10 @@ var fs = require('fs');
 var bunyan = require('bunyan');
 var smartdc = require('../lib/cloudapi'),
     CloudAPI = smartdc.CloudAPI;
+var shared = require('../lib/shared'),
+    printErr = shared.printErr,
+    commonCb = shared.commonCb,
+    DEFAULT_OPTIONS = shared.DEFAULT_OPTIONS;
 var cmdln = require('cmdln'),
     Cmdln = cmdln.Cmdln;
 var auth = require('smartdc-auth');
@@ -25,84 +29,9 @@ var log = bunyan.createLogger({
     level: 'warn'
 });
 
-
-/**
- * Print a CLI error for the given error object.
- *
- * @param error {Error} The error to print
- * @param options {Object} Optional:
- *      - `command` {String} The CLI command name. Else a guess is made.
- */
-function printErr(err) {
-    var code = (err.body ? err.body.code : err.code);
-    var message = (err.body ? err.body.message : message);
-    var cmd = path.basename(process.argv[1]);
-    console.error('%s: error%s: %s',
-        cmd,
-        (code ? util.format(' (%s)', code) : ''),
-        message);
-}
-
-
-/**
- * Common callback for all CLI operations.
- *
- * @param {Error} err optional error object.
- * @param {Object} obj optional response object.
- */
-function commonCb(err, obj) {
-    if (err) {
-        if (err.statusCode === 410) {
-            console.error('Object is Gone (410)');
-            process.exit(3);
-        }
-        printErr(err);
-        process.exit(3);
-    }
-
-    if (obj) {
-        console.log(JSON.stringify(obj, null, 2));
-    }
-
-    process.exit(0);
-}
-
-
 var dashdash = require('dashdash');
 
-var options = [
-    {
-        names: ['help', 'h', '?'],
-        type: 'bool',
-        help: 'Print help and exit.'
-    }, {
-        name: 'version',
-        type: 'bool',
-        help: 'Print version and exit.'
-    }, {
-        names: ['debug', 'd'],
-        type: 'bool',
-        help: 'enable debug/verbose mode (default: disabled)'
-    },
-    {
-        names: ['account', 'a'],
-        type: 'string',
-        help: 'account name',
-        env: 'SDC_ACCOUNT'
-    },
-    {
-        names: ['url', 'u'],
-        type: 'string',
-        help: 'url for SmartDataCenter API',
-        env: 'SDC_URL'
-    },
-    {
-        names: ['keyId', 'k'],
-        type: 'string',
-        help: 'your ssh key fingerprint',
-        env: 'SDC_KEY_ID'
-    }
-];
+var options = DEFAULT_OPTIONS;
 
 if (require.main === module) {
 
@@ -152,9 +81,13 @@ if (require.main === module) {
 
     opts.log = log;
 
+    var identity = (opts.subuser) ?
+        util.format('%s/users/%s', opts.account, opts.subuser):
+        opts.account;
+
     opts.sign = auth.cliSigner({
         keyId: opts.keyId,
-        user: opts.account
+        user: identity
     });
 
     var cloudapi = new CloudAPI(opts);
