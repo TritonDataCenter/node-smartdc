@@ -89,6 +89,12 @@ var options = [
         env: 'SDC_ACCOUNT'
     },
     {
+        names: ['subuser', 'A'],
+        type: 'string',
+        help: 'account sub-user login',
+        env: 'SDC_USER'
+    },
+    {
         names: ['url', 'u'],
         type: 'string',
         help: 'url for SmartDataCenter API',
@@ -121,14 +127,14 @@ if (require.main === module) {
     }
 
     // Use `parser.help()` for formatted options help.
-    if (opts.help || ! opts._args.length || opts._args[0] === 'help') {
+    if (opts.help || !opts._args.length || opts._args[0] === 'help' ||
+            opts._args.length !== 2) {
         var help = parser.help({includeEnv: true}).trimRight();
         console.log('Add role tags to SmartDC resources.\n\n' +
-                'Usage: sdc-chmod [OPTIONS] -- ' +
-                '+role -role =role resource \n\n' +
+                'Usage: sdc-chmod [OPTIONS] -- [+-=]role resource\n\n' +
                 'Role Tags: \n\n' +
-                '+role: add the given role tag to existing ones\n' +
-                '-role: remove the given role tag from existing ones\n' +
+                '+role: add the given role tag(s) to existing ones\n' +
+                '-role: remove the given role tag(s) from existing ones\n' +
                 '=role: set role tag to the given one(s)\n\n' +
                 'Options:\n' + help);
         process.exit(0);
@@ -156,46 +162,39 @@ if (require.main === module) {
 
     opts.log = log;
 
+    var identity = (opts.subuser) ?
+        util.format('%s/users/%s', opts.account, opts.subuser):
+        opts.account;
+
     opts.sign = auth.cliSigner({
         keyId: opts.keyId,
-        user: opts.account
+        user: identity
     });
 
-    // Pre-process arguments in order to get '=role', '-role' and '+role'
-    // here. Also '--' if we finally use it as separator
+    var resource = opts._args[1];
 
     var reset = false;
     var resetTo = [];
     var toRemove = [];
     var toAppend = [];
-    var resource;
-    // Step zero: If there are any role tags with =role, we can ignore
-    // everything else, and just set these as resource role tags.
-    // Step one: grab existing role tags for the resource, if any.
-    // Step two: Try to remove the role tags starting with '-role'
-    // Step three: Add the role tags starting with '+role'
-    // Step four: PUT the role tags.
-    // Finally: get the list of updated role tags
-    opts._args.forEach(function (a) {
-        /* JSSTYLED */
-        var res = /^=(.*)$/.exec(a);
-        if (res !== null) {
-            reset = true;
-            resetTo.push(res[1]);
-            return;
-        }
-        var app = /^\+(.*)$/.exec(a);
+
+    /* JSSTYLED */
+    var res = /^=(.*)$/.exec(opts._args[0]);
+    if (res !== null) {
+        reset = true;
+        resetTo = res[1].split(',');
+    } else {
+        var app = /^\+(.*)$/.exec(opts._args[0]);
         if (app !== null) {
-            toAppend.push(app[1]);
-            return;
+            toAppend = app[1].split(',');
+        } else {
+            var rem = /^-(.*)$/.exec(opts._args[0]);
+            if (rem !== null) {
+                toRemove = rem[1].split(',');
+            }
         }
-        var rem = /^-(.*)$/.exec(a);
-        if (rem !== null) {
-            toRemove.push(rem[1]);
-            return;
-        }
-        resource = a;
-    });
+    }
+
 
     var cloudapi = new CloudAPI(opts);
 
@@ -244,7 +243,7 @@ if (require.main === module) {
         });
     });
 
-    vasync.pipeline({funcs: funcs}, function (er, res) {
+    vasync.pipeline({funcs: funcs}, function (er, _) {
         if (er) {
             printErr(er);
             process.exit(1);
