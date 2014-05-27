@@ -1,0 +1,164 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2014 Joyent, Inc.  All rights reserved.
+var url = require('url');
+
+// var common = require('../lib/cli_common');
+var util = require('util');
+var path = require('path');
+var fs = require('fs');
+
+var bunyan = require('bunyan');
+var smartdc = require('../lib/cloudapi'),
+    CloudAPI = smartdc.CloudAPI;
+var cmdln = require('cmdln'),
+    Cmdln = cmdln.Cmdln;
+var auth = require('smartdc-auth');
+
+var pkg = require('../package.json');
+var name = 'sdc';
+var log = bunyan.createLogger({
+    name: name,
+    serializers: bunyan.stdSerializers,
+    stream: process.stderr,
+    level: 'warn'
+});
+
+
+/**
+ * Print a CLI error for the given error object.
+ *
+ * @param error {Error} The error to print
+ * @param options {Object} Optional:
+ *      - `command` {String} The CLI command name. Else a guess is made.
+ */
+function printErr(err) {
+    var code = (err.body ? err.body.code : err.code);
+    var message = (err.body ? err.body.message : message);
+    var cmd = path.basename(process.argv[1]);
+    console.error('%s: error%s: %s',
+        cmd,
+        (code ? util.format(' (%s)', code) : ''),
+        message);
+}
+
+
+/**
+ * Common callback for all CLI operations.
+ *
+ * @param {Error} err optional error object.
+ * @param {Object} obj optional response object.
+ */
+function commonCb(err, obj) {
+    if (err) {
+        if (err.statusCode === 410) {
+            console.error('Object is Gone (410)');
+            process.exit(3);
+        }
+        printErr(err);
+        process.exit(3);
+    }
+
+    if (obj) {
+        console.log(JSON.stringify(obj, null, 2));
+    }
+
+    process.exit(0);
+}
+
+
+var dashdash = require('dashdash');
+
+var options = [
+    {
+        names: ['help', 'h', '?'],
+        type: 'bool',
+        help: 'Print help and exit.'
+    }, {
+        name: 'version',
+        type: 'bool',
+        help: 'Print version and exit.'
+    }, {
+        names: ['debug', 'd'],
+        type: 'bool',
+        help: 'enable debug/verbose mode (default: disabled)'
+    },
+    {
+        names: ['account', 'a'],
+        type: 'string',
+        help: 'account name',
+        env: 'SDC_ACCOUNT'
+    },
+    {
+        names: ['url', 'u'],
+        type: 'string',
+        help: 'url for SmartDataCenter API',
+        env: 'SDC_URL'
+    },
+    {
+        names: ['keyId', 'k'],
+        type: 'string',
+        help: 'your ssh key fingerprint',
+        env: 'SDC_KEY_ID'
+    }
+];
+
+if (require.main === module) {
+
+    var parser = dashdash.createParser({options: options});
+
+    try {
+        var opts = parser.parse(process.argv);
+    } catch (e) {
+        console.error('sdc-info: error: %s', e.message);
+        process.exit(1);
+    }
+
+    if (opts.debug) {
+        process.env.DEBUG = 1;
+        log.level('trace');
+        log.src = true;
+    }
+
+    // Use `parser.help()` for formatted options help.
+    if (opts.help || ! opts._args.length || opts._args[0] === 'help') {
+        var help = parser.help({includeEnv: true}).trimRight();
+        console.log('Display role tags for a given SmartDC resource\n\n' +
+                'Usage: sdc-info [OPTIONS] resource \n' + 'Options:\n' +
+                help);
+        process.exit(0);
+    }
+
+    if (opts.version) {
+        console.log('sdc-info', pkg.version);
+        process.exit(0);
+    }
+
+    if (typeof (opts.keyId) === 'undefined') {
+        console.error('Either -k or (env) SDC_KEY_ID must be specified');
+        process.exit(1);
+    }
+
+    if (!opts.account) {
+        console.error('Either -a or (env) SDC_ACCOUNT must be specified');
+        process.exit(1);
+    }
+
+    if (!opts.url) {
+        console.error('Either -u or (env) SDC_URL must be specified');
+        process.exit(1);
+    }
+
+    opts.log = log;
+
+    opts.sign = auth.cliSigner({
+        keyId: opts.keyId,
+        user: opts.account
+    });
+
+    var cloudapi = new CloudAPI(opts);
+
+    cloudapi.getRoleTags(opts._args[0], commonCb);
+
+}
