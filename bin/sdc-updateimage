@@ -1,0 +1,87 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2013 Joyent, Inc.  All rights reserved.
+
+var fs = require('fs');
+var https = require('https');
+var path = require('path');
+var url = require('url');
+
+var common = require('../lib/cli_common');
+
+
+
+// --- Globals
+
+var Options = {
+    // General
+    'account': String,
+    'debug': Boolean,
+    'help': Boolean,
+    'keyId': String,
+    'url': url,
+    'version': Boolean,
+    // Specific to this command
+    'imageVersion': String,
+    'name': String,
+    'description': String,
+    'homepage': String,
+    'eula': String,
+    'acl': Array,
+    'tags': String
+};
+
+var ShortOptions = {
+    // General
+    'a': ['--account'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'k': ['--keyId'],
+    'u': ['--url']
+};
+
+var usageStr = common.buildUsageString(Options);
+usageStr += common.buildDetailedUsageString(Options, {
+    imageVersion: 'the version of the image',
+    name: 'the name of the image',
+    description: 'a description string for the image',
+    homepage: 'a homepage URL for the image',
+    eula: 'a EULA URL for the image',
+    acl: 'a user ID to which to grant access to the new image, can be ' +
+        'specified multiple times for multiple users',
+    tags: 'a JSON object of tags for the image, ' +
+        'e.g. --tags \'{"foo": "bar"}\''
+});
+
+
+// --- Mainline
+
+common.parseArguments(Options, ShortOptions, function (parsed) {
+    var opts = {};
+
+    if (parsed.argv.remain.length < 1) {
+        common.usage(usageStr, 1, 'image required');
+    }
+    if (parsed.name)
+        opts.name = parsed.name;
+    if (parsed.imageVersion)
+        opts.version = parsed.imageVersion;
+    if (parsed.description)
+        opts.description = parsed.description;
+    if (parsed.homepage)
+        opts.homepage = parsed.homepage;
+    if (parsed.eula)
+        opts.eula = parsed.eula;
+    if (parsed.acl)
+        opts.acl = parsed.acl;
+    if (parsed.tags)
+        opts.tags = JSON.parse(parsed.tags);
+
+    var client = common.newClient(parsed);
+    parsed.argv.remain.forEach(function (image) {
+        client.updateImage(image, opts, common.callback);
+    });
+
+}, usageStr);
