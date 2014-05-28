@@ -88,6 +88,32 @@ SDCFirewallRule.prototype.do_get.help = (
 );
 
 
+SDCFirewallRule.prototype.do_machines = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!args.length) {
+        return callback(new Error(
+            'Firewall Rule id must be specified'));
+    }
+
+    return self.cloudapi.listRuleMachines(args[0], commonCb);
+};
+
+
+SDCFirewallRule.prototype.do_machines.options = generalOptions;
+SDCFirewallRule.prototype.do_machines.help = (
+    'List machines affected by the given FirewallRule id.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} machines [OPTIONS] fwrule_id \n' +
+    '\n' +
+    '{{options}}'
+);
+
+
 SDCFirewallRule.prototype.do_create = function (subcmd, opts, args, callback) {
     var self = this;
     if (opts.help) {
