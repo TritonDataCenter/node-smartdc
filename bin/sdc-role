@@ -1,0 +1,250 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2014 Joyent, Inc.  All rights reserved.
+var util = require('util');
+
+var shared = require('../lib/shared'),
+    printErr = shared.printErr,
+    commonCb = shared.commonCb,
+    DEFAULT_OPTIONS = shared.DEFAULT_OPTIONS,
+    checkRequiredOptions = shared.checkRequiredOptions;
+var cmdln = require('cmdln'),
+    Cmdln = cmdln.Cmdln;
+
+/**
+ * SDCRole Cmdln sub class
+ */
+function SDCRole() {
+    Cmdln.call(this, {
+        name: 'sdc-role',
+        desc: 'SmartDC Account Roles',
+        // Custom options. By default you get -h/--help.
+        options: DEFAULT_OPTIONS,
+        helpOpts: {
+            includeEnv: true
+        }
+    });
+}
+util.inherits(SDCRole, Cmdln);
+
+SDCRole.prototype.init = function (opts, args, callback) {
+    checkRequiredOptions.apply(this, arguments);
+    Cmdln.prototype.init.apply(this, arguments);
+    return false;
+};
+
+
+var generalOptions = [
+    {
+        names: ['help', 'h', '?'],
+        type: 'bool',
+        help: 'Show this help.'
+    }
+];
+
+
+SDCRole.prototype.do_list = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    return self.cloudapi.listRoles(commonCb);
+};
+
+
+SDCRole.prototype.do_list.options = generalOptions;
+SDCRole.prototype.do_list.help = (
+    'List your Account Roles.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} list [OPTIONS]\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCRole.prototype.do_get = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!args.length) {
+        return callback(new Error(
+            'Role id must be specified'));
+    }
+
+    return self.cloudapi.getRole(args[0], commonCb);
+
+};
+
+
+SDCRole.prototype.do_get.options = generalOptions;
+SDCRole.prototype.do_get.help = (
+    'Get an account Role by id.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} get [OPTIONS] role_id \n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCRole.prototype.do_create = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    var params = {};
+
+    if (opts.name) {
+        params.name = opts.name;
+    }
+
+    if (opts.members) {
+        params.members = opts.members;
+    }
+
+    if (opts.default_members) {
+        params.default_members = opts.default_members;
+    }
+
+    if (opts.policies) {
+        params.policies = opts.policies;
+    }
+
+    return self.cloudapi.createRole(params, commonCb);
+};
+
+
+SDCRole.prototype.do_create.options = [ {
+    name: 'name',
+    type: 'string',
+    help: 'Role name'
+}, {
+    names: ['help', 'h', '?'],
+    type: 'bool',
+    help: 'Show this help.'
+}, {
+    name: 'members',
+    type: 'arrayOfString',
+    help: 'A list logins for users with this role'
+}, {
+    name: 'default-members',
+    type: 'arrayOfString',
+    help: 'A list logins for users with this role enabled'
+}, {
+    name: 'policies',
+    type: 'arrayOfString',
+    help: 'A list of policy names for this role'
+}];
+
+SDCRole.prototype.do_create.help = (
+    'Creates a new Role for your account.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} create [OPTIONS] \n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCRole.prototype.do_update = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!args.length) {
+        return callback(new Error(
+            'Role id must be specified'));
+    }
+
+    var params = {
+        id: args[0]
+    };
+
+    if (opts.name) {
+        params.name = opts.name;
+    }
+
+    if (opts.members) {
+        params.members = opts.members;
+    }
+
+    if (opts.default_members) {
+        params.default_members = opts.default_members;
+    }
+
+    if (opts.policies) {
+        params.policies = opts.policies;
+    }
+
+    return self.cloudapi.updateRole(params, commonCb);
+};
+
+
+SDCRole.prototype.do_update.options = [ {
+    name: 'name',
+    type: 'string',
+    help: 'Role name'
+}, {
+    names: ['help', 'h', '?'],
+    type: 'bool',
+    help: 'Show this help.'
+}, {
+    name: 'members',
+    type: 'arrayOfString',
+    help: 'A list logins for users with this role'
+}, {
+    name: 'default-members',
+    type: 'arrayOfString',
+    help: 'A list logins for users with this role enabled'
+}, {
+    name: 'policies',
+    type: 'arrayOfString',
+    help: 'A list of policy names for this role'
+}];
+
+SDCRole.prototype.do_update.help = (
+    'Updates an account role.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} update [OPTIONS] \n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCRole.prototype.do_delete = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!args.length) {
+        return callback(new Error(
+            'Role id must be specified'));
+    }
+
+    return self.cloudapi.deleteRole(args[0], commonCb);
+
+};
+
+
+SDCRole.prototype.do_delete.options = generalOptions;
+SDCRole.prototype.do_delete.help = (
+    'Removes an account role.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} delete [OPTIONS] role_id \n' +
+    '\n' +
+    '{{options}}'
+);
+
+if (require.main === module) {
+    cmdln.main(SDCRole);
+}

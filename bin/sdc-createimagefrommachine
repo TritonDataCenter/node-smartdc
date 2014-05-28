@@ -30,7 +30,8 @@ var Options = {
     'homepage': String,
     'eula': String,
     'acl': Array,
-    'tags': String
+    'tags': String,
+    'user': String
 };
 
 var ShortOptions = {
@@ -45,7 +46,7 @@ var ShortOptions = {
     'm': ['--machine'],
     'i': ['--imageVersion'],
     'n': ['--name'],
-    'd': ['--description']
+    'A': ['--user']
 };
 
 var usageStr = common.buildUsageString(Options);

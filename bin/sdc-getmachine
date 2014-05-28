@@ -18,7 +18,8 @@ var Options = {
     'help': Boolean,
     'keyId': String,
     'url': url,
-    'version': Boolean
+    'version': Boolean,
+    'user': String
 };
 
 var ShortOptions = {
@@ -28,7 +29,8 @@ var ShortOptions = {
     'h': ['--help'],
     '?': ['--help'],
     'k': ['--keyId'],
-    'u': ['--url']
+    'u': ['--url'],
+    'A': ['--user']
 };
 
 var usageStr = common.buildUsageString(Options) + ' machine_id';
