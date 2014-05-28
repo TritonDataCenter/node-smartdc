@@ -574,7 +574,7 @@ SDCUser.prototype.do_delete.help = (
 
 // --- User SSH keys
 
-SDCUser.prototype.do_keys = function (subcmd, opts, args, callback) {
+SDCUser.prototype.do_list_keys = function (subcmd, opts, args, callback) {
     var self = this;
     if (opts.help) {
         return this.do_help('help', {}, [subcmd], callback);
@@ -589,18 +589,18 @@ SDCUser.prototype.do_keys = function (subcmd, opts, args, callback) {
 };
 
 
-SDCUser.prototype.do_keys.options = generalOptions;
-SDCUser.prototype.do_keys.help = (
+SDCUser.prototype.do_list_keys.options = generalOptions;
+SDCUser.prototype.do_list_keys.help = (
     'List SSH keys for the given user.\n' +
     '\n' +
     'Usage:\n' +
-    '     {{name}} keys [OPTIONS] user_id\n' +
+    '     {{name}} list-keys [OPTIONS] user_id\n' +
     '\n' +
     '{{options}}'
 );
 
 
-SDCUser.prototype.do_key = function (subcmd, opts, args, callback) {
+SDCUser.prototype.do_get_key = function (subcmd, opts, args, callback) {
     var self = this;
     if (opts.help) {
         return this.do_help('help', {}, [subcmd], callback);
@@ -621,12 +621,12 @@ SDCUser.prototype.do_key = function (subcmd, opts, args, callback) {
 };
 
 
-SDCUser.prototype.do_key.options = generalOptions;
-SDCUser.prototype.do_key.help = (
+SDCUser.prototype.do_get_key.options = generalOptions;
+SDCUser.prototype.do_get_key.help = (
     'Get a SSH key from your account.\n' +
     '\n' +
     'Usage:\n' +
-    '     {{name}} key [OPTIONS] user_id key_fingerprint \n' +
+    '     {{name}} get-key [OPTIONS] user_id key_fingerprint \n' +
     '\n' +
     '{{options}}'
 );
