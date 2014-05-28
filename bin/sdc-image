@@ -1,0 +1,369 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2014 Joyent, Inc.  All rights reserved.
+var util = require('util');
+
+var shared = require('../lib/shared'),
+    printErr = shared.printErr,
+    commonCb = shared.commonCb,
+    DEFAULT_OPTIONS = shared.DEFAULT_OPTIONS,
+    checkRequiredOptions = shared.checkRequiredOptions;
+var cmdln = require('cmdln'),
+    Cmdln = cmdln.Cmdln;
+
+/**
+ * SDCImage Cmdln sub class
+ */
+function SDCImage() {
+    Cmdln.call(this, {
+        name: 'sdc-image',
+        desc: 'SmartDC Images',
+        // Custom options. By default you get -h/--help.
+        options: DEFAULT_OPTIONS
+    });
+}
+util.inherits(SDCImage, Cmdln);
+
+SDCImage.prototype.init = function (opts, args, callback) {
+    checkRequiredOptions.apply(this, arguments);
+    Cmdln.prototype.init.apply(this, arguments);
+    return false;
+};
+
+
+var generalOptions = [
+    {
+        names: ['help', 'h', '?'],
+        type: 'bool',
+        help: 'Show this help.'
+    }
+];
+
+
+SDCImage.prototype.do_list = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    var params = {};
+    if (opts['public']) {
+        params['public'] = opts['public'];
+    }
+    if (opts.state) {
+        params.state = opts.state;
+    }
+    if (opts.type) {
+        params.type = opts.type;
+    }
+    return self.cloudapi.listImages(params, commonCb);
+};
+
+
+SDCImage.prototype.do_list.options = [ {
+    names: ['public', 'p'],
+    type: 'string',
+    help: 'Restrict the list to public images'
+}, {
+    names: ['help', 'h', '?'],
+    type: 'bool',
+    help: 'Show this help.'
+}, {
+    names: ['state', 's'],
+    type: 'string',
+    help: 'Only return images on the given state'
+}, {
+    names: ['type', 't'],
+    type: 'string',
+    help: 'Only retrieve images of the given type'
+}];
+
+SDCImage.prototype.do_list.help = (
+    'List Images.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} list [OPTIONS]\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCImage.prototype.do_get = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!args.length) {
+        return callback(new Error(
+            'Image id must be specified'));
+    }
+
+    return self.cloudapi.getImage(args[0], commonCb);
+};
+
+
+SDCImage.prototype.do_get.options = generalOptions;
+SDCImage.prototype.do_get.help = (
+    'Get an Image by id.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} get [OPTIONS] image_id \n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCImage.prototype.do_createfrommachine = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!opts.name) {
+        return callback(new Error('Image name must be specified'));
+    }
+    if (!opts.imageVersion) {
+        return callback(new Error('Image version must be specified'));
+    }
+    if (!opts.machine) {
+        return callback(new Error('Machine id must be specified'));
+    }
+
+    var params = {
+        machine: opts.machine,
+        name: opts.name,
+        version: opts.imageVersion
+    };
+
+    if (opts.description) {
+        params.description = opts.description;
+    }
+    if (opts.homepage) {
+        params.homepage = opts.homepage;
+    }
+    if (opts.eula) {
+        params.eula = opts.eula;
+    }
+    if (opts.acl) {
+        params.acl = opts.acl;
+    }
+    if (opts.tags) {
+        try {
+            params.tags = JSON.parse(opts.tags);
+        } catch (e) {
+            return callback(new Error('Invalid tags format'));
+        }
+    }
+
+
+    return self.cloudapi.createImageFromMachine(params, commonCb);
+};
+
+
+SDCImage.prototype.do_createfrommachine.options = [ {
+    names: ['help', 'h', '?'],
+    type: 'bool',
+    help: 'Show this help.'
+}, {
+    names: ['machine', 'm'],
+    type: 'string',
+    help: 'the ID of the machine from which the image is created (required)'
+}, {
+    names: ['description', 'd'],
+    type: 'string',
+    help: 'A short prose description of the image. Max. 512 chars'
+}, {
+    name: 'homepage',
+    type: 'string',
+    help: 'URL where users can find more info about the image. Max. 128 chars'
+}, {
+    name: 'eula',
+    type: 'string',
+    help: 'URL of the End User License Agreement for the image. Max. 128 chars'
+}, {
+    name: 'acl',
+    type: 'arrayOfString',
+    help: 'Account UUIDs to which to give read access to a private image'
+}, {
+    names: ['name', 'n'],
+    type: 'string',
+    help: 'A name for this image (required). Max 512 chars'
+}, {
+    names: ['imageVersion', 'i'],
+    type: 'string',
+    help: 'A version string for this image (required). Max 128 chars'
+}, {
+    name: 'tags',
+    type: 'string',
+    help: 'Optional. A JSON stringified object of key/value pairs\n' +
+        'e.g. --tags=\'{"foo": "bar"}\''
+}];
+
+SDCImage.prototype.do_createfrommachine.help = (
+    'Updates an Image of your account.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} createfrommachine [OPTIONS] \n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCImage.prototype.do_export = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!args.length) {
+        return callback(new Error(
+            'Image id must be specified'));
+    }
+
+    if (!opts.mantaPath) {
+        return callback(new Error(
+            'Manta Path is required'));
+    }
+
+    return self.cloudapi.exportImage(args[0], opts.mantaPath, commonCb);
+};
+
+
+SDCImage.prototype.do_export.options = [ {
+    names: ['mantaPath', 'm'],
+    type: 'string',
+    help: 'Manta path (required)'
+}, {
+    names: ['help', 'h', '?'],
+    type: 'bool',
+    help: 'Show this help.'
+}];
+
+SDCImage.prototype.do_export.help = (
+    'Exports an image to the given Manta Path.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} export [OPTIONS] \n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCImage.prototype.do_update = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!args.length) {
+        return callback(new Error('Image id must be specified'));
+    }
+
+    var params = {};
+
+    if (opts.name) {
+        params.name = opts.name;
+    }
+    if (opts.imageVersion) {
+        params.version = opts.imageVersion;
+    }
+    if (opts.description) {
+        params.description = opts.description;
+    }
+    if (opts.homepage) {
+        params.homepage = opts.homepage;
+    }
+    if (opts.eula) {
+        params.eula = opts.eula;
+    }
+    if (opts.acl) {
+        params.acl = opts.acl;
+    }
+    if (opts.tags) {
+        try {
+            params.tags = JSON.parse(opts.tags);
+        } catch (e) {
+            return callback(new Error('Invalid tags format'));
+        }
+    }
+
+
+    return self.cloudapi.updateImage(args[0], params, commonCb);
+};
+
+
+SDCImage.prototype.do_update.options = [ {
+    names: ['help', 'h', '?'],
+    type: 'bool',
+    help: 'Show this help.'
+}, {
+    name: 'description',
+    type: 'string',
+    help: 'A short prose description of the image. Max. 512 chars'
+}, {
+    name: 'homepage',
+    type: 'string',
+    help: 'URL where users can find more info about the image. Max. 128 chars'
+}, {
+    name: 'eula',
+    type: 'string',
+    help: 'URL of the End User License Agreement for the image. Max. 128 chars'
+}, {
+    name: 'acl',
+    type: 'arrayOfString',
+    help: 'Account UUIDs to which to give read access to a private image'
+}, {
+    name: 'name',
+    type: 'string',
+    help: 'A name for this image. Max 512 chars'
+}, {
+    name: 'imageVersion',
+    type: 'string',
+    help: 'A version string for this image. Max 128 chars'
+}, {
+    name: 'tags',
+    type: 'string',
+    help: 'Optional. A JSON stringified object of key/value pairs\n' +
+        'e.g. --tags=\'{"foo": "bar"}\''
+}];
+
+SDCImage.prototype.do_update.help = (
+    'Updates an Image of your account.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} update [OPTIONS] image_id \n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCImage.prototype.do_delete = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!args.length) {
+        return callback(new Error(
+            'Image id must be specified'));
+    }
+
+    return self.cloudapi.deleteImage(args[0], commonCb);
+
+};
+
+
+SDCImage.prototype.do_delete.options = generalOptions;
+SDCImage.prototype.do_delete.help = (
+    'Removes an Image from your account.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} delete [OPTIONS] image_id \n' +
+    '\n' +
+    '{{options}}'
+);
+if (require.main === module) {
+    cmdln.main(SDCImage);
+}
