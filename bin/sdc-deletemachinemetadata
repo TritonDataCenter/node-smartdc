@@ -18,7 +18,8 @@ var Options = {
     'keyId': String,
     'metadata': String,
     'url': url,
-    'version': Boolean
+    'version': Boolean,
+    'user': String
 };
 
 var ShortOptions = {
@@ -28,7 +29,8 @@ var ShortOptions = {
     '?': ['--help'],
     'k': ['--keyId'],
     'm': ['--metadata'],
-    'u': ['--url']
+    'u': ['--url'],
+    'A': ['--user']
 };
 
 var usageStr = common.buildUsageString(Options);

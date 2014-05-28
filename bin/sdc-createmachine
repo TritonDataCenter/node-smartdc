@@ -30,7 +30,8 @@ var Options = {
     'script': path,
     'tag': [String, Array],
     'url': url,
-    'version': Boolean
+    'version': Boolean,
+    'user': String
 };
 
 var ShortOptions = {
@@ -49,7 +50,8 @@ var ShortOptions = {
     's': ['--script'],
     't': ['--tag'],
     'u': ['--url'],
-    'w': ['--networks']
+    'w': ['--networks'],
+    'A': ['--user']
 };
 
 var usageStr = common.buildUsageString(Options);

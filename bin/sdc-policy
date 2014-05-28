@@ -1,0 +1,233 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2014 Joyent, Inc.  All rights reserved.
+var util = require('util');
+
+var shared = require('../lib/shared'),
+    printErr = shared.printErr,
+    commonCb = shared.commonCb,
+    DEFAULT_OPTIONS = shared.DEFAULT_OPTIONS,
+    checkRequiredOptions = shared.checkRequiredOptions;
+var cmdln = require('cmdln'),
+    Cmdln = cmdln.Cmdln;
+
+/**
+ * SDCPolicy Cmdln sub class
+ */
+function SDCPolicy() {
+    Cmdln.call(this, {
+        name: 'sdc-policy',
+        desc: 'SmartDC Account Policies',
+        // Custom options. By default you get -h/--help.
+        options: DEFAULT_OPTIONS,
+        helpOpts: {
+            includeEnv: true
+        }
+    });
+}
+util.inherits(SDCPolicy, Cmdln);
+
+SDCPolicy.prototype.init = function (opts, args, callback) {
+    checkRequiredOptions.apply(this, arguments);
+    Cmdln.prototype.init.apply(this, arguments);
+    return false;
+};
+
+
+var generalOptions = [
+    {
+        names: ['help', 'h', '?'],
+        type: 'bool',
+        help: 'Show this help.'
+    }
+];
+
+
+SDCPolicy.prototype.do_list = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    return self.cloudapi.listPolicies(commonCb);
+};
+
+
+SDCPolicy.prototype.do_list.options = generalOptions;
+SDCPolicy.prototype.do_list.help = (
+    'List your Account Policies.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} list [OPTIONS]\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCPolicy.prototype.do_get = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!args.length) {
+        return callback(new Error(
+            'Policy id must be specified'));
+    }
+
+    return self.cloudapi.getPolicy(args[0], commonCb);
+};
+
+
+SDCPolicy.prototype.do_get.options = generalOptions;
+SDCPolicy.prototype.do_get.help = (
+    'Get an account Policy by id.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} get [OPTIONS] policy_id \n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCPolicy.prototype.do_create = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    var params = {};
+
+    if (opts.name) {
+        params.name = opts.name;
+    }
+
+    if (opts.rules) {
+        params.rules = opts.rules;
+    }
+
+    if (opts.description) {
+        params.description = opts.description;
+    }
+
+    return self.cloudapi.createPolicy(params, commonCb);
+};
+
+
+SDCPolicy.prototype.do_create.options = [ {
+    name: 'rules',
+    type: 'arrayOfString',
+    help: 'A list of rules for the policy'
+}, {
+    names: ['help', 'h', '?'],
+    type: 'bool',
+    help: 'Show this help.'
+}, {
+    name: 'name',
+    type: 'string',
+    help: 'Policy name'
+}, {
+    name: 'description',
+    type: 'string',
+    help: 'A detailed policy description'
+}];
+
+SDCPolicy.prototype.do_create.help = (
+    'Creates a new Policy for your account.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} create [OPTIONS] \n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCPolicy.prototype.do_update = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!args.length) {
+        return callback(new Error(
+            'Policy id must be specified'));
+    }
+
+    var params = {
+        id: args[0]
+    };
+
+    if (opts.name) {
+        params.name = opts.name;
+    }
+
+    if (opts.rules) {
+        params.rules = opts.rules;
+    }
+
+    if (opts.description) {
+        params.description = opts.description;
+    }
+
+    return self.cloudapi.updatePolicy(params, commonCb);
+};
+
+
+SDCPolicy.prototype.do_update.options = [ {
+    name: 'rules',
+    type: 'arrayOfString',
+    help: 'A list of rules for the policy'
+}, {
+    names: ['help', 'h', '?'],
+    type: 'bool',
+    help: 'Show this help.'
+}, {
+    name: 'name',
+    type: 'string',
+    help: 'Policy name'
+}, {
+    name: 'description',
+    type: 'string',
+    help: 'A detailed policy description'
+}];
+
+SDCPolicy.prototype.do_update.help = (
+    'Updates a Policy of your account.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} create [OPTIONS] \n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCPolicy.prototype.do_delete = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!args.length) {
+        return callback(new Error(
+            'Policy id must be specified'));
+    }
+
+    return self.cloudapi.deletePolicy(args[0], commonCb);
+
+};
+
+
+SDCPolicy.prototype.do_delete.options = generalOptions;
+SDCPolicy.prototype.do_delete.help = (
+    'Removes a Policy from your account.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} delete [OPTIONS] policy_id \n' +
+    '\n' +
+    '{{options}}'
+);
+
+if (require.main === module) {
+    cmdln.main(SDCPolicy);
+}

@@ -22,7 +22,8 @@ var Options = {
     'predicate': String,
     'stat': String,
     'url': url,
-    'version': Boolean
+    'version': Boolean,
+    'user': String
 };
 
 var ShortOptions = {
@@ -36,7 +37,8 @@ var ShortOptions = {
     'n': ['--decomposition'],
     'p': ['--predicate'],
     's': ['--stat'],
-    'u': ['--url']
+    'u': ['--url'],
+    'A': ['--user']
 };
 
 var usageStr = common.buildUsageString(Options);
