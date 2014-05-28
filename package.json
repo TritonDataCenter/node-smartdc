@@ -2,7 +2,7 @@
   "author": "Joyent, Inc. http://www.joyent.com",
   "name": "smartdc",
   "description": "Client SDK and CLI for the Joyent SmartDataCenter API",
-  "version": "7.3.0",
+  "version": "7.2.0",
   "private": false,
   "homepage": "http://www.joyent.com/software/smartdatacenter",
   "repository": {
@@ -24,8 +24,7 @@
       "restify": "2.4.1",
       "bunyan": "0.21.1",
       "clone": "0.1.6",
-      "smartdc-auth": "1.0.1",
-      "cmdln": "1.3.2"
+      "smartdc-auth": "1.0.1"
   },
   "devDependencies": {
       "tap": "0.4.0",
