@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2013 Joyent, Inc.  All rights reserved.
+
+var fs = require('fs');
+var url = require('url');
+
+var common = require('../lib/cli_common');
+
+
+
+// --- Globals
+
+var Options = {
+    'account': String,
+    'debug': Boolean,
+    'enabled': Boolean,
+    'help': Boolean,
+    'keyId': String,
+    'rule': String,
+    'url': url,
+    'version': Boolean
+};
+
+var ShortOptions = {
+    'a': ['--account'],
+    'd': ['--debug'],
+    'e': ['--enabled'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'k': ['--keyId'],
+    'r': ['--rule'],
+    'u': ['--url']
+};
+
+
+var usageStr = common.buildUsageString(Options);
+usageStr += common.buildDetailedUsageString(Options);
+
+// --- Mainline
+
+common.parseArguments(Options, ShortOptions, function (parsed) {
+
+    var opts = {};
+    if (parsed.rule) {
+        opts.rule = parsed.rule;
+    }
+    if (parsed.enabled) {
+        opts.enabled = parsed.enabled;
+    }
+
+    var client = common.newClient(parsed);
+    client.createFwRule(opts, common.callback);
+}, usageStr);
