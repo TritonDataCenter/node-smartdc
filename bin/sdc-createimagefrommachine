@@ -1,0 +1,95 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2013 Joyent, Inc.  All rights reserved.
+
+var fs = require('fs');
+var https = require('https');
+var path = require('path');
+var url = require('url');
+
+var common = require('../lib/cli_common');
+
+
+
+// --- Globals
+
+var Options = {
+    // General
+    'account': String,
+    'debug': Boolean,
+    'help': Boolean,
+    'keyId': String,
+    'url': url,
+    'version': Boolean,
+    // Specific to this command
+    'machine': String,
+    'imageVersion': String,
+    'name': String,
+    'description': String,
+    'homepage': String,
+    'eula': String,
+    'acl': Array,
+    'tags': String
+};
+
+var ShortOptions = {
+    // General
+    'a': ['--account'],
+    'd': ['--debug'],
+    'h': ['--help'],
+    '?': ['--help'],
+    'k': ['--keyId'],
+    'u': ['--url'],
+    // Specific to this command
+    'm': ['--machine'],
+    'i': ['--imageVersion'],
+    'n': ['--name'],
+    'd': ['--description']
+};
+
+var usageStr = common.buildUsageString(Options);
+usageStr += common.buildDetailedUsageString(Options, {
+    machine: 'the ID of the machine from which the image is created (required)',
+    imageVersion: 'the version string to use for the new image (required)',
+    name: 'the name to use for the new image (required)',
+    description: 'a description string for the new image',
+    homepage: 'a homepage URL for the new image',
+    eula: 'a EULA URL for the new image',
+    acl: 'a user ID to which to grant access to the new image, can be '
+        + 'specified multiple times for multiple users',
+    tags: 'a JSON object of tags for the new image, '
+        + 'e.g. --tags \'{"foo": "bar"}\''
+});
+
+
+// --- Mainline
+
+common.parseArguments(Options, ShortOptions, function (parsed) {
+    var opts = {};
+    if (parsed.machine)
+        opts.machine = parsed.machine;
+    else
+        common.usage(usageStr, 1, 'machine(id) required');
+    if (parsed.name)
+        opts.name = parsed.name;
+    else
+        common.usage(usageStr, 1, 'name(string) required');
+    if (parsed.imageVersion)
+        opts.version = parsed.imageVersion;
+    else
+        common.usage(usageStr, 1, 'imageVersion(string) required');
+    if (parsed.description)
+        opts.description = parsed.description;
+    if (parsed.homepage)
+        opts.homepage = parsed.homepage;
+    if (parsed.eula)
+        opts.eula = parsed.eula;
+    if (parsed.acl)
+        opts.acl = parsed.acl;
+    if (parsed.tags)
+        opts.tags = JSON.parse(parsed.tags);
+
+    var client = common.newClient(parsed);
+    client.createImageFromMachine(opts, common.callback);
+}, usageStr);
