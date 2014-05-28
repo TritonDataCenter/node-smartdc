@@ -70,7 +70,7 @@ SDCPolicy.prototype.do_get = function (subcmd, opts, args, callback) {
 
     if (!args.length) {
         return callback(new Error(
-            'User id must be specified'));
+            'Policy id must be specified'));
     }
 
     return self.cloudapi.getPolicy(args[0], commonCb);

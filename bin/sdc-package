@@ -1,0 +1,93 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2014 Joyent, Inc.  All rights reserved.
+var util = require('util');
+
+var shared = require('../lib/shared'),
+    printErr = shared.printErr,
+    commonCb = shared.commonCb,
+    DEFAULT_OPTIONS = shared.DEFAULT_OPTIONS,
+    checkRequiredOptions = shared.checkRequiredOptions;
+var cmdln = require('cmdln'),
+    Cmdln = cmdln.Cmdln;
+
+/**
+ * SDCPackage Cmdln sub class
+ */
+function SDCPackage() {
+    Cmdln.call(this, {
+        name: 'sdc-package',
+        desc: 'SmartDC Packages',
+        // Custom options. By default you get -h/--help.
+        options: DEFAULT_OPTIONS
+    });
+}
+util.inherits(SDCPackage, Cmdln);
+
+SDCPackage.prototype.init = function (opts, args, callback) {
+    checkRequiredOptions.apply(this, arguments);
+    Cmdln.prototype.init.apply(this, arguments);
+    return false;
+};
+
+
+var generalOptions = [
+    {
+        names: ['help', 'h', '?'],
+        type: 'bool',
+        help: 'Show this help.'
+    }
+];
+
+
+SDCPackage.prototype.do_list = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    return self.cloudapi.listPackages(commonCb);
+};
+
+
+SDCPackage.prototype.do_list.options = generalOptions;
+SDCPackage.prototype.do_list.help = (
+    'List Packages.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} list [OPTIONS]\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+SDCPackage.prototype.do_get = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (!args.length) {
+        return callback(new Error(
+            'Package id must be specified'));
+    }
+
+    return self.cloudapi.getPackage(args[0], commonCb);
+
+};
+
+
+SDCPackage.prototype.do_get.options = generalOptions;
+SDCPackage.prototype.do_get.help = (
+    'Get a Package by id.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} get [OPTIONS] package_id \n' +
+    '\n' +
+    '{{options}}'
+);
+
+if (require.main === module) {
+    cmdln.main(SDCPackage);
+}
