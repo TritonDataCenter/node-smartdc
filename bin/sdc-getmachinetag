@@ -54,6 +54,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
         }
 
         console.log(obj);
+        process.exit(0);
     }
 
     var client = common.newClient(parsed);
