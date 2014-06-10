@@ -277,7 +277,7 @@ SDCUser.prototype.do_change_password.help = (
     'Updates password for a User of your account.\n' +
     '\n' +
     'Usage:\n' +
-    '     {{name}} change-password [OPTIONS] \n' +
+    '     {{name}} change-password [OPTIONS] user_id\n' +
     '\n' +
     '{{options}}'
 );
@@ -404,7 +404,7 @@ SDCUser.prototype.do_update.help = (
     'use {{name}} change-password command instead.\n' +
     '\n' +
     'Usage:\n' +
-    '     {{name}} update [OPTIONS] \n' +
+    '     {{name}} update [OPTIONS] user_id\n' +
     '\n' +
     '{{options}}'
 );

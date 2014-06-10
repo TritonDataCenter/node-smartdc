@@ -213,7 +213,7 @@ SDCRole.prototype.do_update.help = (
     'Updates an account role.\n' +
     '\n' +
     'Usage:\n' +
-    '     {{name}} update [OPTIONS] \n' +
+    '     {{name}} update [OPTIONS] role_id\n' +
     '\n' +
     '{{options}}'
 );
