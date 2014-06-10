@@ -196,7 +196,7 @@ SDCPolicy.prototype.do_update.help = (
     'Updates a Policy of your account.\n' +
     '\n' +
     'Usage:\n' +
-    '     {{name}} create [OPTIONS] \n' +
+    '     {{name}} update [OPTIONS] policy_id \n' +
     '\n' +
     '{{options}}'
 );
