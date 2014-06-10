@@ -122,7 +122,6 @@ if (require.main === module) {
         }
     }
 
-
     var cloudapi = new CloudAPI(opts);
 
     var funcs = [];
@@ -155,6 +154,9 @@ if (require.main === module) {
         });
     } else {
         funcs.push(function _setRoleTags(_, cb) {
+            resetTo = resetTo.filter(function (r) {
+                return (r.length !== 0);
+            });
             existing = resetTo;
             return cb(null);
         });
