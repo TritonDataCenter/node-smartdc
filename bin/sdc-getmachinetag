@@ -49,7 +49,11 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
 
     function callback(err, obj) {
         if (err) {
-            console.error(JSON.parse(err.message).message);
+            if (obj && obj.errors && obj.errors[0]) {
+                console.error(err.message + ':', obj.errors[0].message);
+            } else {
+                console.error(err.message);
+            }
             process.exit(3);
         }
 
