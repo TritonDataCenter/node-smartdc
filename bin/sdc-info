@@ -21,14 +21,6 @@ var cmdln = require('cmdln'),
 var auth = require('smartdc-auth');
 
 var pkg = require('../package.json');
-var name = 'sdc';
-var log = bunyan.createLogger({
-    name: name,
-    serializers: bunyan.stdSerializers,
-    stream: process.stderr,
-    level: 'warn'
-});
-
 var dashdash = require('dashdash');
 
 var options = DEFAULT_OPTIONS;
@@ -46,8 +38,7 @@ if (require.main === module) {
 
     if (opts.debug) {
         process.env.DEBUG = 1;
-        log.level('trace');
-        log.src = true;
+        opts.logLevel = 'trace';
     }
 
     // Use `parser.help()` for formatted options help.
@@ -78,8 +69,6 @@ if (require.main === module) {
         console.error('Either -u or (env) SDC_URL must be specified');
         process.exit(1);
     }
-
-    opts.log = log;
 
     var identity = (opts.user) ?
         util.format('%s/users/%s', opts.account, opts.user):
