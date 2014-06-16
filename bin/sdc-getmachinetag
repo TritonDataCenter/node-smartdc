@@ -34,7 +34,7 @@ var ShortOptions = {
 };
 
 var usageStr = common.buildUsageString(Options) + ' machine_id';
-usageStr += common.buildDetailedUsageString(Options);
+usageStr += common.buildDetailedUsageString(Options, { 'tag': 'tag name' });
 
 
 // --- Mainline
