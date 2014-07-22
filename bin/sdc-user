@@ -305,39 +305,39 @@ SDCUser.prototype.do_update = function (subcmd, opts, args, callback) {
         params.login = opts.login;
     }
 
-    if (opts.address) {
+    if (typeof(opts.address) !== 'undefined') {
         params.address = opts.address;
     }
 
-    if (opts.city) {
+    if (typeof(opts.city) !== 'undefined') {
         params.city = opts.city;
     }
 
-    if (opts.company) {
+    if (typeof(opts.company) !== 'undefined') {
         params.companyName = opts.company;
     }
 
-    if (opts.country) {
+    if (typeof(opts.country) !== 'undefined') {
         params.country = opts.country;
     }
 
-    if (opts.name) {
+    if (typeof(opts.name) !== 'undefined') {
         params.firstName = opts.name;
     }
 
-    if (opts.phone) {
+    if (typeof(opts.phone) !== 'undefined') {
         params.phone = opts.phone;
     }
 
-    if (opts['postal-code']) {
+    if (typeof(opts['postal-code']) !== 'undefined') {
         params.postalCode = opts['postal-code'];
     }
 
-    if (opts.state) {
+    if (typeof(opts.state) !== 'undefined') {
         params.state = opts.state;
     }
 
-    if (opts.surname) {
+    if (typeof(opts.surname) !== 'undefined') {
         params.lastName = opts.surname;
     }
 

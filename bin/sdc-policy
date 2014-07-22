@@ -166,7 +166,7 @@ SDCPolicy.prototype.do_update = function (subcmd, opts, args, callback) {
         params.rules = opts.rules;
     }
 
-    if (opts.description) {
+    if (typeof (opts.description) !== 'undefined') {
         params.description = opts.description;
     }
 
