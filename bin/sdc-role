@@ -183,7 +183,41 @@ SDCRole.prototype.do_update = function (subcmd, opts, args, callback) {
         params.policies = opts.policies;
     }
 
-    return self.cloudapi.updateRole(params, commonCb);
+    self.cloudapi.getRole(args[0], function (err, role) {
+        if (err) {
+            if (err.statusCode === 410) {
+                console.error('Object is Gone (410)');
+                process.exit(3);
+            }
+            printErr(err);
+            process.exit(3);
+        }
+        // Validate that members and default members are OK when one of them
+        // is not provided:
+        var errors = [];
+        if (params.default_members && !params.members) {
+            params.default_members.forEach(function (dm) {
+                if (role.members.indexOf(dm) === -1) {
+                    errors.push(util.format('User \'%s\' must be a role ' +
+                            'member in order to become a default member', dm));
+                }
+            });
+        } else if (params.members && !params.default_members) {
+            role.default_members.forEach(function (dm) {
+                if (params.members.indexOf(dm) === -1) {
+                    errors.push(util.format('User \'%s\' must be removed ' +
+                            'from both members and default members', dm));
+                }
+            });
+        }
+
+        if (errors.length) {
+            console.error(errors.join('\n'));
+            process.exit(3);
+        }
+
+        self.cloudapi.updateRole(params, commonCb);
+    });
 };
 
 
