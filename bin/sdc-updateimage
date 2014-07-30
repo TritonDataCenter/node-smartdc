@@ -31,7 +31,7 @@ var Options = {
     'acl': Array,
     'tags': String,
     'user': String,
-    'as-role': String
+    'role': String
 };
 
 var ShortOptions = {
@@ -42,8 +42,7 @@ var ShortOptions = {
     '?': ['--help'],
     'k': ['--keyId'],
     'u': ['--url'],
-    'A': ['--user'],
-    'R': ['--as-role']
+    'A': ['--user']
 };
 
 var usageStr = common.buildUsageString(Options);

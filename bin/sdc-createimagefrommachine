@@ -32,7 +32,7 @@ var Options = {
     'acl': Array,
     'tags': String,
     'user': String,
-    'as-role': String
+    'role': String
 };
 
 var ShortOptions = {
@@ -46,8 +46,7 @@ var ShortOptions = {
     'm': ['--machine'],
     'i': ['--imageVersion'],
     'n': ['--name'],
-    'A': ['--user'],
-    'R': ['--as-role']
+    'A': ['--user']
 };
 
 var usageStr = common.buildUsageString(Options);
