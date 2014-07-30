@@ -44,6 +44,25 @@ the environment variable equivalents:
   Your matching SSH *private* key must be beside the ".pub" public key file
   in your "~/.ssh" dir.
 
+## Authenticating as account user
+
+Starting with version 7.3, [Role Based Access Control](https://apidocs.joyent.com/rbac)
+lets you provide limited access to to your Joyent Cloud account and Manta
+storage to other members of your organization.
+
+In order to authenticate as a member of a given organization, `SDC_ACCOUNT`
+will remain set to the login associated with the organization, and we'll use
+the `SDC_USER` environment variable to identify ourselves as a member of such
+organization. We can also use the `--A | --user` command line argument with
+any of the `sdc-*` commands if we just want to operate as an account user for
+just that command.
+
+Remember that if the environment variable `SDC_USER` is set, `sdc-*` binaries
+will remain trying to operate as the given user. If you've set this variable and
+want to switch back to operate as the account owner, you should
+`unset SDC_USER`.
+
+
 The SmartDataCenter Cloud API uses
 [http-signature](https://github.com/joyent/node-http-signature) ([IETF draft
 spec](http://tools.ietf.org/id/draft-cavage-http-signatures-00.txt)) for
