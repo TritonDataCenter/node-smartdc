@@ -23,7 +23,8 @@ var Options = {
     'stat': String,
     'url': url,
     'version': Boolean,
-    'user': String
+    'user': String,
+    'as-role': String
 };
 
 var ShortOptions = {
@@ -38,7 +39,8 @@ var ShortOptions = {
     'p': ['--predicate'],
     's': ['--stat'],
     'u': ['--url'],
-    'A': ['--user']
+    'A': ['--user'],
+    'R': ['--as-role']
 };
 
 var usageStr = common.buildUsageString(Options);

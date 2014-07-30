@@ -19,7 +19,8 @@ var Options = {
     'url': url,
     'mantaPath': String,
     'version': Boolean,
-    'user': String
+    'user': String,
+    'as-role': String
 };
 
 var ShortOptions = {
@@ -30,7 +31,8 @@ var ShortOptions = {
     'k': ['--keyId'],
     'u': ['--url'],
     'm': ['--mantaPath'],
-    'A': ['--user']
+    'A': ['--user'],
+    'R': ['--as-role']
 };
 
 var usageStr = common.buildUsageString(Options) + ' image_id';

@@ -29,7 +29,8 @@ var Options = {
     'tombstone': Number,
     'url': url,
     'version': Boolean,
-    'user': String
+    'user': String,
+    'as-role': String
 };
 
 var ShortOptions = {
@@ -50,7 +51,8 @@ var ShortOptions = {
     't': ['--tag'],
     'y': ['--type'],
     'u': ['--url'],
-    'A': ['--user']
+    'A': ['--user'],
+    'R': ['--as-role']
 };
 
 var usageStr = common.buildUsageString(Options);

@@ -30,7 +30,8 @@ var Options = {
     'eula': String,
     'acl': Array,
     'tags': String,
-    'user': String
+    'user': String,
+    'as-role': String
 };
 
 var ShortOptions = {
@@ -41,7 +42,8 @@ var ShortOptions = {
     '?': ['--help'],
     'k': ['--keyId'],
     'u': ['--url'],
-    'A': ['--user']
+    'A': ['--user'],
+    'R': ['--as-role']
 };
 
 var usageStr = common.buildUsageString(Options);
