@@ -20,7 +20,7 @@ var Options = {
     'url': url,
     'version': Boolean,
     'user': String,
-    'as-role': String
+    'role': String
 };
 
 var ShortOptions = {
@@ -31,8 +31,7 @@ var ShortOptions = {
     'k': ['--keyId'],
     'n': ['--snapshot'],
     'u': ['--url'],
-    'A': ['--user'],
-    'R': ['--as-role']
+    'A': ['--user']
 };
 
 var usageStr = common.buildUsageString(Options);
