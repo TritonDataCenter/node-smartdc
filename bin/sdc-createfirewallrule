@@ -21,7 +21,8 @@ var Options = {
     'rule': String,
     'url': url,
     'version': Boolean,
-    'user': String
+    'user': String,
+    'as-role': String
 };
 
 var ShortOptions = {
@@ -33,7 +34,8 @@ var ShortOptions = {
     'k': ['--keyId'],
     'r': ['--rule'],
     'u': ['--url'],
-    'A': ['--user']
+    'A': ['--user'],
+    'R': ['--as-role']
 };
 
 

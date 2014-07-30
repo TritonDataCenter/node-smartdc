@@ -20,7 +20,8 @@ var Options = {
     'metadata': String,
     'url': url,
     'version': Boolean,
-    'user': String
+    'user': String,
+    'as-role': String
 };
 
 var ShortOptions = {
@@ -32,7 +33,8 @@ var ShortOptions = {
     'k': ['--keyId'],
     'm': ['--metadata'],
     'u': ['--url'],
-    'A': ['--user']
+    'A': ['--user'],
+    'R': ['--as-role']
 };
 
 var usageStr = common.buildUsageString(Options) + ' machine_id';

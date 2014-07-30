@@ -21,7 +21,8 @@ var Options = {
     'metadata-file': [String, Array],
     'url': url,
     'version': Boolean,
-    'user': String
+    'user': String,
+    'as-role': String
 };
 
 var ShortOptions = {
@@ -33,7 +34,8 @@ var ShortOptions = {
     'm': ['--metadata'],
     'M': ['--metadata-file'],
     'u': ['--url'],
-    'A': ['--user']
+    'A': ['--user'],
+    'R': ['--as-role']
 };
 
 var usageStr = common.buildUsageString(Options);

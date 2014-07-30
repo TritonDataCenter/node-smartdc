@@ -183,7 +183,7 @@ SDCRole.prototype.do_update = function (subcmd, opts, args, callback) {
         params.policies = opts.policies;
     }
 
-    self.cloudapi.getRole(args[0], function (err, role) {
+    return self.cloudapi.getRole(args[0], function (err, role) {
         if (err) {
             if (err.statusCode === 410) {
                 console.error('Object is Gone (410)');
