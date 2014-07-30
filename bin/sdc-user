@@ -305,39 +305,39 @@ SDCUser.prototype.do_update = function (subcmd, opts, args, callback) {
         params.login = opts.login;
     }
 
-    if (typeof(opts.address) !== 'undefined') {
+    if (typeof (opts.address) !== 'undefined') {
         params.address = opts.address;
     }
 
-    if (typeof(opts.city) !== 'undefined') {
+    if (typeof (opts.city) !== 'undefined') {
         params.city = opts.city;
     }
 
-    if (typeof(opts.company) !== 'undefined') {
+    if (typeof (opts.company) !== 'undefined') {
         params.companyName = opts.company;
     }
 
-    if (typeof(opts.country) !== 'undefined') {
+    if (typeof (opts.country) !== 'undefined') {
         params.country = opts.country;
     }
 
-    if (typeof(opts.name) !== 'undefined') {
+    if (typeof (opts.name) !== 'undefined') {
         params.firstName = opts.name;
     }
 
-    if (typeof(opts.phone) !== 'undefined') {
+    if (typeof (opts.phone) !== 'undefined') {
         params.phone = opts.phone;
     }
 
-    if (typeof(opts['postal-code']) !== 'undefined') {
+    if (typeof (opts['postal-code']) !== 'undefined') {
         params.postalCode = opts['postal-code'];
     }
 
-    if (typeof(opts.state) !== 'undefined') {
+    if (typeof (opts.state) !== 'undefined') {
         params.state = opts.state;
     }
 
-    if (typeof(opts.surname) !== 'undefined') {
+    if (typeof (opts.surname) !== 'undefined') {
         params.lastName = opts.surname;
     }
 
