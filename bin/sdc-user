@@ -76,12 +76,27 @@ SDCUser.prototype.do_get = function (subcmd, opts, args, callback) {
             'User id must be specified'));
     }
 
-    return self.cloudapi.getUser(args[0], commonCb);
+    var user = (opts.membership) ? {
+        id: args[0],
+        membership: true
+    } : args[0];
+
+    return self.cloudapi.getUser(user, commonCb);
 
 };
 
 
-SDCUser.prototype.do_get.options = generalOptions;
+SDCUser.prototype.do_get.options = [ {
+    name: 'membership',
+    type: 'bool',
+    help: 'Include user roles in the response'
+}, {
+    names: ['help', 'h', '?'],
+    type: 'bool',
+    help: 'Show this help.'
+}];
+
+
 SDCUser.prototype.do_get.help = (
     'Get an account User by id.\n' +
     '\n' +
