@@ -10,7 +10,7 @@ var exec = require('child_process').exec;
 var smartdc = require('../lib');
 var sdc;
 
-var PACKAGE, DATASET, IMAGE, MACHINE;
+var PACKAGE, DATASET, IMAGE, MACHINE, NETWORK, NIC;
 
 var TAG_KEY = 'smartdc_role';
 var TAG_VAL = 'unitTest';
@@ -54,8 +54,7 @@ test('setup', function (t) {
                 connectTimeout: 1000,
                 logLevel: (process.env.LOG_LEVEL || 'info'),
                 retry: false,
-                sign: smartdc.privateKeySigner({
-                    key: key,
+                sign: smartdc.cliSigner({
                     keyId: stdout.replace('\n', ''),
                     user: user
                 }),
@@ -228,6 +227,36 @@ test('get images', function (t) {
         t.ok(ds.id);
         t.end();
     }, true);
+});
+
+
+test('list networks', function (t) {
+    sdc.listNetworks(function (err, networks) {
+        t.ifError(err);
+        t.ok(Array.isArray(networks));
+
+        NETWORK = networks[0];
+        t.ok(NETWORK);
+        t.ok(NETWORK.id);
+        t.ok(NETWORK.name);
+        t.ok(typeof (NETWORK.public) === 'boolean');
+
+        t.end();
+    });
+});
+
+
+test('get network', function (t) {
+    sdc.getNetwork(NETWORK.id, function (err, network) {
+        t.ifError(err);
+
+        t.ok(network);
+        t.ok(network.id);
+        t.ok(network.name);
+        t.ok(typeof (network.public) === 'boolean');
+
+        t.end();
+    });
 });
 
 
@@ -496,6 +525,68 @@ test('delete machine tags', function (t) {
     });
 });
 
+
+
+test('list machine nics', function (t) {
+    sdc.listNics(MACHINE.id, function (err, nics) {
+        t.ifError(err);
+
+        t.ok(Array.isArray(nics));
+
+        NIC = nics[0];
+        t.ok(NIC);
+        t.ok(NIC.mac);
+        t.ok(NIC.ip);
+        t.ok(NIC.netmask);
+        t.ok(NIC.gateway);
+        t.ok(NIC.state);
+        t.ok(typeof (NIC.primary) === 'boolean');
+
+        t.end();
+    });
+});
+
+
+test('get machine nic', function (t) {
+    sdc.getNic(MACHINE.id, NIC.mac, function (err, nic) {
+        t.ifError(err);
+
+        t.ok(typeof (nic) === 'object');
+        t.ok(nic.mac);
+        t.ok(nic.ip);
+        t.ok(nic.netmask);
+        t.ok(nic.gateway);
+        t.ok(nic.state);
+        t.ok(typeof (nic.primary) === 'boolean');
+
+        t.end();
+    });
+});
+
+
+test('remove machine nic', function (t) {
+    sdc.deleteNic(MACHINE.id, NIC.mac, function (err) {
+        t.ifError(err);
+
+        waitForAction(MACHINE.id, 'remove_nics', NOW, function (err2) {
+            t.ifError(err2);
+            t.end();
+        });
+    });
+});
+
+
+
+test('add machine nic', function (t) {
+    sdc.createNic({ machine: MACHINE.id, network: NETWORK.id }, function (err) {
+        t.ifError(err);
+
+        waitForAction(MACHINE.id, 'add_nics', NOW, function (err2) {
+            t.ifError(err2);
+            t.end();
+        });
+    });
+});
 
 
 // Note: Big chance for this test to be waiting for too long for a
