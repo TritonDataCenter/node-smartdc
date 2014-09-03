@@ -1,0 +1,152 @@
+#!/usr/bin/env node
+// -*- mode: js -*-
+// vim: set filetype=javascript :
+// Copyright 2014 Joyent, Inc.  All rights reserved.
+
+var util = require('util');
+var shared = require('../lib/shared'),
+    commonCb = shared.commonCb;
+var cmdln = require('cmdln'),
+    Cmdln = cmdln.Cmdln;
+
+
+var generalOptions = [
+    {
+        names: ['help', 'h', '?'],
+        type: 'bool',
+        help: 'Show this help.'
+    }
+];
+
+
+
+function SDCNic() {
+    Cmdln.call(this, {
+        name: 'sdc-nics',
+        desc: 'SmartDC machine NIC operations',
+        options: shared.DEFAULT_OPTIONS,
+        helpOpts: {
+            includeEnv: true
+        }
+    });
+}
+util.inherits(SDCNic, Cmdln);
+
+
+
+SDCNic.prototype.init = function (opts, args, callback) {
+    shared.checkRequiredOptions.apply(this, arguments);
+    Cmdln.prototype.init.apply(this, arguments);
+    return false;
+};
+
+
+
+SDCNic.prototype.do_list = function (subcmd, opts, args, callback) {
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (args.length !== 1) {
+        return callback(new Error('machine_id must be specified'));
+    }
+
+    return this.cloudapi.listNics(args[0], commonCb);
+};
+
+SDCNic.prototype.do_list.options = generalOptions;
+SDCNic.prototype.do_list.help = (
+    'List your machine\'s NICs.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} list [OPTIONS] machine_id\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+
+SDCNic.prototype.do_get = function (subcmd, opts, args, callback) {
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (args.length !== 2) {
+        return callback(new Error('nic_mac and machine_id must be specified'));
+    }
+
+    return this.cloudapi.getNic(args[1], args[0], commonCb);
+
+};
+
+SDCNic.prototype.do_get.options = generalOptions;
+SDCNic.prototype.do_get.help = (
+    'Get a machine\'s NIC by MAC.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} get [OPTIONS] nic_mac machine_id\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+
+SDCNic.prototype.do_create = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (args.length !== 2) {
+        var msg = 'network_id and machine_id must be specified';
+        return callback(new Error(msg));
+    }
+
+    var params = {
+        network: args[0],
+        machine: args[1]
+    };
+
+    return self.cloudapi.createNic(params, commonCb);
+};
+
+SDCNic.prototype.do_create.options = generalOptions;
+SDCNic.prototype.do_create.help = (
+    'Create a new NIC on one of your machines, and reboot the machine.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} create [OPTIONS] network_id machine_id\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+
+SDCNic.prototype.do_delete = function (subcmd, opts, args, callback) {
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (args.length !== 2) {
+        return callback(new Error('nic_mac and machine_id must be specified'));
+    }
+
+    return this.cloudapi.deleteNic(args[1], args[0], commonCb);
+
+};
+
+SDCNic.prototype.do_delete.options = generalOptions;
+SDCNic.prototype.do_delete.help = (
+    'Removes a NIC from a machine, and reboots machine.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} delete [OPTIONS] nic_mac machine_id\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+
+if (require.main === module) {
+    cmdln.main(SDCNic);
+}
