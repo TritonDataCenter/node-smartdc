@@ -54,8 +54,7 @@ test('setup', function (t) {
                 connectTimeout: 1000,
                 logLevel: (process.env.LOG_LEVEL || 'info'),
                 retry: false,
-                sign: smartdc.privateKeySigner({
-                    key: key,
+                sign: smartdc.cliSigner({
                     keyId: stdout.replace('\n', ''),
                     user: user
                 }),
