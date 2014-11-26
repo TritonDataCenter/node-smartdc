@@ -424,6 +424,64 @@ test('start machine', {
 });
 
 
+test('list machine metadata', function (t) {
+    sdc.listMachineMetadata(MACHINE.id, function (err, metadata) {
+        t.ifError(err);
+        t.ok(Object.keys(metadata).length > 1);
+        t.equal(metadata[META_KEY], META_VAL);
+        t.end();
+    });
+});
+
+
+test('get machine metadata', function (t) {
+    sdc.getMachineMetadataV2(MACHINE.id, META_KEY, function (err, metadata) {
+        t.ifError(err);
+        t.equal(metadata, META_VAL);
+        t.end();
+    });
+});
+
+
+test('update machine metadata', function (t) {
+    var newMeta = {
+        baz: 'quux'
+    };
+
+    sdc.updateMachineMetadata(MACHINE.id, newMeta, function (err, metadata) {
+        t.ifError(err);
+        t.ok(Object.keys(metadata).length > 2);
+        t.equal(metadata.baz, 'quux');
+
+        waitForAction(MACHINE.id, 'set_metadata', NOW, function (err1) {
+            t.ifError(err1);
+
+            sdc.getMachineMetadataV2(MACHINE.id, 'baz', function (err2, val) {
+                t.ifError(err2);
+                t.equal(val, 'quux');
+                t.end();
+            });
+        });
+    });
+});
+
+
+test('delete machine metadata', function (t) {
+    sdc.deleteMachineMetadata(MACHINE.id, 'baz', function (err) {
+        t.ifError(err);
+
+        waitForAction(MACHINE.id, 'remove_metadata', NOW, function (err1) {
+            t.ifError(err1);
+
+            sdc.getMachineMetadataV2(MACHINE.id, 'baz', function (err2) {
+                t.equal(err2.statusCode, 404);
+                t.end();
+            });
+        });
+    });
+});
+
+
 test('get machine tag', function (t) {
     sdc.getMachineTag(MACHINE.id, TAG_KEY, function (err, val) {
         t.ifError(err);
