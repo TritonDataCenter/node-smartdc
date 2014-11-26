@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // -*- mode: js -*-
 // vim: set filetype=javascript :
-// Copyright 2013 Joyent, Inc.  All rights reserved.
+// Copyright 2014 Joyent, Inc.  All rights reserved.
 
 var url = require('url');
 
@@ -17,7 +17,6 @@ var Options = {
     'debug': Boolean,
     'help': Boolean,
     'keyId': String,
-    'metadataId': String,
     'url': url,
     'version': Boolean,
     'user': String,
@@ -31,7 +30,6 @@ var ShortOptions = {
     'h': ['--help'],
     '?': ['--help'],
     'k': ['--keyId'],
-    'm': ['--metadataId'],
     'u': ['--url'],
     'A': ['--user']
 };
@@ -47,7 +45,7 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
         common.usage(usageStr, 1, 'machine required');
     }
 
-    function cb(err, obj) {
+    function callback(err, obj) {
         if (err) {
             try {
                 console.error(JSON.parse(err.message).message);
@@ -61,22 +59,11 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
         process.exit(0);
     }
 
-    var query;
-    if (parsed.metadataId) {
-        query = function (machine) {
-           client.getMachineMetadataV2(machine, parsed.metadataId, cb);
-        };
-    } else {
-        console.error('Usage without --metadataId is deprecated. To get full ' +
-                      'metadata listings, please use sdc-listmachinemetadata ' +
-                      'instead.');
-        query = function (machine) {
-           client.listMachineMetadata(machine, parsed.credentials || false, cb);
-        };
-    }
-
-
     var client = common.newClient(parsed);
 
-    parsed.argv.remain.forEach(query);
+    parsed.argv.remain.forEach(function (machine) {
+        client.listMachineMetadata(machine,
+                                   parsed.credentials || false,
+                                   callback);
+    });
 }, usageStr);
