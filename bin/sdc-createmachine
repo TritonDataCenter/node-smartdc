@@ -20,11 +20,13 @@ var Options = {
     'dataset': String,  // DEPRECATED
     'image': String,
     'enable-firewall': Boolean,
+    'far': String,
     'help': Boolean,
     'keyId': String,
     'metadata': [String, Array],
     'metadata-file': [String, Array],
     'name': String,
+    'near': String,
     'networks': [String, Array],
     'package': String,
     'script': path,
@@ -108,6 +110,18 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
 
     if (parsed.networks) {
         opts.networks = parsed.networks;
+    }
+
+    if (parsed.near || parsed.far) {
+        opts.locality = {};
+
+        if (parsed.near) {
+            opts.locality.near = parsed.near.split(',');
+        }
+
+        if (parsed.far) {
+            opts.locality.far = parsed.far.split(',');
+        }
     }
 
     var client = common.newClient(parsed);
