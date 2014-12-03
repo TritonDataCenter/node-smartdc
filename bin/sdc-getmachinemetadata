@@ -21,6 +21,7 @@ var Options = {
     'url': url,
     'version': Boolean,
     'user': String,
+    'verbose': Boolean,
     'role': String
 };
 
@@ -33,6 +34,7 @@ var ShortOptions = {
     'k': ['--keyId'],
     'm': ['--metadataId'],
     'u': ['--url'],
+    'v': ['--verbose'],
     'A': ['--user']
 };
 

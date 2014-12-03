@@ -29,6 +29,7 @@ var Options = {
     'tombstone': Number,
     'url': url,
     'version': Boolean,
+    'verbose': Boolean,
     'user': String,
     'role': String
 };
@@ -51,6 +52,7 @@ var ShortOptions = {
     't': ['--tag'],
     'y': ['--type'],
     'u': ['--url'],
+    'v': ['--verbose'],
     'A': ['--user']
 };
 

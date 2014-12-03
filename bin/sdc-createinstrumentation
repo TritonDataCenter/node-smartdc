@@ -23,6 +23,7 @@ var Options = {
     'stat': String,
     'url': url,
     'version': Boolean,
+    'verbose': Boolean,
     'user': String,
     'role': String
 };
@@ -39,6 +40,7 @@ var ShortOptions = {
     'p': ['--predicate'],
     's': ['--stat'],
     'u': ['--url'],
+    'v': ['--verbose'],
     'A': ['--user']
 };
 

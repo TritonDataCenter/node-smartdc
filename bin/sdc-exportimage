@@ -19,6 +19,7 @@ var Options = {
     'url': url,
     'mantaPath': String,
     'version': Boolean,
+    'verbose': Boolean,
     'user': String,
     'role': String
 };
@@ -30,6 +31,7 @@ var ShortOptions = {
     '?': ['--help'],
     'k': ['--keyId'],
     'u': ['--url'],
+    'v': ['--verbose'],
     'm': ['--mantaPath'],
     'A': ['--user']
 };

@@ -31,6 +31,7 @@ var Options = {
     'tag': [String, Array],
     'url': url,
     'version': Boolean,
+    'verbose': Boolean,
     'user': String,
     'role': String
 };
@@ -51,6 +52,7 @@ var ShortOptions = {
     's': ['--script'],
     't': ['--tag'],
     'u': ['--url'],
+    'v': ['--verbose'],
     'w': ['--networks'],
     'A': ['--user']
 };

@@ -19,6 +19,7 @@ var Options = {
     'value': Boolean,
     'url': url,
     'version': Boolean,
+    'verbose': Boolean,
     'user': String,
     'role': String
 };
@@ -30,7 +31,7 @@ var ShortOptions = {
     '?': ['--help'],
     'k': ['--keyId'],
     'u': ['--url'],
-    'v': ['--value'],
+    'v': ['--value'],  // DEPRECATED
     'A': ['--user']
 };
 

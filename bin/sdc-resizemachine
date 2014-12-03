@@ -19,6 +19,7 @@ var Options = {
     'package': String,
     'url': url,
     'version': Boolean,
+    'verbose': Boolean,
     'user': String,
     'role': String
 };
@@ -31,6 +32,7 @@ var ShortOptions = {
     'k': ['--keyId'],
     'p': ['--package'],
     'u': ['--url'],
+    'v': ['--verbose'],
     'A': ['--user']
 };
 

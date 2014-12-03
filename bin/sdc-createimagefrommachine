@@ -22,6 +22,7 @@ var Options = {
     'keyId': String,
     'url': url,
     'version': Boolean,
+    'verbose': Boolean,
     // Specific to this command
     'machine': String,
     'imageVersion': String,
@@ -46,6 +47,7 @@ var ShortOptions = {
     'm': ['--machine'],
     'i': ['--imageVersion'],
     'n': ['--name'],
+    'v': ['--verbose'],
     'A': ['--user']
 };
 

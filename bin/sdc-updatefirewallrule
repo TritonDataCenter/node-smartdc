@@ -20,6 +20,7 @@ var Options = {
     'rule': String,
     'url': url,
     'version': Boolean,
+    'verbose': Boolean,
     'user': String,
     'role': String
 };
@@ -33,6 +34,7 @@ var ShortOptions = {
     'k': ['--keyId'],
     'r': ['--rule'],
     'u': ['--url'],
+    'v': ['--verbose'],
     'A': ['--user']
 };
 
