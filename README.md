@@ -44,7 +44,7 @@ the environment variable equivalents:
   Your matching SSH *private* key must be beside the ".pub" public key file
   in your "~/.ssh" dir.
   
-  If the CloudAPI service your client is connecting to is using a self-signed
+  If your client is connecting to a CloudAPI service that is using a self-signed
   SSL certificate, you may need to set `SDC_TESTING=1` in your client environent.
 
 ## Authenticating as account user
