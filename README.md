@@ -19,7 +19,7 @@ The CLI commands typical work with JSON content. We suggest you also install
 the [`json` tool](https://github.com/trentm/json) for working with JSON on the
 command line. The examples below use `json` heavily.
 
-    npm install -g jsontool   # *not* 'npm install json'
+    npm install -g json
 
 
 # CLI Setup and Authentication
