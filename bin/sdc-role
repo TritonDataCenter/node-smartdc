@@ -132,15 +132,15 @@ SDCRole.prototype.do_create.options = [ {
 }, {
     name: 'members',
     type: 'arrayOfString',
-    help: 'A list logins for users with this role'
+    help: 'A list logins for users with this role (CSV or JSON)'
 }, {
     name: 'default-members',
     type: 'arrayOfString',
-    help: 'A list logins for users with this role enabled'
+    help: 'A list logins for users with this role enabled  (CSV or JSON)'
 }, {
     name: 'policies',
     type: 'arrayOfString',
-    help: 'A list of policy names for this role'
+    help: 'A list of policy names for this role (CSV or JSON)'
 }];
 
 SDCRole.prototype.do_create.help = (
@@ -233,15 +233,15 @@ SDCRole.prototype.do_update.options = [ {
 }, {
     name: 'members',
     type: 'arrayOfString',
-    help: 'A list logins for users with this role'
+    help: 'A list logins for users with this role (CSV or JSON)'
 }, {
     name: 'default-members',
     type: 'arrayOfString',
-    help: 'A list logins for users with this role enabled'
+    help: 'A list logins for users with this role enabled (CSV or JSON)'
 }, {
     name: 'policies',
     type: 'arrayOfString',
-    help: 'A list of policy names for this role'
+    help: 'A list of policy names for this role (CSV or JSON)'
 }];
 
 SDCRole.prototype.do_update.help = (
