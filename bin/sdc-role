@@ -6,6 +6,7 @@ var util = require('util');
 
 var shared = require('../lib/shared'),
     printErr = shared.printErr,
+    argToArray = shared.argToArray,
     commonCb = shared.commonCb,
     DEFAULT_OPTIONS = shared.DEFAULT_OPTIONS,
     checkRequiredOptions = shared.checkRequiredOptions;
@@ -105,15 +106,15 @@ SDCRole.prototype.do_create = function (subcmd, opts, args, callback) {
     }
 
     if (opts.members) {
-        params.members = opts.members;
+        params.members = argToArray(opts.members);
     }
 
     if (opts.default_members) {
-        params.default_members = opts.default_members;
+        params.default_members = argToArray(opts.default_members);
     }
 
     if (opts.policies) {
-        params.policies = opts.policies;
+        params.policies = argToArray(opts.policies);
     }
 
     return self.cloudapi.createRole(params, commonCb);
@@ -172,15 +173,15 @@ SDCRole.prototype.do_update = function (subcmd, opts, args, callback) {
     }
 
     if (opts.members) {
-        params.members = opts.members;
+        params.members = argToArray(opts.members);
     }
 
     if (opts.default_members) {
-        params.default_members = opts.default_members;
+        params.default_members = argToArray(opts.default_members);
     }
 
     if (opts.policies) {
-        params.policies = opts.policies;
+        params.policies = argToArray(opts.policies);
     }
 
     return self.cloudapi.getRole(args[0], function (err, role) {
