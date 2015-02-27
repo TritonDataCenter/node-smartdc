@@ -4,7 +4,7 @@
 
 var test = require('tap').test;
 var util = require('util');
-var libuuid = require('libuuid');
+var uuid = require('uuid');
 var fs = require('fs');
 var exec = require('child_process').exec;
 var smartdc = require('../lib');
@@ -367,7 +367,7 @@ test('create machine', {
 }, function (t) {
     var opts = {
         image: IMAGE.id,
-        name: 'a' + libuuid.create().substr(0, 7)
+        name: 'a' + uuid.v4().substr(0, 7)
     };
 
     opts['package'] = PACKAGE.id;
@@ -652,7 +652,7 @@ test('add machine nic', function (t) {
 test('rename machine', {
     timeout: 180000
 }, function (t) {
-    var name = 'b' + libuuid.create().substr(0, 7);
+    var name = 'b' + uuid.v4().substr(0, 7);
     sdc.renameMachine(MACHINE.id, {
         name: name
     }, function (err) {
