@@ -1,0 +1,379 @@
+#!/usr/bin/env node
+/*
+ * Copyright (c) 2015, Joyent, Inc.
+ */
+
+var clone = require('clone');
+var cmdln = require('cmdln'),
+    Cmdln = cmdln.Cmdln;
+var shared = require('../lib/shared'),
+    commonCb = shared.commonCb;
+var util = require('util');
+
+
+
+// --- Globals
+
+
+
+var GENERAL_OPTS = [
+    {
+        names: ['help', 'h', '?'],
+        type: 'bool',
+        help: 'Show this help.'
+    }
+];
+var OPTIONAL = {};
+var OPTS = {
+    desc: {
+        name: 'desc',
+        type: 'string',
+        help: 'description'
+    },
+    gateway: {
+        names: ['gateway', 'g'],
+        type: 'string',
+        help: 'gateway'
+    },
+    name: {
+        names: ['name', 'n'],
+        type: 'string',
+        help: 'name'
+    },
+    provision_end_ip: {
+        name: 'provision_end_ip',
+        type: 'string',
+        help: 'provision_end_ip'
+    },
+    provision_start_ip: {
+        name: 'provision_start_ip',
+        type: 'string',
+        help: 'provision_start_ip'
+    },
+    resolvers: {
+        name: 'resolvers',
+        type: 'string',
+        help: 'resolvers'
+    },
+    subnet: {
+        names: ['subnet', 's'],
+        type: 'string',
+        help: 'subnet'
+    },
+    vlan: {
+        name: 'vlan_id',
+        type: 'string',
+        help: 'VLAN ID'
+    },
+    vlanFilter: {
+        name: 'vlan_id',
+        type: 'string',
+        help: 'VLAN ID to filter by'
+    }
+};
+var REQUIRED = {};
+
+for (var opt in OPTS) {
+    OPTIONAL[opt] = clone(OPTS[opt]);
+    OPTIONAL[opt].help = OPTIONAL[opt].help + ' (optional)';
+    REQUIRED[opt] = clone(OPTS[opt]);
+    REQUIRED[opt].help = REQUIRED[opt].help + ' (required)';
+}
+
+
+
+// --- FabricVLAN node-cmdln object
+
+
+
+function FabricVLAN() {
+    Cmdln.call(this, {
+        name: 'sdc-fabric vlan',
+        desc: 'manage fabric VLANs',
+        options: shared.DEFAULT_OPTIONS,
+        helpOpts: {
+            includeEnv: true
+        }
+    });
+}
+util.inherits(FabricVLAN, Cmdln);
+
+
+
+FabricVLAN.prototype.init = shared.checkRequiredOptions;
+
+
+
+FabricVLAN.prototype.do_list = function (subcmd, opts, args, callback) {
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    return this.cloudapi.listFabricVlans(commonCb);
+};
+
+FabricVLAN.prototype.do_list.options = GENERAL_OPTS;
+FabricVLAN.prototype.do_list.help = (
+    'List fabric VLANs.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} list [OPTIONS]\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+
+FabricVLAN.prototype.do_get = function (subcmd, opts, args, callback) {
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (args.length !== 1) {
+        return callback(new Error('vlan_id must be specified'));
+    }
+
+    return this.cloudapi.getFabricVlan(args[0], commonCb);
+};
+
+FabricVLAN.prototype.do_get.options = GENERAL_OPTS;
+FabricVLAN.prototype.do_get.help = (
+    'Get a fabric VLAN by ID.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} get [OPTIONS] <vlan_id>\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+
+FabricVLAN.prototype.do_create = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    return self.cloudapi.createFabricVlan(opts, commonCb);
+};
+
+FabricVLAN.prototype.do_create.options = [
+    REQUIRED.vlan,
+    REQUIRED.name,
+    OPTIONAL.desc
+];
+FabricVLAN.prototype.do_create.help = (
+    'Create a new fabric vlan.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} create [OPTIONS]\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+FabricVLAN.prototype.do_update = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (args.length !== 1) {
+        return callback(new Error('vlan_id must be specified'));
+    }
+
+    return self.cloudapi.updateFabricVlan(args[0], opts, commonCb);
+};
+
+FabricVLAN.prototype.do_update.options = [
+    OPTIONAL.name,
+    OPTIONAL.desc
+];
+FabricVLAN.prototype.do_update.help = (
+    'Update a fabric vlan.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} update [OPTIONS] <vlan_id>\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+FabricVLAN.prototype.do_delete = function (subcmd, opts, args, callback) {
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (args.length !== 1) {
+        return callback(new Error('vlan_id must be specified'));
+    }
+
+    return this.cloudapi.deleteFabricVlan(args[0], commonCb);
+
+};
+
+FabricVLAN.prototype.do_delete.options = GENERAL_OPTS;
+FabricVLAN.prototype.do_delete.help = (
+    'Delete a vlan.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} delete [OPTIONS] <vlan_id>\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+
+// --- FabricNetwork node-cmdln object
+
+
+
+function FabricNetwork() {
+    Cmdln.call(this, {
+        name: 'sdc-fabric network',
+        desc: 'manage fabric networks',
+        options: shared.DEFAULT_OPTIONS,
+        helpOpts: {
+            includeEnv: true
+        }
+    });
+}
+util.inherits(FabricNetwork, Cmdln);
+
+
+
+FabricNetwork.prototype.init = shared.checkRequiredOptions;
+
+
+
+FabricNetwork.prototype.do_list = function (subcmd, opts, args, callback) {
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    return this.cloudapi.listFabricNetworks(opts, commonCb);
+};
+
+FabricNetwork.prototype.do_list.options = [
+    OPTIONAL.vlanFilter
+];
+FabricNetwork.prototype.do_list.help = (
+    'List fabric networks.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} list [OPTIONS]\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+
+FabricNetwork.prototype.do_get = function (subcmd, opts, args, callback) {
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    return this.cloudapi.getFabricNetwork(args[0], commonCb);
+};
+
+FabricNetwork.prototype.do_get.options = GENERAL_OPTS;
+FabricNetwork.prototype.do_get.help = (
+    'Get a fabric network by ID.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} get [OPTIONS] <network_id>\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+
+FabricNetwork.prototype.do_create = function (subcmd, opts, args, callback) {
+    var self = this;
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    return self.cloudapi.createFabricNetwork(opts, commonCb);
+};
+
+FabricNetwork.prototype.do_create.options = [
+    REQUIRED.vlan,
+    REQUIRED.name,
+    REQUIRED.subnet,
+    REQUIRED.provision_start_ip,
+    REQUIRED.provision_end_ip,
+    REQUIRED.resolvers,
+    OPTIONAL.gateway,
+    OPTIONAL.desc
+];
+FabricNetwork.prototype.do_create.help = (
+    'Create a new fabric network.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} create [OPTIONS]\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+FabricNetwork.prototype.do_delete = function (subcmd, opts, args, callback) {
+    var self = this;
+
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (args.length !== 1) {
+        return callback(new Error('network_id must be specified'));
+    }
+
+    return this.cloudapi.getFabricNetwork(args[0],
+            function _afterGet(err, net) {
+        if (err) {
+            return commonCb(err);
+        }
+
+        return self.cloudapi.deleteFabricNetwork(net.vlan_id, args[0],
+                commonCb);
+    });
+};
+
+FabricNetwork.prototype.do_delete.options = GENERAL_OPTS;
+FabricNetwork.prototype.do_delete.help = (
+    'Delete a fabric network.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} delete [OPTIONS] <network_id>\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+
+// --- The paren SDCfabric node-cmdln object
+
+
+
+function SDCfabric() {
+    Cmdln.call(this, {
+        name: 'sdc-fabric',
+        desc: 'SmartDataCenter fabric operations',
+        options: shared.DEFAULT_OPTIONS,
+        helpOpts: {
+            includeEnv: true
+        }
+    });
+}
+util.inherits(SDCfabric, Cmdln);
+
+
+
+SDCfabric.prototype.init = shared.checkRequiredOptions;
+
+SDCfabric.prototype.do_vlan = FabricVLAN;
+SDCfabric.prototype.do_network = FabricNetwork;
+
+if (require.main === module) {
+    cmdln.main(new SDCfabric());
+}
