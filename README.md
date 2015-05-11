@@ -46,6 +46,7 @@ the environment variable equivalents:
   
   If your client is connecting to a CloudAPI service that is using a self-signed
   SSL certificate, you may need to set `SDC_TESTING=1` in your client environent.
+  (Otherwise you'll get `DEPTH_ZERO_SELF_SIGNED_CERT` error).
 
 ## Authenticating as account user
 
