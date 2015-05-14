@@ -6,6 +6,7 @@
 var clone = require('clone');
 var cmdln = require('cmdln'),
     Cmdln = cmdln.Cmdln;
+var path = require('path');
 var shared = require('../lib/shared'),
     commonCb = shared.commonCb;
 var util = require('util');
@@ -287,7 +288,6 @@ FabricNetwork.prototype.do_get.help = (
 );
 
 
-
 FabricNetwork.prototype.do_create = function (subcmd, opts, args, callback) {
     var self = this;
     if (opts.help) {
@@ -349,6 +349,85 @@ FabricNetwork.prototype.do_delete.help = (
     '{{options}}'
 );
 
+
+FabricNetwork.prototype.do_get_default =
+        function (subcmd, opts, args, callback) {
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    return this.cloudapi.getConfig(function _afterConfGet(err, res) {
+        if (err) {
+            commonCb(err);
+            return;
+        }
+
+        if (!res.default_network) {
+            // Rather than create a restify-like error that will end up in
+            // printErr(), just emulate its behaviour:
+            console.error(util.format('%s: default network not found',
+                    path.basename(process.argv[1])));
+            process.exit(3);
+        }
+
+        console.log(res.default_network);
+        process.exit(0);
+    });
+};
+
+FabricNetwork.prototype.do_get_default.options = GENERAL_OPTS;
+FabricNetwork.prototype.do_get_default.help = (
+    'Get your default fabric network for this datacenter.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} get-default [OPTIONS]\n' +
+    '\n' +
+    '{{options}}'
+);
+
+
+FabricNetwork.prototype.do_set_default =
+        function (subcmd, opts, args, callback) {
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (args.length !== 1) {
+        return callback(new Error('network_id must be specified'));
+    }
+
+    var params = {
+        default_network: args[0]
+    };
+
+    return this.cloudapi.updateConfig(params, function _afterConfSet(err, res) {
+        if (err) {
+            commonCb(err);
+            return;
+        }
+
+        if (!res.default_network) {
+            // Rather than create a restify-like error that will end up in
+            // printErr(), just emulate its behaviour:
+            console.error(util.format('%s: default network not found',
+                    path.basename(process.argv[1])));
+            process.exit(3);
+        }
+
+        console.log(res.default_network);
+        process.exit(0);
+    });
+};
+
+FabricNetwork.prototype.do_set_default.options = GENERAL_OPTS;
+FabricNetwork.prototype.do_set_default.help = (
+    'Set your default fabric network for this datacenter.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} set-default [OPTIONS] <network_id>\n' +
+    '\n' +
+    '{{options}}'
+);
 
 
 // --- The paren SDCfabric node-cmdln object
