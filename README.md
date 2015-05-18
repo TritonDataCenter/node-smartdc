@@ -32,7 +32,7 @@ API endpoint URL and your credentials. However you'll probably want to set
 the environment variable equivalents:
 
 * `SDC_URL` (`--url | -u`): URL of the CloudAPI endpoint. E.g.
-  "https://us-sw-1.api.joyentcloud.com".
+  "https://us-east-1.api.joyent.com".
 * `SDC_ACCOUNT` (`--account | -a`): Login name/username. E.g. "bob".
 * `SDC_KEY_ID` (`--keyId | -k`): The fingerprint of an SSH public key that has
   been added to the account set in `SDC_ACCOUNT`. This is used for signing
