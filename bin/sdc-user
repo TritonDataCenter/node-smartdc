@@ -40,7 +40,6 @@ var generalOptions = [
 
 
 SDCUser.prototype.do_list = function (subcmd, opts, args, callback) {
-    console.log(util.inspect(opts.help, false, 8, true));
     var self = this;
     if (opts.help) {
         return this.do_help('help', {}, [subcmd], callback);
