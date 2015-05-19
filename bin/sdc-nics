@@ -34,11 +34,7 @@ util.inherits(SDCNic, Cmdln);
 
 
 
-SDCNic.prototype.init = function (opts, args, callback) {
-    shared.checkRequiredOptions.apply(this, arguments);
-    Cmdln.prototype.init.apply(this, arguments);
-    return false;
-};
+SDCNic.prototype.init = shared.checkRequiredOptions;
 
 
 
