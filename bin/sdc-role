@@ -29,11 +29,7 @@ function SDCRole() {
 }
 util.inherits(SDCRole, Cmdln);
 
-SDCRole.prototype.init = function (opts, args, callback) {
-    checkRequiredOptions.apply(this, arguments);
-    Cmdln.prototype.init.apply(this, arguments);
-    return false;
-};
+SDCRole.prototype.init = shared.checkRequiredOptions;
 
 
 var generalOptions = [
