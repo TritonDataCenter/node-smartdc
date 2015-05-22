@@ -15,6 +15,7 @@ var common = require('../lib/cli_common');
 var Options = {
     'account': String,
     'debug': Boolean,
+    'description': String,
     'enabled': Boolean,
     'help': Boolean,
     'keyId': String,
@@ -53,6 +54,9 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     }
     if (parsed.enabled) {
         opts.enabled = parsed.enabled;
+    }
+    if (parsed.description) {
+        opts.description = parsed.description;
     }
 
     var client = common.newClient(parsed);
