@@ -17,12 +17,13 @@ var util = require('util');
 
 
 
+var HELP_OPT = {
+    names: ['help', 'h', '?'],
+    type: 'bool',
+    help: 'Show this help.'
+};
 var GENERAL_OPTS = [
-    {
-        names: ['help', 'h', '?'],
-        type: 'bool',
-        help: 'Show this help.'
-    }
+    HELP_OPT
 ];
 var OPTIONAL = {};
 var OPTS = {
@@ -161,7 +162,8 @@ FabricVLAN.prototype.do_create = function (subcmd, opts, args, callback) {
 FabricVLAN.prototype.do_create.options = [
     REQUIRED.vlan,
     REQUIRED.name,
-    OPTIONAL.desc
+    OPTIONAL.desc,
+    HELP_OPT
 ];
 FabricVLAN.prototype.do_create.help = (
     'Create a new fabric vlan.\n' +
@@ -188,7 +190,8 @@ FabricVLAN.prototype.do_update = function (subcmd, opts, args, callback) {
 
 FabricVLAN.prototype.do_update.options = [
     OPTIONAL.name,
-    OPTIONAL.desc
+    OPTIONAL.desc,
+    HELP_OPT
 ];
 FabricVLAN.prototype.do_update.help = (
     'Update a fabric vlan.\n' +
@@ -256,7 +259,8 @@ FabricNetwork.prototype.do_list = function (subcmd, opts, args, callback) {
 };
 
 FabricNetwork.prototype.do_list.options = [
-    OPTIONAL.vlanFilter
+    OPTIONAL.vlanFilter,
+    HELP_OPT
 ];
 FabricNetwork.prototype.do_list.help = (
     'List fabric networks.\n' +
@@ -305,7 +309,8 @@ FabricNetwork.prototype.do_create.options = [
     REQUIRED.provision_end_ip,
     REQUIRED.resolvers,
     OPTIONAL.gateway,
-    OPTIONAL.desc
+    OPTIONAL.desc,
+    HELP_OPT
 ];
 FabricNetwork.prototype.do_create.help = (
     'Create a new fabric network.\n' +
