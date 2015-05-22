@@ -27,8 +27,8 @@ var GENERAL_OPTS = [
 ];
 var OPTIONAL = {};
 var OPTS = {
-    desc: {
-        name: 'desc',
+    description: {
+        name: 'description',
         type: 'string',
         help: 'description'
     },
@@ -162,7 +162,7 @@ FabricVLAN.prototype.do_create = function (subcmd, opts, args, callback) {
 FabricVLAN.prototype.do_create.options = [
     REQUIRED.vlan,
     REQUIRED.name,
-    OPTIONAL.desc,
+    OPTIONAL.description,
     HELP_OPT
 ];
 FabricVLAN.prototype.do_create.help = (
@@ -190,7 +190,7 @@ FabricVLAN.prototype.do_update = function (subcmd, opts, args, callback) {
 
 FabricVLAN.prototype.do_update.options = [
     OPTIONAL.name,
-    OPTIONAL.desc,
+    OPTIONAL.description,
     HELP_OPT
 ];
 FabricVLAN.prototype.do_update.help = (
@@ -309,7 +309,7 @@ FabricNetwork.prototype.do_create.options = [
     REQUIRED.provision_end_ip,
     REQUIRED.resolvers,
     OPTIONAL.gateway,
-    OPTIONAL.desc,
+    OPTIONAL.description,
     HELP_OPT
 ];
 FabricNetwork.prototype.do_create.help = (
