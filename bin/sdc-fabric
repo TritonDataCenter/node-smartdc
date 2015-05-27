@@ -82,6 +82,8 @@ for (var opt in OPTS) {
     REQUIRED[opt].help = REQUIRED[opt].help + ' (required)';
 }
 
+var API_VERSION = '~7.3';
+
 
 
 // --- FabricVLAN node-cmdln object
@@ -102,7 +104,7 @@ util.inherits(FabricVLAN, Cmdln);
 
 
 
-FabricVLAN.prototype.init = shared.checkRequiredOptions;
+FabricVLAN.prototype.init = initHandler;
 
 
 
@@ -246,7 +248,7 @@ util.inherits(FabricNetwork, Cmdln);
 
 
 
-FabricNetwork.prototype.init = shared.checkRequiredOptions;
+FabricNetwork.prototype.init = initHandler;
 
 
 
@@ -435,6 +437,7 @@ FabricNetwork.prototype.do_set_default.help = (
 );
 
 
+
 // --- The paren SDCfabric node-cmdln object
 
 
@@ -453,10 +456,22 @@ util.inherits(SDCfabric, Cmdln);
 
 
 
-SDCfabric.prototype.init = shared.checkRequiredOptions;
+SDCfabric.prototype.init = initHandler;
 
 SDCfabric.prototype.do_vlan = FabricVLAN;
 SDCfabric.prototype.do_network = FabricNetwork;
+
+
+
+// --- Helper functions
+
+
+
+function initHandler(opts, args, callback) {
+    opts.apiVersion = API_VERSION;
+    return shared.checkRequiredOptions.call(this, opts, args, callback);
+}
+
 
 if (require.main === module) {
     cmdln.main(new SDCfabric());
