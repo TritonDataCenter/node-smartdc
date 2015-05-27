@@ -32,6 +32,11 @@ var OPTS = {
         type: 'string',
         help: 'description'
     },
+    no_internet_nat: {
+        name: 'no_internet_nat',
+        type: 'bool',
+        help: 'don\'t provision an Internet NAT zone'
+    },
     gateway: {
         names: ['gateway', 'g'],
         type: 'string',
@@ -300,6 +305,11 @@ FabricNetwork.prototype.do_create = function (subcmd, opts, args, callback) {
         return this.do_help('help', {}, [subcmd], callback);
     }
 
+    if (opts.no_internet_nat) {
+        delete opts.no_internet_nat;
+        opts.internet_nat = false;
+    }
+
     return self.cloudapi.createFabricNetwork(opts, commonCb);
 };
 
@@ -310,6 +320,7 @@ FabricNetwork.prototype.do_create.options = [
     REQUIRED.provision_start_ip,
     REQUIRED.provision_end_ip,
     REQUIRED.resolvers,
+    OPTIONAL.no_internet_nat,
     OPTIONAL.gateway,
     OPTIONAL.description,
     HELP_OPT
