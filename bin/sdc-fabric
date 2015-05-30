@@ -305,11 +305,6 @@ FabricNetwork.prototype.do_create = function (subcmd, opts, args, callback) {
         return this.do_help('help', {}, [subcmd], callback);
     }
 
-    if (opts.no_internet_nat) {
-        delete opts.no_internet_nat;
-        opts.internet_nat = false;
-    }
-
     return self.cloudapi.createFabricNetwork(opts, commonCb);
 };
 
