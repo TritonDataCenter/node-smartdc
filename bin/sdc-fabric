@@ -59,7 +59,7 @@ var OPTS = {
     },
     resolvers: {
         name: 'resolvers',
-        type: 'string',
+        type: 'arrayOfString',
         help: 'resolvers'
     },
     subnet: {
@@ -303,6 +303,16 @@ FabricNetwork.prototype.do_create = function (subcmd, opts, args, callback) {
     var self = this;
     if (opts.help) {
         return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    // to match up with the behavior of other node-smartdc commands, we also
+    // want to be able to accept CSV and JSON here
+    if (opts.resolvers && opts.resolvers.length === 1) {
+        try {
+            opts.resolvers = JSON.parse(opts.resolvers[0]);
+        } catch (e) {
+            opts.resolvers = opts.resolvers[0].split(',');
+        }
     }
 
     return self.cloudapi.createFabricNetwork(opts, commonCb);
