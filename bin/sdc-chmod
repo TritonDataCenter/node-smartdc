@@ -89,13 +89,10 @@ if (require.main === module) {
 
     opts.log = log;
 
-    var identity = (opts.user) ?
-        util.format('%s/users/%s', opts.account, opts.user):
-        opts.account;
-
     opts.sign = auth.cliSigner({
         keyId: opts.keyId,
-        user: identity
+        user: opts.account,
+        subuser: opts.user
     });
 
     var resource = opts._args[1];
