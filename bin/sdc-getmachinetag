@@ -60,8 +60,8 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
             process.exit(3);
         }
 
-        console.log(obj);
-        process.exit(0);
+        common.emit(obj);
+        common.exit(0);
     }
 
     var client = common.newClient(parsed);

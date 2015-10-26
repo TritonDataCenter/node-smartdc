@@ -403,8 +403,8 @@ FabricNetwork.prototype.do_get_default =
             process.exit(3);
         }
 
-        console.log(res.default_network);
-        process.exit(0);
+        shared.emit(res.default_network);
+        shared.exit(0);
     });
 };
 
@@ -447,8 +447,8 @@ FabricNetwork.prototype.do_set_default =
             process.exit(3);
         }
 
-        console.log(res.default_network);
-        process.exit(0);
+        shared.emit(res.default_network);
+        shared.exit(0);
     });
 };
 

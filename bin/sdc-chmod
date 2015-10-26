@@ -13,7 +13,6 @@ var smartdc = require('../lib/cloudapi'),
 
 var shared = require('../lib/shared'),
     printErr = shared.printErr,
-    commonCb = shared.commonCb,
     DEFAULT_OPTIONS = shared.DEFAULT_OPTIONS;
 
 var cmdln = require('cmdln'),
@@ -57,19 +56,19 @@ if (require.main === module) {
     if (opts.help || !opts._args.length || opts._args[0] === 'help' ||
             opts._args.length !== 2) {
         var help = parser.help({includeEnv: true}).trimRight();
-        console.log('Add role tags to SmartDC resources.\n\n' +
+        shared.emit('Add role tags to SmartDC resources.\n\n' +
                 'Usage: sdc-chmod [OPTIONS] -- [+-=]role resource\n\n' +
                 'Role Tags: \n\n' +
                 '+role: add the given role tag(s) to existing ones\n' +
                 '-role: remove the given role tag(s) from existing ones\n' +
                 '=role: set role tag to the given one(s)\n\n' +
                 'Options:\n' + help);
-        process.exit(0);
+        shared.exit(0);
     }
 
     if (opts.version) {
-        console.log('sdc-chmod', pkg.version);
-        process.exit(0);
+        shared.emit('sdc-chmod', pkg.version);
+        shared.exit(0);
     }
 
     if (typeof (opts.keyId) === 'undefined') {
@@ -174,8 +173,8 @@ if (require.main === module) {
             printErr(er);
             process.exit(1);
         }
-        console.log(JSON.stringify(existing));
-        process.exit(0);
+        shared.emit(JSON.stringify(existing));
+        shared.exit(0);
     });
 
 }

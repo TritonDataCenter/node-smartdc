@@ -4,7 +4,7 @@
 
 var test = require('tap').test;
 var util = require('util');
-var uuid = require('uuid');
+var uuid = require('node-uuid');
 var fs = require('fs');
 var exec = require('child_process').exec;
 var smartdc = require('../lib');

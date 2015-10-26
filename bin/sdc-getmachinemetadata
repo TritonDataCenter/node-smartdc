@@ -59,8 +59,8 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
             process.exit(3);
         }
 
-        console.log(JSON.stringify(obj, null, 2));
-        process.exit(0);
+        common.emit(JSON.stringify(obj, null, 2));
+        common.exit(0);
     }
 
     var query;

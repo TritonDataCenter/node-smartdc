@@ -5,7 +5,6 @@
 var util = require('util');
 
 var shared = require('../lib/shared'),
-    printErr = shared.printErr,
     commonCb = shared.commonCb,
     DEFAULT_OPTIONS = shared.DEFAULT_OPTIONS,
     checkRequiredOptions = shared.checkRequiredOptions;
