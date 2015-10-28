@@ -40,5 +40,16 @@ CLEAN_FILES += ./node_modules
 test: $(TAP)
 	TAP=1 $(TAP) test/*.test.js
 
+
+# Ensure all version-carrying files have the same version.
+.PHONY: check-version
+check-version:
+	@[[ `cat package.json | json version` == `grep '^## ' CHANGES.md | head -1 | awk '{print $$2}'` ]] \
+		|| (echo "check-version error: CHANGES.md top section version does not match package.json#version: $(shell cat package.json | json version)" && exit 2)
+	@echo Version check ok.
+
+check:: check-version
+
+
 include ./tools/mk/Makefile.deps
 include ./tools/mk/Makefile.targ

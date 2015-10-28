@@ -1,6 +1,14 @@
 # -*- mode: makefile -*-
 #
-# Copyright (c) 2012, Joyent, Inc. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+
+#
+# Copyright (c) 2014, Joyent, Inc.
+#
+
 #
 # Makefile.node_prebuilt.targ: Makefile for including a prebuilt Node.js
 # build.
@@ -25,7 +33,7 @@ $(NODE_EXEC) $(NPM_EXEC) $(NODE_WAF_EXEC):
 	mkdir -p $(shell dirname $(NODE_INSTALL))
 	if [[ $(shell echo $(NODE_PREBUILT_TARBALL) | cut -c 1-4) == "http" ]]; then \
 		echo "Downloading '$(NODE_PREBUILT_BASE)'."; \
-		curl -ksS --fail --connect-timeout 5 -o $(shell dirname $(NODE_INSTALL))/$(NODE_PREBUILT_BASE) $(NODE_PREBUILT_TARBALL); \
+		curl -ksS --fail --connect-timeout 30 -o $(shell dirname $(NODE_INSTALL))/$(NODE_PREBUILT_BASE) $(NODE_PREBUILT_TARBALL); \
 		(cd $(shell dirname $(NODE_INSTALL)) && $(TAR) xf $(NODE_PREBUILT_BASE)); \
 	else \
 		(cd $(shell dirname $(NODE_INSTALL)) && $(TAR) xf $(NODE_PREBUILT_TARBALL)); \

@@ -1,5 +1,45 @@
 # node-smartdc Changelog
 
+## 7.6.0
+
+- #73 revive CHANGES.md changelog
+
+- #71 Fix data truncation (at 64k) from node-smartdc commands when piped to
+  another command, when using node 4.1. E.g. `sdc-listimages | cat` would
+  truncate.
+
+## 7.5.x
+
+- PUBAPI-1155, PUBAPI-1146: Updates to smartdc-auth@2.x to support `SDC_KEY_ID`
+  being a fingerprint format other than the old `ssh-keygen` MD5 default.
+  Recent `ssh-keygen` (e.g. as on Linuces for a while, and on Mac OS X El
+  Capitan) changed the default fingerprint format from `ssh-keygen -l ...` to
+  SHA1.
+- TOOLS-1214 Large number of keys in ssh-agent leads to failure.
+
+
+## 7.4.0
+
+- TOOLS-1027 `sdc-fabric` support added. See
+  <https://docs.joyent.com/public-cloud/network/sdn>.
+  Implementation detail: `sdc-fabric` uses CloudAPI API version 7.3. Other
+  commands continue to use API version 7.2 to function with older pre-fabrics
+  CloudAPIs.
+
+
+## 7.3.1
+
+- PUBAPI-1053: Bumped dependencies to work with node v0.12.0
+
+
+## 7.3.0
+
+- PUBAPI-858: Updated to support RBAC. See
+  <https://docs.joyent.com/public-cloud/rbac>.  Account sub-users can use the
+  CLI now. New commands include: sdc-chmod, sdc-info, sdc-policy, sdc-role, and
+  sdc-user.
+
+
 ## 7.2.1
 
 - Add 'sdc-updateimage' for updating attributes on a custom image.

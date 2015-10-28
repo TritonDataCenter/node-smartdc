@@ -50,7 +50,7 @@ the environment variable equivalents:
 
 ## Authenticating as account user
 
-Starting with version 7.3, [Role Based Access Control](https://apidocs.joyent.com/rbac)
+Starting with version 7.3, [Role Based Access Control](https://docs.joyent.com/public-cloud/rbac)
 lets you provide limited access to to your Joyent Cloud account and Manta
 storage to other members of your organization.
 
@@ -146,8 +146,7 @@ Once you've played around and are done, you can delete this machine.
     Object is Gone (410)
 
 There's a lot more you can do, like manage snapshots, analytics, keys, tags,
-etc. For the *Joyent* cloud, you can read more here:
-<http://www.joyent.com/developers>.
+etc. For the *Joyent* cloud, you can read more at <https://docs.joyent.com>.
 
 
 # Programmatic Usage
@@ -199,22 +198,44 @@ SSH public key.
 MIT. See the "LICENSE" file.
 
 
-# Bugs
+# Development
+
+## Contributing
+
+A few basic rules and guidelines:
+
+- Read the [Joyent Engineering Guidelines on tickets/issues and commit
+  comments](https://github.com/joyent/eng/blob/master/docs/index.md#commit-comments-and-jira-tickets).
+  List GitHub issues and/or Joyent JIRA tickets in commit messages and ensure
+  thought processes are included in the issues or commit messages.
+
+- You typically want to bump the package.json version for all but trivial
+  changes.
+
+- Update CHANGES.md (the change log) for any additions.
+
+- Run and pass `make check`.
+
+- Run and pass `make test` (caveat: I'm not sure it is passing *right now*.)
+  Be aware that this module is meant to work with older node versions
+  and on a number of platforms (smartos, linux, mac, windows).
+
+
+## Bugs
 
 Please report issues to <https://github.com/joyent/node-smartdc/issues>.
 
 
-# Running the test suite
+## Running the test suite
 
-Note that *this will execute tests against the Smart DC setup set into
-ENV variable SDC_URL*. Please, make sure it's OK to try to create new
-machines into such Smart DC setup before running this test suite.
-
-Running the test suite is as simple as:
+Note that *this will run API calls against the SmartDataCenter setup per
+the `SDC_*` environment variables*.  Please, make sure it is okay to try to
+create new machines using the configured DC and account before running the
+test suite.
 
     make test
 
-You may want to add a test user to your Smart DC setup. A sample user, with
+You may want to add a test user to your SDC setup. A sample user, with
 sample ssh keys can be found at `test/user.ldif` and `test/.ssh`. Once you've
 added this user, you can run your tests using:
 
