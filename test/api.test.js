@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Joyent, Inc. All rights reserved.
+ * Copyright (c) 2015, Joyent, Inc. All rights reserved.
  */
 
 var test = require('tap').test;
@@ -10,7 +10,7 @@ var exec = require('child_process').exec;
 var smartdc = require('../lib');
 var sdc;
 
-var PACKAGE, DATASET, IMAGE, MACHINE, NETWORK, NIC;
+var PACKAGE, DATASET, MACHINE, NETWORK, NIC;
 
 var TAG_KEY = 'smartdc_role';
 var TAG_VAL = 'unitTest';
@@ -168,15 +168,28 @@ test('list datasets', function (t) {
         t.ifError(err);
         t.ok(datasets);
         t.ok(Array.isArray(datasets));
-        var smartos = datasets.filter(function (d) {
-            return (d.name === 'smartos' && d.version === '1.6.3');
-        });
-        t.ok(smartos[0]);
-        DATASET = smartos[0];
+
+        // Let's pick an image we'll use for testing.
+        var candidateImageNames = {
+            'base-64-lts': true,
+            'base-64': true,
+            'minimal-64': true,
+            'base-32-lts': true,
+            'base-32': true,
+            'minimal-32': true,
+            'base': true
+        };
+        for (var i = 0; i < datasets.length; i++) {
+            if (candidateImageNames[datasets[i].name]) {
+                DATASET = datasets[i];
+                break;
+            }
+        }
         if (!DATASET) {
-            console.error('Exiting because cannot find test dataset.');
+            console.error('Exiting because cannot find test image.');
             process.exit(1);
         }
+
         t.end();
     }, true);
 });
@@ -196,29 +209,20 @@ test('get dataset', function (t) {
 });
 
 
-// Images (we need to upgrade depending on default SmartOS version):
+// Images
 test('list images', function (t) {
     sdc.listDatasets(function (err, images) {
         t.ifError(err);
         t.ok(images);
         t.ok(Array.isArray(images));
-        var smartos = images.filter(function (d) {
-            return (d.name === 'smartos' && d.version === '1.6.3');
-        });
-        t.ok(smartos[0]);
-        IMAGE = smartos[0];
-        if (!IMAGE) {
-            console.error('Exiting because cannot find test image.');
-            process.exit(1);
-        }
         t.end();
     }, true);
 });
 
 
 test('get images', function (t) {
-    t.ok(IMAGE);
-    sdc.getDataset(IMAGE.id, function (err, ds) {
+    t.ok(DATASET);
+    sdc.getDataset(DATASET.id, function (err, ds) {
         t.ifError(err);
         t.ok(ds);
         t.ok(ds.name);
@@ -266,19 +270,11 @@ test('list datacenters', function (t) {
         t.ifError(err);
         t.ok(datacenters);
         t.ok(Array.isArray(Object.keys(datacenters)));
-        sdc.createClientForDatacenter('coal', function (err2, cli) {
-            t.ifError(err2);
-            t.ok(cli);
-            t.equal(cli.account, sdc.account);
-            t.ok(cli.client);
-            t.end();
-        }, true);
+        t.end();
     }, true);
 });
 
 // Machines:
-
-
 function checkMachine(t, m) {
     t.ok(m, 'checkMachine ok');
     t.ok(m.id, 'checkMachine id ok');
@@ -296,17 +292,16 @@ function checkMachine(t, m) {
 }
 
 
-// This test case assumes no previous machines for the current user. Obviously,
-// it is useless if that's not true.
-test('empty machines list/count', function (t) {
+var COUNT;
+test('start machines list/count', function (t) {
     return sdc.countMachines(function (err, count, done) {
         t.ifError(err);
-        t.equal(0, count);
+        COUNT = count;
         t.ok(done);
         return sdc.listMachines(function (err1, machines, done1) {
             t.ifError(err1);
             t.ok(Array.isArray(machines));
-            t.equal(0, machines.length);
+            t.equal(COUNT, machines.length);
             t.ok(done1);
             t.end();
         });
@@ -366,7 +361,7 @@ test('create machine', {
     timeout: 600000
 }, function (t) {
     var opts = {
-        image: IMAGE.id,
+        image: DATASET.id,
         name: 'a' + uuid.v4().substr(0, 7)
     };
 
@@ -415,12 +410,12 @@ test('get machine', function (t) {
 test('machines list/count', function (t) {
     return sdc.countMachines(function (err, count, done) {
         t.ifError(err);
-        t.equal(1, count);
+        t.equal(COUNT + 1, count);
         t.ok(done);
         return sdc.listMachines(function (err1, machines, done1) {
             t.ifError(err1);
             t.ok(Array.isArray(machines));
-            t.equal(1, machines.length);
+            t.equal(COUNT + 1, machines.length);
             t.ok(done1);
             t.end();
         });
