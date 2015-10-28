@@ -8,6 +8,9 @@
   another command, when using node 4.1. E.g. `sdc-listimages | cat` would
   truncate.
 
+- #70 Update dep to get newer dtrace-provider to fix build against node 4.x
+
+
 ## 7.5.x
 
 - PUBAPI-1155, PUBAPI-1146: Updates to smartdc-auth@2.x to support `SDC_KEY_ID`
