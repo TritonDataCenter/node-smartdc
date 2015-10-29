@@ -1,5 +1,10 @@
 # node-smartdc Changelog
 
+## 7.6.1
+
+- #72 `sdc-fabric` doesn't honor command line flags.
+
+
 ## 7.6.0
 
 - #73 revive CHANGES.md changelog

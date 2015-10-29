@@ -98,34 +98,27 @@ var API_VERSION = '~7.3';
 
 // --- FabricVLAN node-cmdln object
 
-
-
-function FabricVLAN() {
+function FabricVLAN(top) {
+    this.top = top;
     Cmdln.call(this, {
         name: 'sdc-fabric vlan',
-        desc: 'manage fabric VLANs',
-        options: shared.DEFAULT_OPTIONS,
-        helpOpts: {
-            includeEnv: true
-        }
+        desc: 'Manage fabric VLANs'
     });
 }
 util.inherits(FabricVLAN, Cmdln);
 
-
-
-FabricVLAN.prototype.init = initHandler;
-
+FabricVLAN.prototype.init = function vlanInit(opts, args, callback) {
+    this.cloudapi = this.top.cloudapi;
+    Cmdln.prototype.init.apply(this, arguments);
+};
 
 
 FabricVLAN.prototype.do_list = function (subcmd, opts, args, callback) {
     if (opts.help) {
         return this.do_help('help', {}, [subcmd], callback);
     }
-
     return this.cloudapi.listFabricVlans(commonCb);
 };
-
 FabricVLAN.prototype.do_list.options = GENERAL_OPTS;
 FabricVLAN.prototype.do_list.help = (
     'List fabric VLANs.\n' +
@@ -135,7 +128,6 @@ FabricVLAN.prototype.do_list.help = (
     '\n' +
     '{{options}}'
 );
-
 
 
 FabricVLAN.prototype.do_get = function (subcmd, opts, args, callback) {
@@ -159,7 +151,6 @@ FabricVLAN.prototype.do_get.help = (
     '\n' +
     '{{options}}'
 );
-
 
 
 FabricVLAN.prototype.do_create = function (subcmd, opts, args, callback) {
@@ -242,24 +233,20 @@ FabricVLAN.prototype.do_delete.help = (
 
 // --- FabricNetwork node-cmdln object
 
-
-
-function FabricNetwork() {
+function FabricNetwork(top) {
+    this.top = top;
     Cmdln.call(this, {
         name: 'sdc-fabric network',
-        desc: 'manage fabric networks',
-        options: shared.DEFAULT_OPTIONS,
-        helpOpts: {
-            includeEnv: true
-        }
+        desc: 'Manage fabric networks'
     });
 }
 util.inherits(FabricNetwork, Cmdln);
 
 
-
-FabricNetwork.prototype.init = initHandler;
-
+FabricNetwork.prototype.init = function networkInit(opts, args, callback) {
+    this.cloudapi = this.top.cloudapi;
+    Cmdln.prototype.init.apply(this, arguments);
+};
 
 
 FabricNetwork.prototype.do_list = function (subcmd, opts, args, callback) {
@@ -480,24 +467,17 @@ function SDCfabric() {
 }
 util.inherits(SDCfabric, Cmdln);
 
-
-
-SDCfabric.prototype.init = initHandler;
+SDCfabric.prototype.init = function init(opts, args, callback) {
+    opts.apiVersion = API_VERSION;
+    return shared.checkRequiredOptions.call(this, opts, args, callback);
+};
 
 SDCfabric.prototype.do_vlan = FabricVLAN;
 SDCfabric.prototype.do_network = FabricNetwork;
 
 
 
-// --- Helper functions
-
-
-
-function initHandler(opts, args, callback) {
-    opts.apiVersion = API_VERSION;
-    return shared.checkRequiredOptions.call(this, opts, args, callback);
-}
-
+// --- Mainline
 
 if (require.main === module) {
     cmdln.main(new SDCfabric());
