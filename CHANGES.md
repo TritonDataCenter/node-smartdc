@@ -1,5 +1,10 @@
 # node-smartdc Changelog
 
+## 7.6.2
+
+- PUBAPI-1166 use smartdc-auth and http-signature instead of sprintf for
+  generating Authorization headers
+
 ## 7.6.1
 
 - #72 `sdc-fabric` doesn't honor command line flags.
