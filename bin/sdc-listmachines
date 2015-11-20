@@ -13,9 +13,10 @@ var common = require('../lib/cli_common');
 
 var Options = {
     'account': String,
+    'api-version': String,
+    'brand': String,
     'credentials': Boolean,
     'debug': Boolean,
-    'dataset': String, // DEPRECATED
     'image': String,
     'help': Boolean,
     'keyId': String,
@@ -70,8 +71,6 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     }
     if (parsed.image) {
         opts.image = parsed.image;
-    } else if (parsed.dataset) {
-        opts.image = parsed.dataset;
     }
     if (typeof (parsed.limit) !== 'undefined') {
         opts.limit = parsed.limit;
@@ -93,6 +92,9 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     }
     if (parsed.type) {
         opts.type = parsed.type;
+    }
+    if (parsed.brand) {
+        opts.brand = parsed.brand;
     }
 
     if (parsed.tag) {

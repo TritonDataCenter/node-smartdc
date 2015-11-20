@@ -1,5 +1,18 @@
 # node-smartdc Changelog
 
+## 8.0.0
+
+- PUBAPI-1161, PUBAPI-1180 - `brand` and `docker` attributes added to machine
+objects, and the meaning of `type` on image objects has changed; these changes
+improve the detail about the kind of machines and images available. The 6.5
+API was slated for removal two years ago, so now removed; `sdc-listdatasets` and
+`sdc-getdataset` have been removed (please use `sdc-listimages` and
+`sdc-getimage` instead), and `getDataset()` and `listDatasets()` have been
+removed (please use `getImage()` and `listImages()` instead). An `--api-version`
+flag and `SDC_API_VERSION` environment variable has been added to all commands,
+to allow API versions 7.0.0, 7.1.0, 7.2.0, 7.3.0 and 8.0.0 to be invoked.
+sdc-listmachine now supports filtering with --brand.
+
 ## 7.6.2
 
 - PUBAPI-1166 use smartdc-auth and http-signature instead of sprintf for

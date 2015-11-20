@@ -468,7 +468,7 @@ function SDCfabric() {
 util.inherits(SDCfabric, Cmdln);
 
 SDCfabric.prototype.init = function init(opts, args, callback) {
-    opts.apiVersion = API_VERSION;
+    opts.api_version = opts.api_version || API_VERSION;
     return shared.checkRequiredOptions.call(this, opts, args, callback);
 };
 

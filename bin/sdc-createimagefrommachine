@@ -17,6 +17,7 @@ var common = require('../lib/cli_common');
 var Options = {
     // General
     'account': String,
+    'api-version': String,
     'debug': Boolean,
     'help': Boolean,
     'keyId': String,

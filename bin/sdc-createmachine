@@ -16,8 +16,8 @@ var common = require('../lib/cli_common');
 
 var Options = {
     'account': String,
+    'api-version': String,
     'debug': Boolean,
-    'dataset': String,  // DEPRECATED
     'image': String,
     'enable-firewall': Boolean,
     'far': String,
@@ -30,7 +30,7 @@ var Options = {
     'networks': [String, Array],
     'package': String,
     'script': path,
-    'strict_locality': Boolean,
+    'strict-locality': Boolean,
     'tag': [String, Array],
     'url': url,
     'version': Boolean,
@@ -73,8 +73,6 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     var k;
     if (parsed.image) {
         opts.image = parsed.image;
-    } else if (parsed.dataset) {
-        opts.image = parsed.dataset;
     }
     if (parsed.name)  {
         opts.name = parsed.name;
@@ -126,8 +124,8 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
             opts.locality.far = parsed.far.split(',');
         }
 
-        if (parsed.strict_locality) {
-            opts.locality.strict = parsed.strict_locality;
+        if (parsed['strict-locality']) {
+            opts.locality.strict = parsed['strict-locality'];
         }
     }
 

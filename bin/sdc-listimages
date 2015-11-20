@@ -11,8 +11,11 @@ var common = require('../lib/cli_common');
 
 // --- Globals
 
+var API_VERSION = '~7.0||~8.0';
+
 var Options = {
     'account': String,
+    'api-version': String,
     'public': String,
     'state': String,
     'type': String,
@@ -56,6 +59,8 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
     if (parsed.type) {
         opts.type = parsed.type;
     }
+
+    parsed.api_version = parsed.api_version || API_VERSION;
 
     var client = common.newClient(parsed);
     client.listImages(opts, common.callback);

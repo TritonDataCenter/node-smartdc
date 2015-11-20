@@ -10,7 +10,7 @@ var exec = require('child_process').exec;
 var smartdc = require('../lib');
 var sdc;
 
-var PACKAGE, DATASET, MACHINE, NETWORK, NIC;
+var PACKAGE, IMAGE, MACHINE, NETWORK, NIC;
 
 var TAG_KEY = 'smartdc_role';
 var TAG_VAL = 'unitTest';
@@ -162,12 +162,11 @@ test('get package', function (t) {
 });
 
 
-// Datasets (we need to upgrade depending on default SmartOS version):
-test('list datasets', function (t) {
-    sdc.listDatasets(function (err, datasets) {
+test('list images', function (t) {
+    sdc.listImages(function (err, images) {
         t.ifError(err);
-        t.ok(datasets);
-        t.ok(Array.isArray(datasets));
+        t.ok(images);
+        t.ok(Array.isArray(images));
 
         // Let's pick an image we'll use for testing.
         var candidateImageNames = {
@@ -179,13 +178,13 @@ test('list datasets', function (t) {
             'minimal-32': true,
             'base': true
         };
-        for (var i = 0; i < datasets.length; i++) {
-            if (candidateImageNames[datasets[i].name]) {
-                DATASET = datasets[i];
+        for (var i = 0; i < images.length; i++) {
+            if (candidateImageNames[images[i].name]) {
+                IMAGE = images[i];
                 break;
             }
         }
-        if (!DATASET) {
+        if (!IMAGE) {
             console.error('Exiting because cannot find test image.');
             process.exit(1);
         }
@@ -195,34 +194,10 @@ test('list datasets', function (t) {
 });
 
 
-test('get dataset', function (t) {
-    t.ok(DATASET);
-    sdc.getDataset(DATASET.id, function (err, ds) {
-        t.ifError(err);
-        t.ok(ds);
-        t.ok(ds.name);
-        t.ok(ds.version);
-        t.ok(ds.os);
-        t.ok(ds.id);
-        t.end();
-    }, true);
-});
+test('get image', function (t) {
+    t.ok(IMAGE);
 
-
-// Images
-test('list images', function (t) {
-    sdc.listDatasets(function (err, images) {
-        t.ifError(err);
-        t.ok(images);
-        t.ok(Array.isArray(images));
-        t.end();
-    }, true);
-});
-
-
-test('get images', function (t) {
-    t.ok(DATASET);
-    sdc.getDataset(DATASET.id, function (err, ds) {
+    sdc.getImage(IMAGE.id, function (err, ds) {
         t.ifError(err);
         t.ok(ds);
         t.ok(ds.name);
@@ -361,7 +336,7 @@ test('create machine', {
     timeout: 600000
 }, function (t) {
     var opts = {
-        image: DATASET.id,
+        image: IMAGE.id,
         name: 'a' + uuid.v4().substr(0, 7)
     };
 
