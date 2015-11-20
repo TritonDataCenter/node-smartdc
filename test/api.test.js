@@ -2,7 +2,7 @@
  * Copyright (c) 2015, Joyent, Inc. All rights reserved.
  */
 
-var test = require('tap').test;
+var test = require('tape').test;
 var util = require('util');
 var uuid = require('node-uuid');
 var fs = require('fs');
@@ -333,7 +333,7 @@ var NOW = new Date();
 
 // Machine creation there we go!:
 test('create machine', {
-    timeout: 600000
+    timeout: 120 * 1000 // in ms
 }, function (t) {
     var opts = {
         image: IMAGE.id,
@@ -399,7 +399,7 @@ test('machines list/count', function (t) {
 
 
 test('stop machine', {
-    timeout: 180000
+    timeout: 240 * 1000 // in ms
 }, function (t) {
     sdc.stopMachine(MACHINE.id, function (err) {
         t.ifError(err);
@@ -412,7 +412,7 @@ test('stop machine', {
 
 
 test('start machine', {
-    timeout: 180000
+    timeout: 240 * 1000 // in ms
 }, function (t) {
     sdc.startMachine(MACHINE.id, function (err) {
         t.ifError(err);
@@ -566,7 +566,6 @@ test('list machine nics', function (t) {
         t.ok(NIC.mac);
         t.ok(NIC.ip);
         t.ok(NIC.netmask);
-        t.ok(NIC.gateway);
         t.ok(NIC.state);
         t.ok(typeof (NIC.primary) === 'boolean');
 
@@ -583,7 +582,6 @@ test('get machine nic', function (t) {
         t.ok(nic.mac);
         t.ok(nic.ip);
         t.ok(nic.netmask);
-        t.ok(nic.gateway);
         t.ok(nic.state);
         t.ok(typeof (nic.primary) === 'boolean');
 
@@ -620,7 +618,7 @@ test('add machine nic', function (t) {
 // Note: Big chance for this test to be waiting for too long for a
 // simple rename operation. Or maybe not.
 test('rename machine', {
-    timeout: 180000
+    timeout: 240 * 1000 // in ms
 }, function (t) {
     var name = 'b' + uuid.v4().substr(0, 7);
     sdc.renameMachine(MACHINE.id, {
@@ -641,7 +639,7 @@ test('rename machine', {
 
 
 test('reboot machine', {
-    timeout: 180000
+    timeout: 240 * 1000 // in ms
 }, function (t) {
     sdc.rebootMachine(MACHINE.id, function (err) {
         t.ifError(err);
@@ -654,7 +652,7 @@ test('reboot machine', {
 
 
 test('delete machine', {
-    timeout: 180000
+    timeout: 240 * 1000 // in ms
 }, function (t) {
     sdc.deleteMachine(MACHINE.id, function (err) {
         t.ifError(err);

@@ -28,7 +28,7 @@
       "vasync": "1.6.2"
   },
   "devDependencies": {
-      "tap": "0.4.0",
+      "tape": "3.5.0",
       "node-uuid": "1.4.2"
   }
 }
