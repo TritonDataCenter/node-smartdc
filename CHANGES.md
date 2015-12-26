@@ -1,5 +1,10 @@
 # node-smartdc Changelog
 
+## 8.0.1
+
+- PUBAPI-1214 updated `sshpk-agent` dependency, to fix some bad-state bugs that
+  cause the ssh-agent support to malfunction under load.
+
 ## 8.0.0
 
 - PUBAPI-1161, PUBAPI-1180 - `brand` and `docker` attributes added to machine
