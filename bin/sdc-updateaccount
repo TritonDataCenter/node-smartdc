@@ -27,6 +27,8 @@ var Options = {
     'postal-code': String,
     'state': String,
     'surname': String,
+    'cns-disable': Boolean,
+    'cns-enable': Boolean,
     'url': url,
     'version': Boolean,
     'verbose': Boolean,
@@ -93,6 +95,14 @@ common.parseArguments(Options, ShortOptions, function (parsed) {
 
     if (parsed.surname) {
         opts.lastName = parsed.surname;
+    }
+
+    if (parsed['cns-enable']) {
+        opts.triton_cns_enabled = true;
+    }
+
+    if (parsed['cns-disable']) {
+        opts.triton_cns_enabled = false;
     }
 
     var client = common.newClient(parsed);

@@ -1,5 +1,10 @@
 # node-smartdc Changelog
 
+## 8.1.0
+
+- PUBAPI-1219 - add --cns-enable and --cns-disable options to
+  sdc-updateaccount, to enable and disable the Triton CNS.
+
 ## 8.0.2
 
 - PUBAPI-1215 - fix an API versioning problem with getting and listing
