@@ -11,7 +11,7 @@ var common = require('../lib/cli_common');
 
 // --- Globals
 
-var API_VERSION = '~7.0||~8.0';
+var API_VERSION = '~7||~8';
 
 var Options = {
     'account': String,
