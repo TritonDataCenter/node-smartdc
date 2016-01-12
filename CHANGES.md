@@ -1,5 +1,12 @@
 # node-smartdc Changelog
 
+## 8.0.2
+
+- PUBAPI-1215 - fix an API versioning problem with getting and listing
+  images. This unintentionally caused a backwards-compatible-breaking
+  change. The following attributes were being omitted, which this change
+  brings back: owner, public, state, eula, acl, origin, error
+
 ## 8.0.1
 
 - PUBAPI-1214 updated `sshpk-agent` dependency, to fix some bad-state bugs that
