@@ -320,7 +320,7 @@ FabricNetwork.prototype.do_create.options = [
     REQUIRED.subnet,
     REQUIRED.provision_start_ip,
     REQUIRED.provision_end_ip,
-    REQUIRED.resolvers,
+    OPTIONAL.resolvers,
     OPTIONAL.no_internet_nat,
     OPTIONAL.gateway,
     OPTIONAL.description,
