@@ -19,16 +19,22 @@
 
 ## 8.0.0
 
-- PUBAPI-1161, PUBAPI-1180 - `brand` and `docker` attributes added to machine
-objects, and the meaning of `type` on image objects has changed; these changes
-improve the detail about the kind of machines and images available. The 6.5
-API was slated for removal two years ago, so now removed; `sdc-listdatasets` and
-`sdc-getdataset` have been removed (please use `sdc-listimages` and
-`sdc-getimage` instead), and `getDataset()` and `listDatasets()` have been
-removed (please use `getImage()` and `listImages()` instead). An `--api-version`
-flag and `SDC_API_VERSION` environment variable has been added to all commands,
-to allow API versions 7.0.0, 7.1.0, 7.2.0, 7.3.0 and 8.0.0 to be invoked.
-sdc-listmachine now supports filtering with --brand.
+- [Backward incompatibility, PUBAPI-1161, PUBAPI-1180] All the node-smartdc
+  `sdc-*` tools changed from using CloudAPI API version 7 to API version 8, by
+  default. As well, support for the long deprecated API version 6.5 was dropped.
+
+  To explicitly get the API version 7 behavior, either set the
+  `SDC_API_VERSION=~7` environment variable or use the `--api-version=~7`
+  option to `sdc-*` commands. E.g.:
+
+        SDC_API_VERSION=~7 sdc-listmachines
+        sdc-listimages --api-version=~7 --type=smartmachine
+
+   See the CloudAPI [API Versions](https://apidocs.joyent.com/cloudapi/#api-versions)
+   section for details.
+
+- `sdc-listmachines` filtering by `brand` is now supported.
+
 
 ## 7.6.2
 
@@ -43,11 +49,9 @@ sdc-listmachine now supports filtering with --brand.
 ## 7.6.0
 
 - #73 revive CHANGES.md changelog
-
 - #71 Fix data truncation (at 64k) from node-smartdc commands when piped to
   another command, when using node 4.1. E.g. `sdc-listimages | cat` would
   truncate.
-
 - #70 Update dep to get newer dtrace-provider to fix build against node 4.x
 
 
@@ -168,4 +172,3 @@ sdc-listmachine now supports filtering with --brand.
 - Short option `-?`, valid for all the `sdc-*` commands
 - Normalized arguments: when machine is required, is always last, not named, argument.
 - Handle `noCache` option for machine metadata/tags
-
