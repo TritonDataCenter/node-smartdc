@@ -3,6 +3,11 @@ the [Joyent SmartDataCenter API](http://apidocs.joyent.com/cloudapi/), for
 example the [Joyent Compute
 Service](http://www.joyent.com/products/compute-service).
 
+This repository is part of the Joyent Triton project. See the [contribution
+guidelines](https://github.com/joyent/triton/blob/master/CONTRIBUTING.md) --
+*Triton does not use GitHub PRs* -- and general documentation at the main
+[Triton project](https://github.com/joyent/triton) page.
+
 (Note: Current releases and the #master branch of this are for SmartDataCenter
 (SDC) version 7.  It is not 100% backward compatible with SDC 6.5. For 100%
 compatility with SDC 6.5, you must install a "6.5.x" version of this module.)
@@ -43,7 +48,7 @@ the environment variable equivalents:
 
   Your matching SSH *private* key must be beside the ".pub" public key file
   in your "~/.ssh" dir.
-  
+
   If your client is connecting to a CloudAPI service that is using a self-signed
   SSL certificate, you may need to set `SDC_TESTING=1` in your client environent.
   (Otherwise you'll get `DEPTH_ZERO_SELF_SIGNED_CERT` error).
@@ -219,6 +224,11 @@ A few basic rules and guidelines:
 - Run and pass `make test` (caveat: I'm not sure it is passing *right now*.)
   Be aware that this module is meant to work with older node versions
   and on a number of platforms (smartos, linux, mac, windows).
+
+- *This project does not use GitHub PRs.* See the [contribution guidelines]
+(https://github.com/joyent/triton/blob/master/CONTRIBUTING.md) and
+general documentation at the main [Triton project]
+(https://github.com/joyent/triton) page.
 
 
 ## Bugs
