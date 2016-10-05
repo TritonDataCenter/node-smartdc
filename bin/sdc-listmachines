@@ -27,7 +27,7 @@ var Options = {
     'state': String,
     'tag': [String, Array],
     'type': String,
-    'tombstone': Number,
+    'tombstone': Boolean,
     'url': url,
     'version': Boolean,
     'verbose': Boolean,
