@@ -45,6 +45,10 @@ the environment variable equivalents:
   output. You can calculate the fingerprint like this:
 
         ssh-keygen -l -f ~/.ssh/id_rsa.pub | awk '{print $2}' | tr -d '\n'
+        
+  On new versions of `ssh-keygen`, you have to specify which output format to use;
+  
+        ssh-keygen -E md5 -lf  ~/.ssh/id_rsa.pub  | awk '{print $2}'
 
   Your matching SSH *private* key must be beside the ".pub" public key file
   in your "~/.ssh" dir.
