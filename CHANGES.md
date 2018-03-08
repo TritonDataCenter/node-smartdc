@@ -1,5 +1,8 @@
 # node-smartdc Changelog
 
+## 8.1.1
+- PUBAPI-1378 Provide UpdateFabricNetwork endpoint
+
 ## 8.1.0
 
 - PUBAPI-1219 - add --cns-enable and --cns-disable options to
