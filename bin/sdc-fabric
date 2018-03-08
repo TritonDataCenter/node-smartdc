@@ -291,6 +291,61 @@ FabricNetwork.prototype.do_get.help = (
 );
 
 
+FabricNetwork.prototype.do_update = function (subcmd, opts, args, callback) {
+    var self = this;
+
+    if (opts.help) {
+        return this.do_help('help', {}, [subcmd], callback);
+    }
+
+    if (args.length !== 1) {
+        return callback(new Error('network_id must be specified'));
+    }
+
+    // to match up with the behavior of other node-smartdc commands, we also
+    // want to be able to accept CSV and JSON here
+    if (opts.resolvers && opts.resolvers.length === 1) {
+        try {
+            opts.resolvers = JSON.parse(opts.resolvers[0]);
+        } catch (e) {
+            opts.resolvers = opts.resolvers[0].split(',');
+        }
+    }
+
+    if (opts.routes) {
+        opts.routes = JSON.parse(opts.routes);
+    }
+
+    return this.cloudapi.getFabricNetwork(args[0],
+            function _afterGet(err, net) {
+        if (err) {
+            return commonCb(err);
+        }
+
+        return self.cloudapi.updateFabricNetwork(net.vlan_id, args[0], opts,
+                commonCb);
+    });
+};
+
+FabricNetwork.prototype.do_update.options = [
+    OPTIONAL.name,
+    OPTIONAL.resolvers,
+    OPTIONAL.no_internet_nat,
+    OPTIONAL.gateway,
+    OPTIONAL.description,
+    OPTIONAL.routes,
+    HELP_OPT
+];
+
+FabricNetwork.prototype.do_update.help = (
+    'Update an existing fabric network.\n' +
+    '\n' +
+    'Usage:\n' +
+    '     {{name}} update [OPTIONS]\n' +
+    '\n' +
+    '{{options}}'
+);
+
 FabricNetwork.prototype.do_create = function (subcmd, opts, args, callback) {
     var self = this;
     if (opts.help) {
