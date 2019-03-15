@@ -1,8 +1,8 @@
 {
   "author": "Joyent, Inc. http://www.joyent.com",
   "name": "smartdc",
-  "description": "Client SDK and CLI for the Joyent SmartDataCenter API",
-  "version": "8.1.0",
+  "description": "Old Client SDK and CLI for the Joyent SmartDataCenter API",
+  "version": "9.0.0",
   "repository": {
       "type": "git",
       "url": "git://github.com/joyent/node-smartdc.git"

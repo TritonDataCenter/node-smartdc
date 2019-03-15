@@ -1,5 +1,11 @@
 # node-smartdc Changelog
 
+## 9.0.0
+
+- [Backwad incompatible] TRITON-884 - Drop support for Cloud Analytics.
+  Cloud Analytics has been removed from Triton. See
+  [TRITON-884](https://smartos.org/bugview/TRITON-884) for details.
+
 ## 8.1.0
 
 - PUBAPI-1219 - add --cns-enable and --cns-disable options to

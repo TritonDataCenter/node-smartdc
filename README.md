@@ -150,7 +150,7 @@ Once you've played around and are done, you can delete this machine.
     $ sdc-getmachine f8f995da-086f-e8f5-c062-992139432c4f
     Object is Gone (410)
 
-There's a lot more you can do, like manage snapshots, analytics, keys, tags,
+There's a lot more you can do, like manage snapshots, keys, tags,
 etc. For the *Joyent* cloud, you can read more at <https://docs.joyent.com>.
 
 
