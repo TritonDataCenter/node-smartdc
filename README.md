@@ -4,8 +4,8 @@ example the [Joyent Compute
 Service](http://www.joyent.com/products/compute-service).
 
 This repository is part of the Joyent Triton project. See the [contribution
-guidelines](https://github.com/joyent/triton/blob/master/CONTRIBUTING.md) --
-*Triton does not use GitHub PRs* -- and general documentation at the main
+guidelines](https://github.com/joyent/triton/blob/master/CONTRIBUTING.md)
+and general documentation at the main
 [Triton project](https://github.com/joyent/triton) page.
 
 (Note: Current releases and the #master branch of this are for SmartDataCenter
@@ -224,12 +224,6 @@ A few basic rules and guidelines:
 - Run and pass `make test` (caveat: I'm not sure it is passing *right now*.)
   Be aware that this module is meant to work with older node versions
   and on a number of platforms (smartos, linux, mac, windows).
-
-- *This project does not use GitHub PRs.* See the [contribution guidelines]
-(https://github.com/joyent/triton/blob/master/CONTRIBUTING.md) and
-general documentation at the main [Triton project]
-(https://github.com/joyent/triton) page.
-
 
 ## Bugs
 
