@@ -19,7 +19,7 @@
       "assert-plus": "0.1.5",
       "lru-cache": "2.2.0",
       "nopt": "2.0.0",
-      "restify": "4.0.3",
+      "restify": "8.4.0",
       "bunyan": "1.5.1",
       "clone": "0.1.6",
       "smartdc-auth": "2.3.1",
