@@ -1,34 +1,34 @@
 {
-  "author": "Joyent, Inc. http://www.joyent.com",
-  "name": "smartdc",
-  "description": "Old Client SDK and CLI for the Joyent SmartDataCenter API",
-  "version": "9.0.0",
-  "repository": {
-      "type": "git",
-      "url": "https://github.com/joyent/node-smartdc.git"
-  },
-  "main": "lib/index.js",
-  "engines": {
-      "node": ">=0.8.14"
-  },
-  "directories": {
-      "bin": "./bin",
-      "lib": "./lib"
-  },
-  "dependencies": {
-      "assert-plus": "0.1.5",
-      "lru-cache": "2.2.0",
-      "nopt": "2.0.0",
-      "restify": "4.0.3",
-      "bunyan": "1.5.1",
-      "clone": "0.1.6",
-      "smartdc-auth": "2.3.1",
-      "cmdln": "3.2.1",
-      "dashdash": "1.7.3",
-      "vasync": "1.6.2"
-  },
-  "devDependencies": {
-      "tape": "3.5.0",
-      "node-uuid": "1.4.2"
-  }
+    "author": "Joyent, Inc. http://www.joyent.com",
+    "name": "smartdc",
+    "description": "Old Client SDK and CLI for the Joyent SmartDataCenter API",
+    "version": "9.0.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/joyent/node-smartdc.git"
+    },
+    "main": "lib/index.js",
+    "engines": {
+        "node": ">=0.8.14"
+    },
+    "directories": {
+        "bin": "./bin",
+        "lib": "./lib"
+    },
+    "dependencies": {
+        "assert-plus": "0.1.5",
+        "lru-cache": "2.2.0",
+        "nopt": "2.0.0",
+        "restify": "4.0.3",
+        "bunyan": "1.5.1",
+        "clone": "0.1.6",
+        "smartdc-auth": "2.3.1",
+        "cmdln": "3.2.1",
+        "dashdash": "1.7.3",
+        "vasync": "1.6.2"
+    },
+    "devDependencies": {
+        "tape": "3.5.0",
+        "node-uuid": "1.4.2"
+    }
 }
