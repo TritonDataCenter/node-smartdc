@@ -109,7 +109,8 @@ a new machine (aka VM). Let's provision a new "base" (SmartOS) machine. First
 find the id of the "base" image (version 13.3.0):
 
     $ IMAGE=$(sdc-listimages | json -c 'this.name=="base" && this.version=="13.3.0"' 0.id)
-    $ sdc-createmachine --image $IMAGE --name mymachine1
+    $ PACKAGE=$(sdc-listpackages | json -c 'this.name=="t4-standard-1G"' 0.id)
+    $ sdc-createmachine --image $IMAGE --package $PACKAGE --name mymachine1
     $ sdc-getmachine f8f995da-086f-e8f5-c062-992139432c4f
     {
       "id": "f8f995da-086f-e8f5-c062-992139432c4f",
