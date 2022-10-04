@@ -1,11 +1,11 @@
 {
-    "author": "Joyent, Inc. http://www.joyent.com",
+    "author": "MNX Cloud, Inc (mnx.io)",
     "name": "smartdc",
-    "description": "Old Client SDK and CLI for the Joyent SmartDataCenter API",
-    "version": "9.0.1",
+    "description": "Legacy Client SDK and CLI for Triton Data Center",
+    "version": "9.0.2",
     "repository": {
         "type": "git",
-        "url": "https://github.com/joyent/node-smartdc.git"
+        "url": "https://github.com/TritonDataCenter/node-smartdc.git"
     },
     "main": "lib/index.js",
     "engines": {
@@ -22,7 +22,7 @@
         "restify": "4.0.3",
         "bunyan": "1.5.1",
         "clone": "0.1.6",
-        "smartdc-auth": "2.3.1",
+        "smartdc-auth": "2.5.9",
         "cmdln": "3.2.1",
         "dashdash": "1.7.3",
         "vasync": "1.6.2"

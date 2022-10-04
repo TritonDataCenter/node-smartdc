@@ -1,5 +1,10 @@
 # node-smartdc Changelog
 
+## 9.0.2
+
+- TRITON-2325 CVE-2021-3918: json-schema is vulnerable to Prototype Pollution
+
+
 ## 9.0.0
 
 - [Backwad incompatible] TRITON-884 - Drop support for Cloud Analytics.
